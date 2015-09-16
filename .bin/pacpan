@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+# TODO Make browserify node script
+
+APP=$1
+BIN=node_modules/.bin
+SRC=${2:-./playground/$1}
+DST=${3:-./playground/$1}
+
+echo "[pacpan] packaging app ${APP} at ${SRC}..."
+
+mkdir -p playground
+
+$BIN/browserify --debug --verbose \
+  --external panels-ui \
+  --external react \
+  --external react-redux \
+  --external redux \
+  --external redux-logger \
+  --external redux-thunk \
+  --ignore **/node_modules/**,**/__tests__/** \
+  --require $SRC/index:$APP \
+  --extension .es6 \
+  --transform babelify | \
+  $BIN/exorcist $DST.js.map > $DST.js &&
+  $BIN/uglifyjs --verbose \
+    --compress \
+    --mangle \
+    --screw-ie8 \
+    --in-source-map $DST.js.map \
+    --source-map $DST.min.js.map $DST.js > $DST.min.js
+
+echo "[pacpan] done"
+ls -lha $DST.*

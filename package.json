@@ -1,0 +1,60 @@
+{
+  "name": "panels",
+  "version": "0.1.0",
+  "description": "Panels by UXtemple",
+  "main": "index.js",
+  "scripts": {
+    "start": ".bin/start",
+    "test": ".bin/test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/UXtemple/panels.git"
+  },
+  "keywords": [
+    "panels",
+    "UXtemple"
+  ],
+  "author": "UXtemple <hi@uxtemple.com>",
+  "contributors": [
+    "Darío Javier Cravero <dario@uxtemple.com>",
+    "Tom Parandyk <tom@uxtemple.com>"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/UXtemple/panels/issues"
+  },
+  "homepage": "https://github.com/UXtemple/panels#readme",
+  "dependencies": {
+    "can-use-dom": "^0.1.0",
+    "core-js": "^1.1.4",
+    "lodash.debounce": "^3.1.1",
+    "raf": "^3.1.0",
+    "react": "^0.14.0-rc1",
+    "react-dom": "^0.14.0-rc1",
+    "react-redux": "^2.1.0",
+    "redux": "^2.0.0",
+    "redux-logger": "^1.0.6",
+    "redux-thunk": "^0.1.0",
+    "rlookup": "^0.2.0",
+    "whatwg-fetch": "^0.9.0",
+    "xregexp": "git://github.com/slevithan/xregexp.git"
+  },
+  "devDependencies": {
+    "babel": "^5.8.23",
+    "babelify": "^6.3.0",
+    "browserify": "^11.0.1",
+    "browserify-hmr": "^0.2.2",
+    "exorcist": "^0.4.0",
+    "faucet": "0.0.1",
+    "koa": "^1.0.0",
+    "koa-sendfile": "^1.1.1",
+    "koa-static": "^1.4.9",
+    "node-static": "^0.7.7",
+    "react-hot-transform": "^1.0.2",
+    "sinon": "^1.16.1",
+    "tape": "^4.2.0",
+    "uglify-js": "^2.4.24",
+    "watchify": "^3.4.0"
+  }
+}

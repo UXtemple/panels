@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+BIN=node_modules/.bin
+
+# once off, we don't need to be always looking at the external deps
+$BIN/browserify --verbose \
+  --require can-use-dom \
+  --require lodash.debounce \
+  --require raf \
+  --require react \
+  --require react-dom \
+  --require react-redux \
+  --require redux \
+  --require redux-logger \
+  --require redux-thunk \
+  --require rlookup \
+  --require xregexp \
+  --outfile playground/vendor.js vendor.es6
+
+$BIN/watchify --debug --verbose \
+  --no-bundle-external \
+  --extension .es6 \
+  --require ./ui:panels-ui \
+  --transform babelify \
+  --outfile playground/panels.js \
+  index.es6 &
+sudo $BIN/babel-node .bin/server.es6 &
+wait

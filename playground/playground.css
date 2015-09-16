@@ -1,0 +1,37 @@
+body {
+  padding: 0;
+  margin: 0;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 200;
+}
+
+a,
+div,
+img,
+h1,
+h2,
+p,
+span {
+  box-sizing: border-box;
+  position: relative;
+
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+
+  -ms-flex-direction: column;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+
+  -ms-flex-shrink: 0;
+  -webkit-flex-shrink: 0;
+  flex-shrink: 0;
+
+  -ms-align-items: stretch;
+  -webkit-align-items: stretch;
+  align-items: stretch;
+
+  border: 0 solid black;
+  margin: 0;
+  padding: 0;
+}

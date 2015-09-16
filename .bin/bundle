@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+BIN=node_modules/.bin
+
+$BIN/uglifyjs --verbose \
+  --compress \
+  --mangle \
+  --screw-ie8 playground/vendor.js > playground/vendor.min.js

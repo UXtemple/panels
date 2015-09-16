@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+# TODO Make browserify node script
+
+APP=$1
+BIN=node_modules/.bin
+SRC=${2:-./playground/$1}
+
+echo "[pacpan] constantly packaging app ${APP} at ${SRC}..."
+
+mkdir -p playground
+
+$BIN/watchify --debug --verbose \
+  --external panels-ui \
+  --external react \
+  --external react-redux \
+  --external redux \
+  --external redux-logger \
+  --external redux-thunk \
+  --ignore **/node_modules/**,**/__tests__/** \
+  --require $SRC/index:$APP \
+  --extension .es6 \
+  --transform babelify \
+  --outfile playground/$APP.js
