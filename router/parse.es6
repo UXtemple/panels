@@ -1,14 +1,7 @@
-import XRegExp from 'xregexp';
+import Url from 'lite-url';
 
 const TRAILING_SLASH_REGEX = /\/$/;
-const SCHEMA_REGEX = /https?:\/\//;
-// TODO Simplify regex and remove XRegExp dependency
-const URI_REGEX = XRegExp(
-  '^(?<schema> [^:/?]+ ) ://   # aka protocol   \n\
-    (?<app>   [^/?]+   )       # domain name/IP \n\
-    (?<path>   [^?]*   ) \\??  # optional path  \n\
-    (?<query>  .*      )       # optional query', 'x'
-);
+const PROTOCOL_REGEX = /https?:\/\//;
 
 function trailingSlash(uri) {
   return TRAILING_SLASH_REGEX.test(uri) ? uri : `${uri}/`;
@@ -20,14 +13,14 @@ export default function parse(uri) {
   let nextUri = trailingSlash(uri);
 
   do {
-    const parsed = XRegExp.exec(nextUri, URI_REGEX);
+    const parsed = new Url(nextUri);
 
-    if (parsed && parsed.schema && parsed.app) {
-      let path = parsed.path;
+    if (parsed && parsed.protocol && parsed.host) {
+      let path = parsed.pathname;
 
-      if (SCHEMA_REGEX.test(parsed.path)) {
-        path = parsed.path.split(SCHEMA_REGEX)[0];
-        nextUri = parsed.path.replace(path, '');
+      if (PROTOCOL_REGEX.test(parsed.pathname)) {
+        path = parsed.pathname.split(PROTOCOL_REGEX)[0];
+        nextUri = parsed.pathname.replace(path, '');
       } else {
         nextUri = undefined;
       }
@@ -41,7 +34,7 @@ export default function parse(uri) {
       } while(path.length);
       const uniquePathBits = new Set(pathBits.sort());
       // TODO Should we bring the query bit in?
-      uniquePathBits.forEach(bit => panels.push(`${parsed.schema}://${parsed.app}${bit}`));
+      uniquePathBits.forEach(bit => panels.push(`${parsed.protocol}//${parsed.host}${bit}`));
     } else {
       nextUri = undefined;
     }
@@ -55,12 +48,12 @@ export default function parse(uri) {
   }, '');
 
   return panels.map((uri, i) => {
-    const { app, path } = XRegExp.exec(uri, URI_REGEX);
+    const parsed = new Url(uri);
 
     return {
-      app,
+      app: parsed.host,
       context: contexts[i],
-      path,
+      path: parsed.pathname,
       uri
     };
   });
