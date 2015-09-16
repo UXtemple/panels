@@ -49,3 +49,9 @@ Once packaged an app can be exposed as a regular JavaScript file in a web server
 So, for `usepanels.com`, the panels definition lives at `usepanels.com/panels.js`.
 
 The app mapper makes sure apps are loaded on demand whenever a URI needs them.
+
+## Dist
+
+```
+npm run dist
+```

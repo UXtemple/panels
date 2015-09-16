@@ -1,0 +1,18 @@
+#!/usr/bin/env babel-node
+
+const bundle = process.argv[2];
+const pkg = require('../package.json');
+
+let version;
+switch (bundle) {
+  case 'panels':
+    version = pkg.version;
+    break;
+  case 'vendor':
+    version = pkg.vendorVersion;
+    break;
+  default:
+    return console.error(`${bundle} doesn't exist`);
+    break;
+}
+console.log(version);
