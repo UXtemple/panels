@@ -3,6 +3,7 @@ import { findDOMNode } from 'react-dom';
 import { noSpeed } from '../animate/utils';
 import animate from '../animate';
 import App from '../apps/component';
+import canUseDOM from 'can-use-dom';
 import debounce from 'lodash.debounce';
 import getPanelPathFromRoute from './get-panel-path-from-route';
 import Panels from '../ui/panels';
@@ -24,6 +25,7 @@ class Router extends Component {
     cancelAnimationFrame(this.animationState.rafId);
     this.animationState.rafId = null;
   }
+
   componentDidMount() {
     this.updatePushLeft();
     findDOMNode(this.refs.container).scrollLeft = findDOMNode(this.refs.last).offsetLeft;
@@ -31,15 +33,8 @@ class Router extends Component {
     this.updatePushLeftDebounced = debounce(() => this.updatePushLeft(), UPDATE_PUSH_LEFT_INTERVAL);
     window.addEventListener('resize', this.updatePushLeftDebounced, false);
     window.addEventListener('orientationchange', this.updatePushLeftDebounced, false);
-  }
-  componenWillUnmount() {
-    window.removeEventListener('resize', this.updatePushLeftDebounced);
-    window.removeEventListener('orientationchange', this.updatePushLeftDebounced);
-  }
 
-  updatePushLeft() {
-    findDOMNode(this.refs.pushLeft).style.width =
-      `calc(50vw - ${findDOMNode(this.refs.last).getClientRects()[0].width / 2}px)`;
+    this.updateTitle();
   }
 
   componentDidUpdate(prevProps) {
@@ -52,9 +47,14 @@ class Router extends Component {
     this.updatePushLeft();
     this.animationState.endValue = findDOMNode(this.refs.last).offsetLeft;
     this.raf(true, false);
+
+    this.updateTitle();
   }
-  componentWillUnmount() {
+
+  componenWillUnmount() {
     this.cancelRaf();
+    window.removeEventListener('resize', this.updatePushLeftDebounced);
+    window.removeEventListener('orientationchange', this.updatePushLeftDebounced);
   }
 
   raf(justStarted, isLastRaf) {
@@ -106,6 +106,17 @@ class Router extends Component {
         <div style={style.pushRight} />
       </div>
     );
+  }
+
+  updatePushLeft() {
+    findDOMNode(this.refs.pushLeft).style.width =
+      `calc(50vw - ${findDOMNode(this.refs.last).getClientRects()[0].width / 2}px)`;
+  }
+
+  updateTitle() {
+    if (canUseDOM) {
+      document.title = this.props.focusPanel.title;
+    }
   }
 
   static defaultProps = {
