@@ -2,6 +2,8 @@
 
 A runtime to run panels apps.
 
+[![Circle CI](https://circleci.com/gh/UXtemple/panels.svg?style=svg)](https://circleci.com/gh/UXtemple/panels)
+
 **WIP**.
 **TODO** update this doc to reflect the reality :).
 

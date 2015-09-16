@@ -1,20 +1,40 @@
-import assert from 'assert';
-import eq from 'lodash/lang/eq';
 import parse from '../parse';
+import test from 'tape';
 
 const A = 'https://UXtemple.com/';
-const Ae = {uri: A, context: A};
+const Ae = {app: 'UXtemple.com', path: '/', uri: A, context: A};
 const B = `${A}panels`;
-const Be = {uri: B, context: `${B}/`};
+const Be = {app: 'UXtemple.com', path: '/panels', uri: B, context: `${B}/`};
 const Cu = 'https://usepanels.com/';
 const C = `${A}${Cu}`;
-const Ce = {uri: Cu, context: C};
+const Ce = {app: 'usepanels.com', path: '/', uri: Cu, context: C};
 const D = `${B}/https://usepanels.com/`;
-const De = {uri: Cu, context: D};
+const De = {app: 'usepanels.com', path: '/', uri: Cu, context: D};
 
-describe('#parse', function() {
-  it(`${A}`, () => assert(eq(parse(A), [Ae])));
-  it(`${B}`, () => assert(eq(parse(B), [Ae, Be])));
-  it(`${C}`, () => assert(eq(parse(C), [Ae, Ce])));
-  it(`${D}`, () => assert(eq(parse(D), [Ae, Be, De])));
+test('#parse', t => {
+  t.deepEquals(
+    parse(A),
+    [Ae],
+    A
+  );
+
+  t.deepEquals(
+    parse(B),
+    [Ae, Be],
+    B
+  );
+
+  t.deepEquals(
+    parse(C),
+    [Ae, Ce],
+    C
+  );
+
+  t.deepEquals(
+    parse(D),
+    [Ae, Be, De],
+    D
+  );
+
+  t.end();
 });

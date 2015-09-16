@@ -1,12 +1,11 @@
 import { NAVIGATE, navigate } from '../actions';
-import assert from 'assert';
+import test from 'tape';
 
 const URI = '/';
 
-describe('actions', () => {
-  it('#navigate', () => {
-    const {type, payload} = navigate(URI);
-    assert(type === NAVIGATE, 'type');
-    assert(payload.uri === URI, 'payload: uri');
-  });
+test('#navigate', t => {
+  const {type, payload} = navigate(URI);
+  t.equals(type, NAVIGATE, 'type');
+  t.deepEquals(payload, {uri: URI}, 'payload');
+  t.end();
 });

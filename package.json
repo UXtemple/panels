@@ -1,6 +1,7 @@
 {
   "name": "panels",
   "version": "0.1.0",
+  "vendorVersion": "0.1.0",
   "description": "Panels by UXtemple",
   "main": "index.js",
   "scripts": {
@@ -51,6 +52,7 @@
     "koa-sendfile": "^1.1.1",
     "koa-static": "^1.4.9",
     "node-static": "^0.7.7",
+    "proxyquire": "^1.7.2",
     "react-hot-transform": "^1.0.2",
     "sinon": "^1.16.1",
     "tape": "^4.2.0",
