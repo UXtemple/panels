@@ -38,6 +38,7 @@
     "koa-static": "^1.4.9",
     "lite-url": "^1.0.4",
     "lodash.debounce": "^3.1.1",
+    "panels-ui": "^0.6.0",
     "raf": "^3.1.0",
     "react": "^0.14.0-rc1",
     "react-dom": "^0.14.0-rc1",

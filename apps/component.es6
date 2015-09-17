@@ -1,10 +1,10 @@
 import { connect } from 'react-redux';
 import { loadAppIfNeeded } from './actions';
+import { widthShape } from 'panels-ui';
 import appShape from './app-shape';
 import Panel from '../panels/component';
 import React, { Component, PropTypes } from 'react';
 import routeShape from '../router/route-shape';
-import widthShape from '../ui/width-shape';
 
 class App extends Component {
   componentDidMount() {

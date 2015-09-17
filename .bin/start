@@ -7,6 +7,7 @@ $BIN/browserify --verbose \
   --require can-use-dom \
   --require lite-url \
   --require lodash.debounce \
+  --require panels-ui \
   --require raf \
   --require react \
   --require react-dom \
@@ -20,7 +21,6 @@ $BIN/browserify --verbose \
 $BIN/watchify --debug --verbose \
   --no-bundle-external \
   --extension .es6 \
-  --require ./ui:panels-ui \
   --transform babelify \
   --outfile playground/panels.js \
   index.es6 &

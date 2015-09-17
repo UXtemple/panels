@@ -1,12 +1,12 @@
 import { connect } from 'react-redux';
 import { findDOMNode } from 'react-dom';
 import { noSpeed } from '../animate/utils';
+import { Panels } from 'panels-ui';
 import animate from '../animate';
 import App from '../apps/component';
 import canUseDOM from 'can-use-dom';
 import debounce from 'lodash.debounce';
 import getFocusPanel from '../panels/get-focus-panel';
-import Panels from '../ui/panels';
 import panelShape from '../panels/panel-shape';
 import raf from 'raf';
 import React, { Component, PropTypes } from 'react';
