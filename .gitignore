@@ -2,5 +2,10 @@
 *.log
 .DS_Store
 dist
-node_modules
+node_modules/*
+!node_modules/uxtemple.com
+node_modules/uxtemple.com/node_modules
+!node_modules/usepanels.com
+node_modules/usepanels.com/node_modules
 !playground/uxtemple.com
+!playground/usepanels.com

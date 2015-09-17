@@ -26,9 +26,12 @@ class Panel extends Component {
     if (typeof panel === 'undefined' || panel.isLoading) {
       return <div style={{width}}>loading panel {route.app} {route.path}...</div>;
     } else if (panel.isReady) {
+      const dep = require(route.app);
+      const Type = dep.types[panel.type];
+
       return (
         <Provider store={app.store}>
-          <panel.Type {...panel.props} {...this.props} />
+          <Type {...panel.props} {...this.props} />
         </Provider>
       );
     } else {

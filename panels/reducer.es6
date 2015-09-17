@@ -11,7 +11,7 @@ export default function panels(state={}, action) {
           isReady: true,
           props: action.payload.props,
           title: action.payload.title,
-          Type: action.payload.Type
+          type: action.payload.type
         }
       };
     default: return state;

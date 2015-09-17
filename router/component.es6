@@ -5,7 +5,7 @@ import animate from '../animate';
 import App from '../apps/component';
 import canUseDOM from 'can-use-dom';
 import debounce from 'lodash.debounce';
-import getPanelPathFromRoute from './get-panel-path-from-route';
+import getFocusPanel from '../panels/get-focus-panel';
 import Panels from '../ui/panels';
 import panelShape from '../panels/panel-shape';
 import raf from 'raf';
@@ -131,10 +131,9 @@ class Router extends Component {
 
 function mapStateToProps(state) {
   const routes = state.router.routes;
-  const focusRoute = routes[routes.length - 1];
 
   return {
-    focusPanel: state.panels[getPanelPathFromRoute(focusRoute)] || false,
+    focusPanel: getFocusPanel(routes, state.panels),
     routes
   };
 }

@@ -1,18 +1,15 @@
-import koa from 'koa';
-import sendfile from 'koa-sendfile';
-import serve from 'koa-static';
+#!/usr/bin/env babel-node
 
-let app = koa();
-app.use(serve('./playground'));
-app.use(catchAll);
-app.listen(80);
+import createServer from '../server';
 
-function *catchAll(next) {
-  yield* sendfile.call(this, './playground/index.html');
+const LISTEN = process.env.LISTEN || 3000;
+const PUBLIC = process.env.PUBLIC || `${__dirname}/../dist`;
 
-  if (!this.status) {
-    this.throw(404);
-  }
-}
+const server = createServer({
+  publicRoot: PUBLIC
+});
 
-console.log('panels catch-all dev server is ready at http://localhost');
+server.listen(LISTEN);
+
+const at = typeof parseInt(LISTEN, 10) === 'number' ? `http://0.0.0.0/${LISTEN}` : LISTEN;
+console.log(`panels-server is ready at ${at}`);

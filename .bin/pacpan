@@ -4,8 +4,8 @@
 
 APP=$1
 BIN=node_modules/.bin
-SRC=${2:-./playground/$1}
-DST=${3:-./playground/$1}
+SRC=${2:-./node_modules/$1}
+DST=${3:-./dist/$1}
 
 echo "[pacpan] packaging app ${APP} at ${SRC}..."
 

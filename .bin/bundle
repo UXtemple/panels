@@ -16,6 +16,7 @@ $BIN/browserify --verbose --debug \
   --require can-use-dom \
   --require lite-url \
   --require lodash.debounce \
+  --require ./ui:panels-ui \
   --require raf \
   --require react \
   --require react-dom \
@@ -24,6 +25,8 @@ $BIN/browserify --verbose --debug \
   --require redux-logger \
   --require redux-thunk \
   --require rlookup \
+  --extension .es6 \
+  --transform babelify \
   vendor.es6 | \
   $BIN/exorcist $VENDOR_DST.js.map > $VENDOR_DST.js &&
   $BIN/uglifyjs --verbose \
@@ -39,7 +42,6 @@ echo "[bundle] processing panels v${PANELS_VERSION}..."
 $BIN/browserify --debug --verbose \
   --no-bundle-external \
   --extension .es6 \
-  --require ./ui:panels-ui \
   --transform babelify \
   index.es6 | \
   $BIN/exorcist $PANELS_DST.js.map > $PANELS_DST.js &&

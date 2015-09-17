@@ -1,3 +1,5 @@
+import isRequireable from '../utils/is-requireable';
+
 export const LOAD = 'APPS:LOAD';
 /**
  *  Load an app
@@ -28,14 +30,7 @@ export function loadAppIfNeeded(route) {
     const app = getState().apps[route.app];
 
     if (typeof app === 'undefined') {
-      try {
-        require(route.app);
-        dispatch(ready(route.app));
-      } catch(err) {
-        /Cannot find module/.test(err.message) ?
-          dispatch(load(route.app)) :
-          dispatch(failed(route.app));
-      }
+      dispatch(isRequireable(route.app) ? ready(route.app) : load(route.app));
     }
   };
 }
@@ -61,14 +56,15 @@ export const READY = 'APPS:READY';
  *
  *  @param app String the app's domain
  */
-export function ready(app) {
+export function ready(app, panelsProps) {
   const dep = require(app);
+  const initialState = dep.getInitialState(panelsProps);
 
   return {
     type: READY,
     payload: {
       app,
-      store: dep.configureStore()
+      store: dep.configureStore(initialState)
     }
   };
 }
