@@ -55,9 +55,14 @@ class Panel extends Component {
 
 function mapStateToProps(state, props) {
   const routeIndex = state.router.routes.findIndex(panel => panel.context === props.route.context);
+  let panel = state.panels[getPanelPathFromRoute(props.route)];
+  // TODO FIXME
+  if (panel && panel.isReady) {
+    panel = prepare(panel, props.app.store.getState())
+  }
 
   return {
-    panel: prepare(state.panels[getPanelPathFromRoute(props.route)], props.app.store.getState()),
+    panel,
     routeAfter: state.router.routes[routeIndex + 1] || false
   };
 }

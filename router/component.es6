@@ -8,6 +8,7 @@ import canUseDOM from 'can-use-dom';
 import debounce from 'lodash.debounce';
 import getFocusPanel from '../panels/get-focus-panel';
 import panelShape from '../panels/panel-shape';
+import prepare from '../panels/prepare';
 import raf from 'raf';
 import React, { Component, PropTypes } from 'react';
 import routeShape from './route-shape';
@@ -132,12 +133,14 @@ class Router extends Component {
 function mapStateToProps(state) {
   const routes = state.router.routes;
 
-  const focusPanel = getFocusPanel(routes, state.panels);
-  const focusPanelApp = routes[routes.length - 1].app;
-  const focusPanelAppState = state.apps.byDomain[focusPanelApp].store.getState();
+  let focusPanel = getFocusPanel(routes, state.panels);
+  // TODO FIXME
+  const focusPanelApp = state.apps.byDomain[routes[routes.length - 1].app];
+  const focusPanelAppState = focusPanelApp && focusPanelApp.isReady && focusPanelApp.store.getState();
+  focusPanel = focusPanelAppState ? prepare(focusPanel, focusPanelAppState) : focusPanel;
 
   return {
-    focusPanel: prepare(focusPanel, focusPanelAppState),
+    focusPanel,
     routes
   };
 }

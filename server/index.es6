@@ -8,9 +8,9 @@ import serve from 'koa-static';
 export default function createServer({publicRoot='./public'}) {
   const server = koa();
 
+  server.use(serve(publicRoot));
   server.use(logger());
   server.use(compress());
-  server.use(serve(publicRoot));
   server.use(htmlMinifier({collapseWhitespace: true}));
   server.use(panels());
 
