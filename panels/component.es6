@@ -5,6 +5,7 @@ import { Provider } from 'react-redux';
 import appShape from '../apps/app-shape';
 import getPanelPathFromRoute from '../router/get-panel-path-from-route';
 import panelShape from './panel-shape';
+import prepare from './prepare';
 import React, { Component, PropTypes } from 'react';
 import routeShape from '../router/route-shape';
 
@@ -56,7 +57,7 @@ function mapStateToProps(state, props) {
   const routeIndex = state.router.routes.findIndex(panel => panel.context === props.route.context);
 
   return {
-    panel: state.panels[getPanelPathFromRoute(props.route)],
+    panel: prepare(state.panels[getPanelPathFromRoute(props.route)], props.app.store.getState()),
     routeAfter: state.router.routes[routeIndex + 1] || false
   };
 }

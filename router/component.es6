@@ -132,8 +132,12 @@ class Router extends Component {
 function mapStateToProps(state) {
   const routes = state.router.routes;
 
+  const focusPanel = getFocusPanel(routes, state.panels);
+  const focusPanelApp = routes[routes.length - 1].app;
+  const focusPanelAppState = state.apps.byDomain[focusPanelApp].store.getState();
+
   return {
-    focusPanel: getFocusPanel(routes, state.panels),
+    focusPanel: prepare(focusPanel, focusPanelAppState),
     routes
   };
 }

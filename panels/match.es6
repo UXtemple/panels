@@ -24,7 +24,7 @@ export default function match(route) {
     return {
       background: panel.background,
       props: parseProps(panelMatch.params, panel.props),
-      title: parseParams(panelMatch.params, panel.title),
+      title: panel.title,
       type: panel.type
     };
   }
