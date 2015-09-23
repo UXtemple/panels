@@ -1,8 +1,10 @@
 import { panels, vendor } from './assets';
 
+const MIN = process.env.NODE_ENV === 'production' ? '.min' : '';
+
 export default function render({apps, data, html, title}) {
-  const appsStyles = apps.map(app => `<link href=//${app}/${app}.css rel=stylesheet />`).join('');
-  const appsScripts = apps.map(app => `<script src=//${app}/${app}.js></script>`).join('');
+  const appsStyles = apps.map(app => `<link href=//${app}/${app}${MIN}.css rel=stylesheet />`).join('');
+  const appsScripts = apps.map(app => `<script src=//${app}/${app}${MIN}.js></script>`).join('');
 
   return `<!DOCTYPE html>
 <html lang=en>
