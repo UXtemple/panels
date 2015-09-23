@@ -1,9 +1,8 @@
 import { panels, vendor } from './assets';
 
-const HEAD = '<link href=https://fonts.googleapis.com/css?family=Roboto:100,400&subset=latin,latin-ext rel=stylesheet />';
-
-export default function render({apps, data, head=HEAD, html, title}) {
-  const appsScripts = apps.map(app => `<script src=//${app}/${app}.js></script>`);
+export default function render({apps, data, html, title}) {
+  const appsStyles = apps.map(app => `<link href=//${app}/${app}.css rel=stylesheet />`).join('');
+  const appsScripts = apps.map(app => `<script src=//${app}/${app}.js></script>`).join('');
 
   return `<!DOCTYPE html>
 <html lang=en>
@@ -14,7 +13,7 @@ export default function render({apps, data, head=HEAD, html, title}) {
     <meta content=! name=fragment />
     <title>${title}</title>
     <link href=/favicon.ico rel=icon type=image/x-icon />
-    ${head}
+    ${appsStyles}
     <link href=https://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.min.css rel=stylesheet />
     <style>body{margin:0;}a,div,img,input,h1,h2,p,span{box-sizing:border-box;position:relative;display:flex;flex-direction:column;align-items:stretch;flex-shrink: 0;border:0 solid black;margin:0;padding:0;}</style>
   </head>

@@ -136,7 +136,7 @@ function mapStateToProps(state) {
   let focusPanel = getFocusPanel(routes, state.panels);
   // TODO FIXME
   const focusPanelApp = state.apps.byDomain[routes[routes.length - 1].app];
-  const focusPanelAppState = focusPanelApp && focusPanelApp.isReady && focusPanelApp.store.getState();
+  const focusPanelAppState = focusPanelApp && focusPanelApp.isReady && focusPanelApp.store.getState;
   focusPanel = focusPanelAppState ? prepare(focusPanel, focusPanelAppState) : focusPanel;
 
   return {

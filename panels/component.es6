@@ -17,7 +17,8 @@ class Panel extends Component {
   getChildContext() {
     return {
       isActive: path => this.props.routeAfter && `${this.props.route.context}${path}` === this.props.routeAfter.context,
-      navigate: toUri => this.props.dispatch(navigate(`${this.props.route.context}${toUri}`))
+      navigate: toUri => this.props.dispatch(navigate(`${this.props.route.context}${toUri}`)),
+      route: this.props.route
     };
   }
 
@@ -42,7 +43,8 @@ class Panel extends Component {
 
   static childContextTypes = {
     isActive: PropTypes.func.isRequired,
-    navigate: PropTypes.func.isRequired
+    navigate: PropTypes.func.isRequired,
+    route: routeShape.isRequired
   }
 
   static propTypes = {
@@ -58,7 +60,7 @@ function mapStateToProps(state, props) {
   let panel = state.panels[getPanelPathFromRoute(props.route)];
   // TODO FIXME
   if (panel && panel.isReady) {
-    panel = prepare(panel, props.app.store.getState())
+    panel = prepare(panel, props.app.store.getState)
   }
 
   return {

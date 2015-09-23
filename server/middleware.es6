@@ -19,7 +19,7 @@ import routerReducer from '../router/reducer';
 const HTML = 'text/html';
 const GET = 'GET';
 
-export default function panelsMiddleware(head) {
+export default function panelsMiddleware() {
   return function *(next) {
     if (this.method === GET && this.accepts(HTML)) {
       this.type = HTML;
@@ -59,10 +59,16 @@ export default function panelsMiddleware(head) {
           <Router />
         </Provider>
       );
-      const focusPanel = getFocusPanel(state.router.routes, state.panels);
-      const title = (focusPanel && focusPanel.title) || 'usepanels.com';
 
-      this.body = render({apps: appsDomains, data, head, html, title});
+      const focusRoute = router.routes[router.routes.length - 1];
+      const focusApp = apps.byDomain[focusRoute.app];
+      const focusPanel = getFocusPanel(state.router.routes, state.panels);
+      let title = (focusPanel && focusPanel.title) || 'usepanels.com';
+      if (typeof title === 'function') {
+        title = title(focusApp.store.getState, focusPanel.props);
+      }
+
+      this.body = render({apps: appsDomains, data, html, title});
     } else {
       yield next;
     }

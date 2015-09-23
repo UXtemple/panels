@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+APPS=''
+for APP in $@; do
+  APPS="node_modules/${APP},${APPS}"
+done
+
+WATCH=''
+for APP in $@; do
+  WATCH="--watch node_modules/${APP} ${WATCH}"
+done
+
+sudo \
+  APPS=$APPS \
+  LISTEN=80 \
+  PUBLIC=dist \
+  nodemon --ext js,es6 \
+  --watch . \
+  $WATCH \
+  --exec node_modules/.bin/babel-node -- .bin/server.es6

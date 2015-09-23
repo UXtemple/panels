@@ -1,5 +1,6 @@
 import { failed, loading, ready } from './actions';
 import loadScript from './load-script';
+import loadStyle from './load-style';
 
 export default function appLoader(store) {
   return store.subscribe(function appLoaderStoreListener() {
@@ -11,6 +12,7 @@ export default function appLoader(store) {
       store.dispatch(loading(app));
 
       loadScript(`//${app}/${app}.js`, err => store.dispatch(err ? failed(app) : ready(app)));
+      loadStyle(`//${app}/${app}.css`, ::console.error);
     }
   });
 }

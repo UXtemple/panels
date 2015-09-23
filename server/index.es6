@@ -5,9 +5,10 @@ import koa from 'koa';
 import panels from './middleware';
 import serve from 'koa-static';
 
-export default function createServer({publicRoot='./public'}) {
+export default function createServer({apps=[], publicRoot='./public'}) {
   const server = koa();
 
+  apps.forEach(app => server.use(serve(`${app}/public`)));
   server.use(serve(publicRoot));
   server.use(logger());
   server.use(compress());

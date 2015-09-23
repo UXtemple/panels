@@ -2,10 +2,12 @@
 
 import createServer from '../server';
 
+const APPS = process.env.APPS.split(',') || [];
 const LISTEN = process.env.LISTEN || 3000;
 const PUBLIC = process.env.PUBLIC || `${__dirname}/../dist`;
 
 const server = createServer({
+  apps: APPS,
   publicRoot: PUBLIC
 });
 

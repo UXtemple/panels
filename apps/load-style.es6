@@ -1,37 +1,38 @@
-// Original source [partition-bundle](https://github.com/arian/partition-bundle/blob/master/lib/loadScript.js)
-export default function loadScript(file, head, fn) {
+export default function loadStyle(file, head, fn) {
   if (typeof head === 'function') {
     fn = head;
     head = document.getElementsByTagName('head')[0];
   }
 
-  let script = document.createElement('script');
+  let style = document.createElement('style');
+  style.rel = 'stylesheet';
+  style.type = 'text/css';
   let done = false;
   let timer;
 
   function ready(err) {
     done = true;
-    script.onload = script.onerror = script.onreadystatechange = null;
+    style.onload = style.onerror = style.onreadystatechange = null;
     clearTimeout(timer);
     fn(err);
   }
 
-  script.onload = script.onreadystatechange = function(e) {
+  style.onload = style.onreadystatechange = function(e) {
     if (!done && (!this.readyState || this.readyState == 'complete' || this.readyState == 'loaded')) {
       ready(null);
     }
   };
 
-  script.onerror = function(error) {
+  style.onerror = function(error) {
     if (!done) {
       ready(error || new Error('Could not load file'));
     }
   };
 
   timer = setTimeout(function() {
-    ready(new Error('Script loading timed-out'));
+    ready(new Error('style loading timed-out'));
   }, 3e4);
 
-  script.src = file;
-  head.appendChild(script);
+  style.href = file;
+  head.appendChild(style);
 }
