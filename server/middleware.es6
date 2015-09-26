@@ -60,8 +60,8 @@ export default function panelsMiddleware() {
         </Provider>
       );
 
-      const focusRoute = router.routes[router.routes.length - 1];
-      const focusApp = apps.byDomain[focusRoute.app];
+      const focusRoute = state.router.routes[state.router.routes.length - 1];
+      const focusApp = state.apps.byDomain[focusRoute.app];
       const focusPanel = getFocusPanel(state.router.routes, state.panels);
       let title = (focusPanel && focusPanel.title) || 'usepanels.com';
       if (typeof title === 'function') {

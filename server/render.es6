@@ -16,8 +16,7 @@ export default function render({apps, data, html, title}) {
     <title>${title}</title>
     <link href=/favicon.ico rel=icon type=image/x-icon />
     ${appsStyles}
-    <link href=https://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.min.css rel=stylesheet />
-    <style>body{margin:0;}a,div,img,input,h1,h2,p,span{box-sizing:border-box;position:relative;display:flex;flex-direction:column;align-items:stretch;flex-shrink: 0;border:0 solid black;margin:0;padding:0;}</style>
+    <style>body{margin:0;}a,div,img,input,h1,h2,p,span{box-sizing:border-box;position:relative;display:-webkit-flex;display:flex;-webkit-flex-direction:column;flex-direction:column;-webkit-align-items:stretch;align-items:stretch;-webkit-flex-shrink:0;flex-shrink:0;border:0 solid black;margin:0;padding:0;}</style>
   </head>
   <body>
     <div id=root>${html}</div>
