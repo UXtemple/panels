@@ -5,8 +5,11 @@
   "description": "Panels by UXtemple",
   "main": "index.js",
   "scripts": {
+    "build": ".bin/build",
+    "clean": ".bin/clean",
     "dist": ".bin/dist",
     "start": ".bin/start",
+    "push": ".bin/push",
     "test": ".bin/test"
   },
   "repository": {
