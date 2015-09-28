@@ -9,10 +9,9 @@ import debounce from 'lodash.debounce';
 import getFocusPanel from '../panels/get-focus-panel';
 import panelShape from '../panels/panel-shape';
 import prepare from '../panels/prepare';
-import raf from 'raf';
 import React, { Component, PropTypes } from 'react';
 import routeShape from './route-shape';
-
+const raf = require('raf');
 const UPDATE_PUSH_LEFT_INTERVAL = 50;
 
 class Router extends Component {

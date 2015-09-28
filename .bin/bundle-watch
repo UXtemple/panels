@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+
+BIN=node_modules/.bin
+DST=public
+
+PANELS_VERSION=`.bin/version panels`
+PANELS_DST=$DST/panels-$PANELS_VERSION
+VENDOR_VERSION=`.bin/version vendor`
+VENDOR_DST=$DST/vendor-$VENDOR_VERSION
+
+mkdir -p $DST
+
+$BIN/browserify --verbose --debug \
+  --require can-use-dom \
+  --require lite-url \
+  --require lodash.debounce \
+  --require panels-ui \
+  --require raf \
+  --require react \
+  --require react-dom \
+  --require react-redux \
+  --require redux \
+  --require redux-logger \
+  --require redux-thunk \
+  --require rlookup \
+  --extension .es6 \
+  --transform babelify \
+  vendor.es6 | \
+  $BIN/exorcist $VENDOR_DST.js.map > $VENDOR_DST.js
+
+$BIN/watchify --debug --verbose \
+  --external can-use-dom \
+  --external lite-url \
+  --external lodash.debounce \
+  --external panels-ui \
+  --external raf \
+  --external react \
+  --external react-dom \
+  --external react-redux \
+  --external redux \
+  --external redux-logger \
+  --external redux-thunk \
+  --external rlookup \
+  --extension .es6 \
+  --plugin [ browserify-hmr --url "http://localhost:3124/" ] \
+  --transform babelify \
+  --outfile $PANELS_DST.js \
+  index.es6

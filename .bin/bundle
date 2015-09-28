@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 BIN=node_modules/.bin
-DST=dist
+DST=public
 
 PANELS_VERSION=`.bin/version panels`
 PANELS_DST=$DST/panels-$PANELS_VERSION

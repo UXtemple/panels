@@ -12,8 +12,8 @@ done
 
 sudo \
   APPS=$APPS \
+  NODE_ENV=dev \
   LISTEN=80 \
-  PUBLIC=dist \
   nodemon --ext js,es6 \
   --watch . \
   $WATCH \
