@@ -5,11 +5,12 @@ import koa from 'koa';
 import panels from './middleware';
 import serve from 'koa-static';
 
-export default function createServer({apps=[], publicRoot='./public'}) {
+export default function createServer({apps=[]}) {
   const server = koa();
 
   apps.forEach(app => server.use(serve(`${app}/public`)));
-  server.use(serve(publicRoot));
+  console.log('publicRoot', `${__dirname}/../public`)
+  server.use(serve(`${__dirname}/../public`));
   server.use(logger());
   server.use(compress());
   server.use(htmlMinifier({collapseWhitespace: true}));

@@ -2,6 +2,9 @@
   "loose": "all",
   "stage": 0,
   "env": {
+    "server": {
+      "optional": ["runtime"]
+    },
     "development": {
       "plugins": ["react-transform"],
       "extra": {
