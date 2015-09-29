@@ -5,9 +5,10 @@ VERSION=${VERSION:-patch};
 
 git pull &&
 git push &&
-NODE_ENV=server npm run build &&
 npm version $VERSION &&
+npm run clean &&
 NODE_ENV=production npm run bundle &&
+BABEL_ENV=server npm run build &&
 npm publish &&
 git push --follow-tags &&
 npm run clean
