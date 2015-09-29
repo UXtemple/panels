@@ -32,6 +32,7 @@
   },
   "homepage": "https://github.com/UXtemple/panels#readme",
   "dependencies": {
+    "babel-runtime": "^5.8.25",
     "can-use-dom": "^0.1.0",
     "core-js": "^1.2.0",
     "koa": "^1.0.0",
@@ -58,7 +59,6 @@
     "babel": "^5.8.23",
     "babel-plugin-react-autoprefix": "^0.2.6",
     "babel-plugin-react-transform": "^1.1.1",
-    "babel-runtime": "^5.8.25",
     "babelify": "^6.3.0",
     "browserify": "^11.0.1",
     "browserify-hmr": "^0.2.2",
