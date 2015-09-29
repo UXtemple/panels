@@ -27,6 +27,7 @@ $BIN/browserify --verbose --debug \
   --require rlookup \
   --extension .es6 \
   --transform babelify \
+  --transform envify \
   vendor.es6 | \
   $BIN/exorcist $VENDOR_DST.js.map > $VENDOR_DST.js &&
   $BIN/uglifyjs --verbose \
@@ -43,6 +44,7 @@ $BIN/browserify --debug --verbose \
   --no-bundle-external \
   --extension .es6 \
   --transform babelify \
+  --transform envify \
   index.es6 | \
   $BIN/exorcist $PANELS_DST.js.map > $PANELS_DST.js &&
   $BIN/uglifyjs --verbose \

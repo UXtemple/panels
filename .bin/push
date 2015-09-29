@@ -3,9 +3,11 @@
 read -p "New version (enter nothing for patch): " VERSION;
 VERSION=${VERSION:-patch};
 
+NODE_ENV=production \
 git pull &&
 git push &&
 npm run build &&
+npm run bundle &&
 npm version $VERSION &&
 npm publish &&
 git push --follow-tags &&

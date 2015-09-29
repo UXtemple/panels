@@ -6,6 +6,7 @@
   "main": "index.js",
   "scripts": {
     "build": ".bin/build",
+    "bundle": ".bin/bundle",
     "clean": ".bin/clean",
     "dist": ".bin/dist",
     "start": ".bin/start",
@@ -60,6 +61,7 @@
     "babelify": "^6.3.0",
     "browserify": "^11.0.1",
     "browserify-hmr": "^0.2.2",
+    "envify": "^3.4.0",
     "exorcist": "^0.4.0",
     "faucet": "0.0.1",
     "proxyquire": "^1.7.2",
