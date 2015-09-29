@@ -32,7 +32,10 @@ export default function parse(uri) {
         path = path.slice(0, path.length - 1).join('/');
         pathBits.push(path || '/');
       } while(path.length);
-      const uniquePathBits = new Set(pathBits.sort());
+      // We can't use Set's argument in constructor feature as Safari doesn't support it!
+      // https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Set#Browser_compatibility
+      const uniquePathBits = new Set();
+      pathBits.sort().forEach(bit => uniquePathBits.add(bit));
       // TODO Should we bring the query bit in?
       uniquePathBits.forEach(bit => panels.push(`${parsed.protocol}//${parsed.host}${bit}`));
     } else {
