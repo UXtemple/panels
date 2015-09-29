@@ -1,7 +1,7 @@
 const { version: panelsVersion, vendorVersion } = require('../package.json');
 
 const isProduction = process.env.NODE_ENV === 'production';
-const URI = isProduction ? 'https://cdn.usepanels.com/' : '/';
+const URI = isProduction ? '//cdn.usepanels.com/' : '/';
 const EXT = isProduction ? '.min.js' : '.js';
 
 export const panels = process.env.PANELS_RUNTIME_URI || `${URI}panels-${panelsVersion}${EXT}`;
