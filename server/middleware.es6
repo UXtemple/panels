@@ -6,7 +6,7 @@ import * as routerActions from '../router/actions';
 import appsReducer from '../apps/reducer';
 import configureStore from '../configure-store';
 import getFocusPanel from '../panels/get-focus-panel';
-import getPanelPathFromRoute from '../router/get-panel-path-from-route.es6';
+import getPanelPathFromRoute from '../router/get-panel-path-from-route';
 import include from '../utils/include';
 import isRequireable from '../utils/is-requireable';
 import pack from '../state/pack';
