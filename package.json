@@ -1,6 +1,6 @@
 {
   "name": "panels",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "vendorVersion": "0.1.0",
   "description": "Panels by UXtemple",
   "main": "index.js",
