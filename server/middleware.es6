@@ -19,7 +19,7 @@ import routerReducer from '../router/reducer';
 const HTML = 'text/html';
 const GET = 'GET';
 
-export default function panelsMiddleware() {
+export default function panelsMiddleware({heapId}) {
   return function *(next) {
     if (this.method === GET && this.accepts(HTML)) {
       this.type = HTML;
@@ -68,7 +68,7 @@ export default function panelsMiddleware() {
         title = title(focusApp.store.getState, focusPanel.props);
       }
 
-      this.body = render({apps: appsDomains, data, html, title});
+      this.body = render({apps: appsDomains, data, heapId, html, title});
     } else {
       yield next;
     }
