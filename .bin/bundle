@@ -23,6 +23,7 @@ $BIN/browserify --verbose --debug \
   --require react-redux \
   --require redux \
   --require redux-logger \
+  --require redux-promise \
   --require redux-thunk \
   --require rlookup \
   --extension .es6 \
