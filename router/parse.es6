@@ -1,16 +1,19 @@
 import Url from 'lite-url';
 
-const TRAILING_SLASH_REGEX = /\/$/;
 const PROTOCOL_REGEX = /https?:\/\//;
+const SLICE_END = ')';
+const SLICE_START = '(';
+const SLICE_MARKERS = new RegExp(`[${SLICE_START}${SLICE_END}]`, 'g');
+const TRAILING_SLASH_REGEX = /\/$/;
 
-function trailingSlash(uri) {
+function withTrailingSlash(uri) {
   return TRAILING_SLASH_REGEX.test(uri) ? uri : `${uri}/`;
 }
 
 export default function parse(uri) {
   let panels = [];
   // Make sure we always have a trailing slash on the URI
-  let nextUri = trailingSlash(uri);
+  let nextUri = withTrailingSlash(uri);
 
   do {
     const parsed = new Url(nextUri);
@@ -25,39 +28,54 @@ export default function parse(uri) {
         nextUri = undefined;
       }
 
+      const base = `${parsed.protocol}//${parsed.host}`;
+
       // Get every path 'bit' which is indeed every panel we need to load
-      let pathBits = [];
+      let pathPanels = [];
+      let visible = true;
       do {
         path = path.split('/');
         path = path.slice(0, path.length - 1).join('/');
-        pathBits.push(path || '/');
-      } while(path.length);
-      // We can't use Set's argument in constructor feature as Safari doesn't support it!
-      // https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Set#Browser_compatibility
-      const uniquePathBits = new Set();
-      pathBits.sort().forEach(bit => uniquePathBits.add(bit));
-      // TODO Should we bring the query bit in?
-      uniquePathBits.forEach(bit => panels.push(`${parsed.protocol}//${parsed.host}${bit}`));
+        const hasSliceEndMarker = path.indexOf(SLICE_END) > -1;
+        const hasSliceStartMarker = path.indexOf(SLICE_START) > -1;
+        path = path.replace(SLICE_MARKERS, '');
+
+        visible = hasSliceEndMarker ? false : visible;
+
+        const bit = path || '/';
+        // if (pathPanels.indexOf(bit) === -1) {
+        pathPanels.push({
+          uri: `${base}${bit}`,
+          visible
+        });
+        // }
+
+        visible = path.indexOf(SLICE_START) > -1 ? true : visible;
+      } while (path.length);
+
+      panels = panels.concat(pathPanels.reverse());
     } else {
       nextUri = undefined;
     }
-  } while(nextUri);
+  } while (nextUri);
 
   let contexts = [];
-  panels.reduce((prev, panel, i) => {
-    const lastFwdSlash = panel.lastIndexOf('/') + 1;
-    const sharesRoot = new RegExp(`${panel.substr(0, lastFwdSlash)}$`);
-    return contexts[i] = trailingSlash(prev + (sharesRoot.test(prev) ? panel.substr(lastFwdSlash, panel.length) : panel));
+  panels.reduce((prev, {uri}, i) => {
+    const lastFwdSlash = uri.lastIndexOf('/') + 1;
+    const sharesRoot = new RegExp(`${uri.substr(0, lastFwdSlash)}$`);
+    const contextUri = prev + (sharesRoot.test(prev) ? uri.substr(lastFwdSlash, uri.length) : uri);
+    return contexts[i] = withTrailingSlash(contextUri);
   }, '');
 
-  return panels.map((uri, i) => {
-    const parsed = new Url(uri);
+  return panels.map((panel, i) => {
+    const parsed = new Url(panel.uri);
 
     return {
       app: parsed.host,
       context: contexts[i],
       path: parsed.pathname,
-      uri
+      uri: panel.uri,
+      visible: panel.visible
     };
   });
 }
