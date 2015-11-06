@@ -15,10 +15,7 @@ function unpackApp(app, theApp) {
 
 export default function unpack(state) {
   return {
-    apps: {
-      byDomain: unpackApps(state.apps.byDomain),
-      toLoad: state.apps.toLoad
-    },
+    apps: unpackApps(state.apps),
     panels: state.panels,
     router: state.router
   };

@@ -1,25 +1,18 @@
-import isRequireable from '../utils/is-requireable';
+import { PANELS_APP } from './middleware';
 
-export const LOAD = 'APPS:LOAD';
-/**
- *  Load an app
- *
- *  @param app String the app's domain
- */
+export const LOAD = 'panels/apps/LOAD';
 export function load(app) {
   return {
     type: LOAD,
     payload: {
+      [PANELS_APP]: true
+    },
+    meta: {
       app
     }
   };
 }
 
-/**
- *  Load apps on demand
- *
- *  @param app String the app's domain
- */
 export function loadAppIfNeeded(route) {
   return function loadAppIfNeededThunk(dispatch, getState) {
     // TODO implement smarter app loading, not a big deal until we implement sliced routes
@@ -29,57 +22,8 @@ export function loadAppIfNeeded(route) {
 
     const app = getState().apps[route.app];
 
-    if (typeof app === 'undefined') {
-      dispatch(isRequireable(route.app) ? ready(route.app) : load(route.app));
-    }
-  };
-}
-
-export const LOADING = 'APPS:LOADING';
-/**
- *  Indicate that an app is loading
- *
- *  @param app String the app's domain
- */
-export function loading(app) {
-  return {
-    type: LOADING,
-    payload: {
-      app
-    }
-  };
-}
-
-export const READY = 'APPS:READY';
-/**
- *  Indicate that an app is ready to be used
- *
- *  @param app String the app's domain
- */
-export function ready(app, panelsProps) {
-  const dep = require(app);
-  const initialState = dep.getInitialState(panelsProps);
-
-  return {
-    type: READY,
-    payload: {
-      app,
-      store: dep.configureStore(initialState)
-    }
-  };
-}
-
-export const FAILED = 'APPS:FAILED';
-/**
- *  Indicate that an app failed to load
- *
- *  @param app String the app's domain
- */
-export function failed(app) {
-  return {
-    type: FAILED,
-    payload: {
-      app
+    if (typeof app === 'undefined' || !(app.isLoading || app.isReady)) {
+      dispatch(load(route.app));
     }
   };
 }

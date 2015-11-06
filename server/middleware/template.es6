@@ -1,4 +1,4 @@
-import { panels, vendor } from './assets';
+import { panels, vendor } from '../assets';
 
 const TYPE = process.env.NODE_ENV === 'production' ? 'min' : 'dev';
 

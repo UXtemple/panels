@@ -32,7 +32,7 @@ class App extends Component {
 
 function mapStateToProps(state, props) {
   return {
-    app: state.apps.byDomain[props.route.app]
+    app: state.apps[props.route.app]
   };
 }
 

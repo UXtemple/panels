@@ -1,7 +1,6 @@
 import { navigate } from './router/actions';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
-import appsLoader from './apps/loader';
 import configureStore from './configure-store';
 import history from './router/history';
 import React from 'react';
@@ -15,7 +14,7 @@ const initialState = typeof window.__panels__ === 'undefined' ?
 
 const store = configureStore(initialState);
 
-appsLoader(store);
+// TODO history should be a middleware too!
 history(store);
 
 render(

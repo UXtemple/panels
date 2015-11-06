@@ -2,55 +2,46 @@ import { FAILED, LOAD, LOADING, READY } from './actions';
 import exclude from '../utils/exclude';
 import include from '../utils/include';
 
-export default function apps(state = {byDomain: {}, toLoad: []}, action) {
-  const app = action.payload && action.payload.app;
+export default function apps(state = {}, action={}) {
+  let nextState = state;
 
   switch (action.type) {
-    case FAILED:
-      return {
-        ...state,
-        byDomain: {
-          ...state.byDomain,
-          [app]: {
-            isLoading: false,
-            isReady: false,
-            store: {}
-          }
-        }
-      };
-
     case LOAD:
-      return {
-        ...state,
-        toLoad: include(app, state.toLoad)
-      };
+    const { app } = action.meta;
 
-    case LOADING:
-      return {
-        byDomain: {
-          ...state.byDomain,
-          [action.payload.app]: {
-            isLoading: true,
-            isReady: false,
-            store: {}
-          }
-        },
-        toLoad: exclude(app, state.toLoad)
-      };
-
-    case READY:
-      return {
+    if (action.sequence.type === 'start') {
+      nextState = {
         ...state,
-        byDomain: {
-          ...state.byDomain,
-          [action.payload.app]: {
-            isLoading: false,
-            isReady: true,
-            store: action.payload.store
-          }
+        [app]: {
+          isLoading: false,
+          isReady: false
         }
       };
+    } else if (action.error) {
+      nextState = {
+        ...state,
+        [app]: {
+          ...state[app],
+          isLoading: false,
+          error: true,
+          message: action.payload
+        }
+      };
+    } else {
+      nextState = {
+        ...state,
+        [app]: {
+          ...state[app],
+          isLoading: false,
+          isReady: true,
+          store: action.payload
+        }
+      };
+    }
+    break;
 
-    default: return state;
+    default: break;
   }
+
+  return nextState;
 }

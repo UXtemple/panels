@@ -1,4 +1,4 @@
-export const NAVIGATE = 'ROUTER:NAVIGATE';
+export const NAVIGATE = 'panels/router/NAVIGATE';
 export function navigate(uri) {
   return {
     type: NAVIGATE,

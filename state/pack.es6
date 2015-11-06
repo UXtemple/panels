@@ -15,10 +15,7 @@ function packApp(app) {
 
 export default function pack(state) {
   return serialise({
-    apps: {
-      byDomain: packApps(state.apps.byDomain),
-      toLoad: state.apps.toLoad
-    },
+    apps: packApps(state.apps),
     panels: state.panels,
     router: state.router
   });
