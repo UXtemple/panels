@@ -29,28 +29,28 @@ export default function parse(uri) {
       }
 
       const base = `${parsed.protocol}//${parsed.host}`;
+      const context = panels.length > 0 ? panels[panels.length - 1].context : '';
 
       // Get every path 'bit' which is indeed every panel we need to load
       let pathPanels = [];
       let visible = true;
       do {
         path = path.split('/');
+        const lastBit = path.length > 1 ? path[path.length - 2] : '';
         path = path.slice(0, path.length - 1).join('/');
-        const hasSliceEndMarker = path.indexOf(SLICE_END) > -1;
-        const hasSliceStartMarker = path.indexOf(SLICE_START) > -1;
-        path = path.replace(SLICE_MARKERS, '');
+        const hasSliceEndMarker = lastBit.indexOf(SLICE_END) > -1;
+        const hasSliceStartMarker = lastBit.indexOf(SLICE_START) > -1;
 
-        visible = hasSliceEndMarker ? false : visible;
+        visible = hasSliceEndMarker || hasSliceStartMarker ? false : visible;
 
-        const bit = path || '/';
-        // if (pathPanels.indexOf(bit) === -1) {
         pathPanels.push({
-          uri: `${base}${bit}`,
+          app: parsed.host,
+          context: `${context}${base}${withTrailingSlash(path)}`,
+          path: path.replace(SLICE_MARKERS, '') || '/',
           visible
         });
-        // }
 
-        visible = path.indexOf(SLICE_START) > -1 ? true : visible;
+        visible = hasSliceStartMarker ? true : visible;
       } while (path.length);
 
       panels = panels.concat(pathPanels.reverse());
@@ -59,23 +59,5 @@ export default function parse(uri) {
     }
   } while (nextUri);
 
-  let contexts = [];
-  panels.reduce((prev, {uri}, i) => {
-    const lastFwdSlash = uri.lastIndexOf('/') + 1;
-    const sharesRoot = new RegExp(`${uri.substr(0, lastFwdSlash)}$`);
-    const contextUri = prev + (sharesRoot.test(prev) ? uri.substr(lastFwdSlash, uri.length) : uri);
-    return contexts[i] = withTrailingSlash(contextUri);
-  }, '');
-
-  return panels.map((panel, i) => {
-    const parsed = new Url(panel.uri);
-
-    return {
-      app: parsed.host,
-      context: contexts[i],
-      path: parsed.pathname,
-      uri: panel.uri,
-      visible: panel.visible
-    };
-  });
+  return panels;
 }
