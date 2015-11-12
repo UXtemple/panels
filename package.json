@@ -1,7 +1,7 @@
 {
   "name": "panels",
   "version": "0.3.2",
-  "vendorVersion": "0.2.0",
+  "vendorVersion": "1.0.0",
   "description": "Panels by UXtemple",
   "main": "index.js",
   "scripts": {
@@ -43,10 +43,10 @@
     "koa-static": "^1.4.9",
     "lite-url": "^1.0.4",
     "lodash.debounce": "^3.1.1",
-    "panels-ui": "^0.6.0",
+    "panels-ui": "^0.6.5",
     "raf": "^3.1.0",
-    "react": "^0.14.0",
-    "react-dom": "^0.14.0",
+    "react": "^0.14.2",
+    "react-dom": "^0.14.2",
     "react-redux": "^4.0.0",
     "redux": "^3.0.2",
     "redux-logger": "^2.0.0",
