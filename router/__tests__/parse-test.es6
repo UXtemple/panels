@@ -68,6 +68,16 @@ test('#parse', t => {
   );
 
   t.deepEquals(
+    parse('https://UXtemple.com/(panels)/use/(new)'), [
+      {app: 'UXtemple.com', path: '/', context: 'https://UXtemple.com/', visible: true},
+      {app: 'UXtemple.com', path: '/panels', context: 'https://UXtemple.com/(panels)/', visible: false},
+      {app: 'UXtemple.com', path: '/panels/use', context: 'https://UXtemple.com/(panels)/use/', visible: true},
+      {app: 'UXtemple.com', path: '/panels/use/new', context: 'https://UXtemple.com/(panels)/use/(new)/', visible: false}
+    ],
+    'teleport: slice some parts https://UXtemple.com/(panels)/use/(new)'
+  );
+
+  t.deepEquals(
     parse('https://UXtemple.com/panels)/use/https://usepanels.com/UXtemple'), [
       {app: 'UXtemple.com', path: '/', context: 'https://UXtemple.com/', visible: false},
       {app: 'UXtemple.com', path: '/panels', context: 'https://UXtemple.com/panels)/', visible: false},
@@ -75,14 +85,19 @@ test('#parse', t => {
       {app: 'usepanels.com', path: '/', context: 'https://UXtemple.com/panels)/use/https://usepanels.com/', visible: true},
       {app: 'usepanels.com', path: '/UXtemple', context: 'https://UXtemple.com/panels)/use/https://usepanels.com/UXtemple/', visible: true},
     ],
-    'teleport: slice on one app with multiple apps'
+    'teleport: slice one app only https://UXtemple.com/panels)/use/https://usepanels.com/UXtemple'
   );
 
-  // t.deepEquals(
-  //   parse('https://UXtemple.com(/panels)/at/https://usepanels.com/)UXtemple'),
-  //   [],
-  //   'slice many apps'
-  // );
+  t.deepEquals(
+    parse('https://UXtemple.com/panels)/use/https://usepanels.com/)UXtemple'), [
+      {app: 'UXtemple.com', path: '/', context: 'https://UXtemple.com/', visible: false},
+      {app: 'UXtemple.com', path: '/panels', context: 'https://UXtemple.com/panels)/', visible: false},
+      {app: 'UXtemple.com', path: '/panels/use', context: 'https://UXtemple.com/panels)/use/', visible: true},
+      {app: 'usepanels.com', path: '/', context: 'https://UXtemple.com/panels)/use/https://usepanels.com/', visible: false},
+      {app: 'usepanels.com', path: '/UXtemple', context: 'https://UXtemple.com/panels)/use/https://usepanels.com/)UXtemple/', visible: true},
+    ],
+    'teleport: slice many apps https://UXtemple.com/panels)/use/https://usepanels.com/)UXtemple'
+  );
 
   t.end();
 });

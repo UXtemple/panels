@@ -21,6 +21,7 @@ $BIN/browserify --verbose --debug \
   --require react-redux \
   --require redux \
   --require redux-logger \
+  --require redux-promise \
   --require redux-thunk \
   --require rlookup \
   --extension .es6 \
@@ -29,20 +30,8 @@ $BIN/browserify --verbose --debug \
   $BIN/exorcist $VENDOR_DST.js.map > $VENDOR_DST.js
 
 $BIN/watchify --debug --verbose \
-  --external can-use-dom \
-  --external lite-url \
-  --external lodash.debounce \
-  --external panels-ui \
-  --external raf \
-  --external react \
-  --external react-dom \
-  --external react-redux \
-  --external redux \
-  --external redux-logger \
-  --external redux-thunk \
-  --external rlookup \
+  --no-bundle-external \
   --extension .es6 \
-  --plugin [ browserify-hmr --url "http://localhost:3124/" ] \
   --transform babelify \
   --outfile $PANELS_DST.js \
   index.es6

@@ -38,7 +38,8 @@ export default function parse(uri) {
         path = path.split('/');
         const lastBit = path.length > 1 ? path[path.length - 2] : '';
         path = path.slice(0, path.length - 1).join('/');
-        const hasSliceEndMarker = lastBit.indexOf(SLICE_END) > -1;
+        const hasSliceEndMarkerForRoot = lastBit.indexOf(SLICE_END) === 0;
+        const hasSliceEndMarker = !hasSliceEndMarkerForRoot && lastBit.indexOf(SLICE_END) > -1;
         const hasSliceStartMarker = lastBit.indexOf(SLICE_START) > -1;
 
         visible = hasSliceEndMarker || hasSliceStartMarker ? false : visible;
@@ -50,7 +51,7 @@ export default function parse(uri) {
           visible
         });
 
-        visible = hasSliceStartMarker ? true : visible;
+        visible = hasSliceEndMarkerForRoot ? false : (hasSliceStartMarker ? true : visible);
       } while (path.length);
 
       panels = panels.concat(pathPanels.reverse());

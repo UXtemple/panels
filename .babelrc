@@ -1,24 +1,4 @@
 {
   "loose": "all",
-  "stage": 0,
-  "env": {
-    "server": {
-      "optional": ["runtime"]
-    },
-    "development": {
-      "plugins": ["react-transform"],
-      "extra": {
-        "react-transform": {
-          "transforms": [{
-            "transform": "react-transform-hmr",
-            "imports": ["react"],
-            "locals": ["module"]
-          }, {
-            "transform": "react-transform-catch-errors",
-            "imports": ["react", "redbox-react"]
-          }]
-        }
-      }
-    }
-  }
+  "stage": 0
 }

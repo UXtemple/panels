@@ -7,3 +7,11 @@ export function navigate(uri) {
     }
   };
 }
+
+export const SHOW = 'panels/router/SHOW';
+export function show(route) {
+  return {
+    type: SHOW,
+    payload: route
+  };
+}

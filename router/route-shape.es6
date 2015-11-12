@@ -4,5 +4,5 @@ export default PropTypes.shape({
   app: PropTypes.string.isRequired,
   context: PropTypes.string.isRequired,
   path: PropTypes.string.isRequired,
-  uri: PropTypes.string.isRequired
+  visible: PropTypes.bool.isRequired
 });

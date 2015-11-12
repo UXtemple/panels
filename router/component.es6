@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 import { findDOMNode } from 'react-dom';
 import { noSpeed } from '../animate/utils';
+import { show } from './actions';
 import { Panels } from 'panels-ui';
 import animate from '../animate';
 import App from '../apps/component';
@@ -13,6 +14,16 @@ import React, { Component, PropTypes } from 'react';
 import routeShape from './route-shape';
 const raf = require('raf');
 const UPDATE_PUSH_LEFT_INTERVAL = 50;
+
+const rv = x => Math.floor((x * Math.random()) % 255);
+const rc = n => `rgb(${255 - rv(n)}, ${255 - rv(n)},${rv(n)})`;
+const Sliced = props => (
+  <div onClick={() => props.dispatch(show(props.route))} style={{
+    backgroundColor: rc(props.route.context.length),
+    border: `1px solid ${rc(props.route.context.length)}`,
+    width: 10
+  }} />
+);
 
 class Router extends Component {
   animationState = {
@@ -101,7 +112,9 @@ class Router extends Component {
       <div style={containerStyle} ref='container' onWheel={::this.cancelRaf}>
         <div ref='pushLeft' style={style.pushLeft} />
         <Panels>
-          {routes.map((route, i) => <App key={route.context} dispatch={dispatch} route={route} ref={i === routes.length - 1 && 'last'} />)}
+          {routes.map((route, i) => route.visible ?
+                      <App key={route.context} dispatch={dispatch} route={route} ref={i === routes.length - 1 && 'last'} /> :
+                      <Sliced key={route.context} dispatch={dispatch} route={route} ref={i === routes.length - 1 && 'last'} />)}
         </Panels>
         <div style={style.pushRight} />
       </div>
