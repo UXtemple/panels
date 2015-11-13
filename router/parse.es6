@@ -1,3 +1,4 @@
+import { normalize } from 'path-browserify';
 import Url from 'lite-url';
 
 const PROTOCOL_REGEX = /https?:\/\//;
@@ -19,7 +20,7 @@ export default function parse(uri) {
     const parsed = new Url(nextUri);
 
     if (parsed && parsed.protocol && parsed.host) {
-      let path = parsed.pathname;
+      let path = normalize(parsed.pathname);
 
       if (PROTOCOL_REGEX.test(parsed.pathname)) {
         path = parsed.pathname.split(PROTOCOL_REGEX)[0];

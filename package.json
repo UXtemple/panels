@@ -1,7 +1,7 @@
 {
   "name": "panels",
   "version": "1.0.0",
-  "vendorVersion": "1.0.0",
+  "vendorVersion": "1.1.0",
   "description": "Panels by UXtemple",
   "main": "index.js",
   "scripts": {
@@ -44,6 +44,7 @@
     "lite-url": "^1.0.4",
     "lodash.debounce": "^3.1.1",
     "panels-ui": "^0.6.5",
+    "path-browserify": "0.0.0",
     "raf": "^3.1.0",
     "react": "^0.14.2",
     "react-dom": "^0.14.2",

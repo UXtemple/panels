@@ -18,6 +18,14 @@ test('#parse', t => {
   );
 
   t.deepEquals(
+    parse('https://UXtemple.com/panels/../back'), [
+      {app: 'UXtemple.com', path: '/', context: 'https://UXtemple.com/', visible: true},
+      {app: 'UXtemple.com', path: '/back', context: 'https://UXtemple.com/back/', visible: true}
+    ],
+    'basic: backwards panels https://UXtemple.com/panels/../back'
+  );
+
+  t.deepEquals(
     parse('https://UXtemple.com/https://usepanels.com/'), [
       {app: 'UXtemple.com', path: '/', context: 'https://UXtemple.com/', visible: true},
       {app: 'usepanels.com', path: '/', context: 'https://UXtemple.com/https://usepanels.com/', visible: true}

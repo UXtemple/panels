@@ -15,6 +15,7 @@ $BIN/browserify --verbose --debug \
   --require lite-url \
   --require lodash.debounce \
   --require panels-ui \
+  --require path-browserify \
   --require raf \
   --require react \
   --require react-dom \
