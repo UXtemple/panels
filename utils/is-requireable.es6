@@ -4,7 +4,10 @@ export default function isRequireable(dep) {
   try {
     require(dep);
     is = true;
-  } catch(err) {}
+  } catch(err) {
+    console.error(`Failed to require ${dep}`);
+    console.error(err.stack);
+  }
 
   return is;
 }
