@@ -1,7 +1,7 @@
 {
   "name": "panels",
-  "version": "1.1.4-rc.1",
-  "vendorVersion": "1.1.0",
+  "version": "1.1.4",
+  "vendorVersion": "1.2.0",
   "description": "Panels by UXtemple",
   "main": "index.js",
   "scripts": {
@@ -35,6 +35,7 @@
     "babel-runtime": "^5.8.25",
     "can-use-dom": "^0.1.0",
     "core-js": "^1.2.0",
+    "knock-knock-go": "^2.0.0",
     "koa": "^1.0.0",
     "koa-compress": "^1.0.8",
     "koa-html-minifier": "^1.0.1",
@@ -49,6 +50,7 @@
     "react": "^0.14.2",
     "react-dom": "^0.14.2",
     "react-redux": "^4.0.0",
+    "recompose": "^0.11.2",
     "redux": "^3.0.2",
     "redux-logger": "^2.0.0",
     "redux-promise": "^0.6.0-alpha",
@@ -65,7 +67,6 @@
     "exorcist": "^0.4.0",
     "faucet": "0.0.1",
     "proxyquire": "^1.7.2",
-    "redbox-react": "^1.1.1",
     "sinon": "^1.16.1",
     "tape": "^4.2.0",
     "uglify-js": "^2.4.24",

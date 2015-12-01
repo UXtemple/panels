@@ -2,38 +2,30 @@ import { connect } from 'react-redux';
 import { loadAppIfNeeded } from './actions';
 import { widthShape } from 'panels-ui';
 import appShape from './app-shape';
+import knockKnockGo from '../knock-knock-go';
 import Panel from '../panels/component';
-import React, { Component, PropTypes } from 'react';
+import React, { PropTypes } from 'react';
 import routeShape from '../router/route-shape';
 
-class App extends Component {
-  componentDidMount() {
-    this.props.dispatch(loadAppIfNeeded(this.props.route));
-  }
+const App = props => <Panel appStore={props.store} route={props.route} width={props.width} />;
 
-  render() {
-    const { app, route, width } = this.props;
+App.propTypes = {
+  ...appShape,
+  route: routeShape.isRequired,
+  width: widthShape.isRequired
+};
 
-    if (typeof app === 'undefined' || app.isLoading) {
-      return <div style={{width}}>loading app {route.app}...</div>;
-    } else if (app.isReady) {
-      return <Panel app={app} route={route} width={width} />;
-    } else {
-      return <div style={{width}}>app {route.app} failed to load or doesn't exist</div>;
-    }
-  }
-
-  static propTypes = {
-    app: appShape,
-    route: routeShape.isRequired,
-    width: widthShape.isRequired
-  }
-}
+const KnockKnockApp = knockKnockGo(
+  props => props.isLoading,
+  props => props.error,
+  App,
+  props => props.dispatch(loadAppIfNeeded(props.route))
+);
 
 function mapStateToProps(state, props) {
-  return {
-    app: state.apps[props.route.app]
+  return state.apps[props.route.app] || {
+    isLoading: true
   };
 }
 
-export default connect(mapStateToProps)(App);
+export default connect(mapStateToProps)(KnockKnockApp);

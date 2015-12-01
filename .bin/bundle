@@ -14,11 +14,13 @@ mkdir -p $DST
 echo "[bundle] processing vendor v${VENDOR_VERSION}..."
 NODE_ENV=development $BIN/browserify --verbose --debug \
   --require can-use-dom \
+  --require knock-knock-go \
   --require lite-url \
   --require lodash.debounce \
   --require panels-ui \
   --require path-browserify \
   --require raf \
+  --require recompose/withContext \
   --require react \
   --require react-dom \
   --require react-redux \
@@ -35,11 +37,13 @@ NODE_ENV=development $BIN/browserify --verbose --debug \
 
 NODE_ENV=production $BIN/browserify --verbose --debug \
   --require can-use-dom \
+  --require knock-knock-go \
   --require lite-url \
   --require lodash.debounce \
   --require panels-ui \
   --require path-browserify \
   --require raf \
+  --require recompose/withContext \
   --require react \
   --require react-dom \
   --require react-redux \

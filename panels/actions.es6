@@ -1,7 +1,7 @@
 import getPanelFromApp from './get-panel-from-app';
 import getPanelPathFromRoute from '../router/get-panel-path-from-route';
 
-export const LOAD = 'PANELS:LOAD';
+export const LOAD = 'panels/panels/LOAD';
 export function load(route) {
   const panel = getPanelPathFromRoute(route);
   const { background, props, title, type } = getPanelFromApp(route);

@@ -137,7 +137,10 @@ class Router extends Component {
   }
 
   static propTypes = {
-    focusPanel: PropTypes.oneOfType([PropTypes.bool, panelShape]),
+    focusPanel: PropTypes.oneOfType([
+      PropTypes.bool,
+      PropTypes.shape(panelShape)
+    ]),
     routes: PropTypes.arrayOf(routeShape),
   }
 }

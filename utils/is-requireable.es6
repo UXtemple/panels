@@ -1,3 +1,5 @@
+import canUseDom from 'can-use-dom';
+
 export default function isRequireable(dep) {
   let is = false;
 
@@ -5,8 +7,10 @@ export default function isRequireable(dep) {
     require(dep);
     is = true;
   } catch(err) {
-    console.error(`Failed to require ${dep}`);
-    console.error(err.stack);
+    if (!canUseDom) {
+      console.error(`Failed to require ${dep}`);
+      console.error(err.stack);
+    }
   }
 
   return is;

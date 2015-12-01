@@ -2,71 +2,66 @@ import { connect } from 'react-redux';
 import { loadPanelIfNeeded } from './actions';
 import { navigate } from '../router/actions';
 import { Provider } from 'react-redux';
+import withContext from 'recompose/withContext';
 import appShape from '../apps/app-shape';
 import getPanelPathFromRoute from '../router/get-panel-path-from-route';
+import knockKnockGo from '../knock-knock-go';
 import panelShape from './panel-shape';
 import prepare from './prepare';
-import React, { Component, PropTypes } from 'react';
+import React, { PropTypes } from 'react';
 import routeShape from '../router/route-shape';
 
-class Panel extends Component {
-  componentDidMount() {
-    this.props.dispatch(loadPanelIfNeeded(this.props.route));
-  }
+const Panel = props => {
+  const dep = require(props.route.app);
+  const Type = dep.types[props.type];
 
-  getChildContext() {
-    return {
-      isActive: path => this.props.routeAfter && `${this.props.route.context}${path}` === this.props.routeAfter.context,
-      navigate: toUri => this.props.dispatch(navigate(`${this.props.route.context}${toUri}`)),
-      route: this.props.route
-    };
-  }
+  return (
+    <Provider store={props.appStore}>
+      <Type {...props.props} {...props} />
+    </Provider>
+  );
+};
+Panel.propTypes = {
+  ...panelShape,
+  appStore: appShape.store,
+  route: routeShape.isRequired,
+  routeAfter: PropTypes.oneOfType([PropTypes.bool, routeShape]).isRequired
+};
 
-  render() {
-    const { app, panel, route, routeAfter, width } = this.props;
-
-    if (typeof panel === 'undefined' || panel.isLoading) {
-      return <div style={{width}}>loading panel {route.app} {route.path}...</div>;
-    } else if (panel.isReady) {
-      const dep = require(route.app);
-      const Type = dep.types[panel.type];
-
-      return (
-        <Provider store={app.store}>
-          <Type {...panel.props} {...this.props} />
-        </Provider>
-      );
-    } else {
-      return <div style={{width}}>panel {route.app} {route.path} failed to load or doesn't exist</div>;
-    }
-  }
-
-  static childContextTypes = {
+const PanelInContext = withContext({
     isActive: PropTypes.func.isRequired,
     navigate: PropTypes.func.isRequired,
     route: routeShape.isRequired
-  }
+  },
+  props => ({
+    isActive: path => props.routeAfter && `${props.route.context}${path}` === props.routeAfter.context,
+    navigate: toUri => props.dispatch(navigate(`${props.route.context}${toUri}`)),
+    route: props.route
+  }),
+  Panel
+);
 
-  static propTypes = {
-    app: appShape.isRequired,
-    panel: panelShape,
-    route: routeShape.isRequired,
-    routeAfter: PropTypes.oneOfType([PropTypes.bool, routeShape]).isRequired
-  }
-}
+const KnockKnockPanelInContext = knockKnockGo(
+  props => props.isLoading,
+  props => props.error,
+  PanelInContext,
+  props => props.dispatch(loadPanelIfNeeded(props.route))
+);
 
 function mapStateToProps(state, props) {
   const routeIndex = state.router.routes.findIndex(panel => panel.context === props.route.context);
-  let panel = state.panels[getPanelPathFromRoute(props.route)];
+  let panel = state.panels[getPanelPathFromRoute(props.route)] || {
+    isLoading: true
+  };
   // TODO FIXME
   if (panel && panel.isReady) {
-    panel = prepare(panel, props.app.store.getState)
+    panel = prepare(panel, props.appStore.getState)
   }
 
   return {
-    panel,
+    ...panel,
     routeAfter: state.router.routes[routeIndex + 1] || false
   };
 }
 
-export default connect(mapStateToProps)(Panel);
+export default connect(mapStateToProps)(KnockKnockPanelInContext);

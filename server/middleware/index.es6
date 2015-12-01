@@ -7,7 +7,7 @@ import template from './template';
 const HTML = 'text/html';
 const GET = 'GET';
 
-export default function panelsMiddleware({heapId, prerender = true}) {
+export default function panelsMiddleware({prerender = true}) {
   return function *(next) {
     if (this.method === GET && this.accepts(HTML)) {
       this.type = HTML;
@@ -18,7 +18,7 @@ export default function panelsMiddleware({heapId, prerender = true}) {
         const panels = getPanels(requireableRoutes);
         const apps = yield getApps(requireableRoutes, panels);
 
-        this.body = render({apps, panels, router}, heapId);
+        this.body = render({apps, panels, router});
       } else {
         this.body = template();
       }

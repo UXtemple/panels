@@ -8,14 +8,13 @@ import React from 'react';
 import Router from '../../router/component';
 import template from './template';
 
-export default function render(initialState, heapId) {
+export default function render(initialState) {
   const store = configureStore(initialState);
   const state = store.getState();
 
   return template({
     apps: Object.keys(state.apps).map(domain => domain),
     data: pack(state),
-    heapId,
     html: renderToString(
       <Provider store={store}>
         <Router />
