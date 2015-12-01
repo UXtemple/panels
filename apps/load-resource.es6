@@ -12,7 +12,7 @@ function createResource(file) {
     return document.createElement('script');
 
   case STYLE:
-    const resource = document.createElement('style');
+    const resource = document.createElement('link');
     resource.rel = 'stylesheet';
     resource.type = 'text/css';
     return resource;
@@ -38,7 +38,7 @@ function setSource(resource, file) {
   }
 }
 
-export default function load(file, head) {
+export default function load(file, head=document.getElementsByTagName('head')[0]) {
   return new Promise((resolve, reject) => {
     if (typeof file === 'undefined') {
       return resolve();

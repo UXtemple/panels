@@ -1,10 +1,9 @@
 import isRequireable from '../utils/is-requireable';
 import loadResource from './load-resource';
 
-// TODO Style from server should point to the right file too, maybe we get a file from node_modules
-// in that case?
 function loadResources(app) {
   return fetch(`//${app}/panels.json`)
+    .then(res => res.json())
     .then(source => Promise.all([
       loadResource(source.logic),
       loadResource(source.style)
