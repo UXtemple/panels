@@ -13,7 +13,7 @@ export default function createServer({apps=[], heapId}) {
   server.use(logger());
   server.use(compress());
   server.use(htmlMinifier({collapseWhitespace: true}));
-  server.use(panels({heapId}));
+  server.use(panels({heapId, prerender: !!process.env.PRERENDER}));
 
   return server;
 }

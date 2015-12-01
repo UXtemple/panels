@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
-read -p "New version (enter nothing for patch): " VERSION;
-VERSION=${VERSION:-patch};
+# read -p "New version (enter nothing for patch): " VERSION;
+# VERSION=${VERSION:-patch};
 
 git pull &&
 git push &&
-npm version $VERSION &&
+# npm version $VERSION &&
 npm run clean &&
-NODE_ENV=production npm run bundle &&
-BABEL_ENV=server npm run build &&
+npm run bundle &&
+npm run build &&
 npm publish &&
 git push --follow-tags &&
 npm run clean

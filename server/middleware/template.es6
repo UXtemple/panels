@@ -2,7 +2,7 @@ import { panels, vendor } from '../assets';
 
 const TYPE = process.env.NODE_ENV === 'production' ? 'min' : 'dev';
 
-export default function render({apps, data, heapId, html, title}) {
+export default function render({apps = [], data, heapId, html, title}={}) {
   const appsStyles = apps.map(app => `<link href=//${app}/${app}.css rel=stylesheet />`).join('');
   const appsScripts = apps.map(app => `<script src=//${app}/${app}.${TYPE}.js></script>`).join('');
   const heap = heapId ? `
