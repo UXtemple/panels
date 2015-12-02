@@ -27,7 +27,7 @@ export function loadPanelIfNeeded(route) {
     const panel = getPanelPathFromRoute(route);
     const thePanel = getState().panels[panel];
 
-    if (typeof thePanel === 'undefined') {
+    if (typeof thePanel === 'undefined' || !(thePanel.isLoading || thePanel.isReady || thePanel.error)) {
       dispatch(load(route));
     }
   };

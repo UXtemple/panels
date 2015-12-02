@@ -12,18 +12,19 @@ import panelShape from '../panels/panel-shape';
 import prepare from '../panels/prepare';
 import React, { Component, PropTypes } from 'react';
 import routeShape from './route-shape';
+import toClass from 'recompose/toClass';
 const raf = require('raf');
 const UPDATE_PUSH_LEFT_INTERVAL = 50;
 
 const rv = x => Math.floor((x * Math.random()) % 255);
 const rc = n => `rgb(${255 - rv(n)}, ${255 - rv(n)},${rv(n)})`;
-const Sliced = props => (
+const Sliced = toClass(props => (
   <div onClick={() => props.dispatch(show(props.route))} style={{
     backgroundColor: rc(props.route.context.length),
     border: `1px solid ${rc(props.route.context.length)}`,
     width: 10
   }} />
-);
+));
 
 class Router extends Component {
   animationState = {
@@ -112,9 +113,10 @@ class Router extends Component {
       <div style={containerStyle} ref='container' onWheel={::this.cancelRaf}>
         <div ref='pushLeft' style={style.pushLeft} />
         <Panels>
-          {routes.map((route, i) => route.visible ?
-                      <App key={route.context} dispatch={dispatch} route={route} ref={i === routes.length - 1 && 'last'} /> :
-                      <Sliced key={route.context} dispatch={dispatch} route={route} ref={i === routes.length - 1 && 'last'} />)}
+          {routes.map((route, i) => {
+            const Type = route.visible ? App : Sliced;
+            return <Type key={route.context} dispatch={dispatch} route={route} ref={i === routes.length - 1 && 'last'} />
+          })}
         </Panels>
         <div style={style.pushRight} />
       </div>
@@ -126,6 +128,12 @@ class Router extends Component {
       `calc(50vw - ${findDOMNode(this.refs.last).getClientRects()[0].width / 2}px)`;
   }
 
+  // TODO There's a problem with timing here, essentially when the focus panel is set, its data
+  // might not be ready to update the title here (because it might be fetching it from a remote
+  // source or something and getInitialState might not be set, etc.)
+  // Anyway, the thing is that the title might not get updated which isn't that great.
+  // I think that we should move this into the panel itself. Perhaps each panel can get whether it's
+  // the focusPanel or not and we should stop rendering that here which seems silly anyway.
   updateTitle() {
     if (canUseDOM) {
       document.title = this.props.focusPanel.title;

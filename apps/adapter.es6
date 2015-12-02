@@ -17,7 +17,10 @@ function load(app, props) {
 
   return appPromise
     .then(() => Promise.resolve().then(() => require(app).getInitialState(props)))
-    .then(initialState => require(app).configureStore(initialState));
+    .then(initialState => require(app).configureStore(initialState))
+    .catch(err => {
+      throw new Error(err);
+    });
 }
 
 export default {

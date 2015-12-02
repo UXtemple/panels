@@ -57,6 +57,7 @@
     "redux-thunk": "^1.0.0",
     "rlookup": "^0.2.0",
     "serialize-javascript": "^1.1.2",
+    "stacktrace-js": "^1.0.1",
     "whatwg-fetch": "^0.9.0"
   },
   "devDependencies": {

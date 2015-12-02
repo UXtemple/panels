@@ -15,14 +15,9 @@ export function load(app) {
 
 export function loadAppIfNeeded(route) {
   return function loadAppIfNeededThunk(dispatch, getState) {
-    // TODO implement smarter app loading, not a big deal until we implement sliced routes
-    if (route.path !== '/') {
-      return;
-    }
-
     const app = getState().apps[route.app];
 
-    if (typeof app === 'undefined' || !(app.isLoading || app.isReady)) {
+    if (typeof app === 'undefined' || !(app.isLoading || app.isReady || app.error)) {
       dispatch(load(route.app));
     }
   };
