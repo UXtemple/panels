@@ -15,9 +15,11 @@ const Panel = props => {
   const dep = require(props.route.app);
   const Type = dep.types[props.type];
 
+  const { props: typeProps, width, ...rest } = props;
+
   return (
     <Provider store={props.appStore}>
-      <Type {...props.props} {...props} />
+      <Type {...typeProps} width={width} panel={rest} />
     </Provider>
   );
 };

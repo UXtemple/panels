@@ -10,6 +10,8 @@ function loadResources(app) {
     ]));
 }
 
+// TODO FIXME We need to bubble up issues in here. Right now errors are being swallowed almost all
+// times ends up in a crazy endless loop of load actions being dispatched :/.
 function load(app, props) {
   const appPromise = isRequireable(app) ? Promise.resolve() : loadResources(app);
 
