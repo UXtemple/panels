@@ -33,6 +33,7 @@ NODE_ENV=development $BIN/browserify --verbose --debug \
   --require redux-promise \
   --require redux-thunk \
   --require rlookup \
+  --require stacktrace-js \
   --extension .es6 \
   --transform babelify \
   --transform envify \
