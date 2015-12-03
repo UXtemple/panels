@@ -114,8 +114,14 @@ class Router extends Component {
         <div ref='pushLeft' style={style.pushLeft} />
         <Panels>
           {routes.map((route, i) => {
+            const focus = i === routes.length - 1;
             const Type = route.visible ? App : Sliced;
-            return <Type key={route.context} dispatch={dispatch} route={route} ref={i === routes.length - 1 && 'last'} />
+            return <Type
+              dispatch={dispatch}
+              focus={focus}
+              key={route.context}
+              ref={focus && 'last'}
+              route={route} />
           })}
         </Panels>
         <div style={style.pushRight} />

@@ -20,7 +20,11 @@ NODE_ENV=development $BIN/browserify --verbose --debug \
   --require panels-ui \
   --require path-browserify \
   --require raf \
+  --require recompose/compose \
+  --require recompose/lifecycle \
+  --require recompose/toClass \
   --require recompose/withContext \
+  --require recompose/withState \
   --require react \
   --require react-dom \
   --require react-redux \

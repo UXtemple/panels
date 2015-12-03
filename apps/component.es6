@@ -7,7 +7,13 @@ import Panel from '../panels/component';
 import React, { PropTypes } from 'react';
 import routeShape from '../router/route-shape';
 
-const App = props => <Panel appStore={props.store} route={props.route} width={props.width} />;
+const App = props => (
+  <Panel
+    appStore={props.store}
+    focus={props.focus}
+    route={props.route}
+    width={props.width} />
+);
 
 App.propTypes = {
   ...appShape,
