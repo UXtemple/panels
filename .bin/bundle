@@ -1,30 +1,22 @@
 #!/usr/bin/env bash
 
 BIN=node_modules/.bin
-DST=public
+BUNDLE=bundle
 
-PANELS_VERSION=`.bin/version panels`
-PANELS_DST=$DST/panels-$PANELS_VERSION
-VENDOR_VERSION=`.bin/version vendor`
-VENDOR_DST=$DST/vendor-$VENDOR_VERSION
+VERSION=$1
+PANELS=$BUNDLE/panels-$VERSION
 
 echo "[bundle] bundling panels..."
-mkdir -p $DST
+mkdir -p $BUNDLE
 
-echo "[bundle] processing vendor v${VENDOR_VERSION}..."
+echo "[bundle] v${VERSION}..."
 NODE_ENV=development $BIN/browserify --verbose --debug \
   --require can-use-dom \
   --require knock-knock-go \
   --require lite-url \
   --require lodash.debounce \
   --require panels-ui \
-  --require path-browserify \
-  --require raf \
-  --require recompose/compose \
-  --require recompose/lifecycle \
-  --require recompose/toClass \
   --require recompose/withContext \
-  --require recompose/withState \
   --require react \
   --require react-dom \
   --require react-redux \
@@ -33,12 +25,11 @@ NODE_ENV=development $BIN/browserify --verbose --debug \
   --require redux-promise \
   --require redux-thunk \
   --require rlookup \
-  --require stacktrace-js \
   --extension .es6 \
   --transform babelify \
   --transform envify \
-  vendor.es6 | \
-  $BIN/exorcist $VENDOR_DST.js.map > $VENDOR_DST.js
+  index.es6 | \
+  $BIN/exorcist $PANELS.js.map > $PANELS.js
 
 NODE_ENV=production $BIN/browserify --verbose --debug \
   --require can-use-dom \
@@ -46,8 +37,6 @@ NODE_ENV=production $BIN/browserify --verbose --debug \
   --require lite-url \
   --require lodash.debounce \
   --require panels-ui \
-  --require path-browserify \
-  --require raf \
   --require recompose/withContext \
   --require react \
   --require react-dom \
@@ -60,42 +49,15 @@ NODE_ENV=production $BIN/browserify --verbose --debug \
   --extension .es6 \
   --transform babelify \
   --transform envify \
-  vendor.es6 | \
-  $BIN/exorcist $VENDOR_DST-prod.js.map > $VENDOR_DST-prod.js &&
+  index.es6 | \
+  $BIN/exorcist $PANELS-prod.js.map > $PANELS-prod.js &&
   $BIN/uglifyjs --verbose \
     --compress \
     --mangle \
     --screw-ie8 \
-    --in-source-map $VENDOR_DST-prod.js.map \
-    --source-map $VENDOR_DST.min.js.map $VENDOR_DST-prod.js > $VENDOR_DST.min.js
-rm $VENDOR_DST-prod*
-echo "[bundle] vendor done"
-ls -lha $VENDOR_DST.*
+    --in-source-map $PANELS-prod.js.map \
+    --source-map $PANELS.min.js.map $PANELS-prod.js > $PANELS.min.js
+rm $PANELS-prod*
 
-echo "[bundle] processing panels v${PANELS_VERSION}..."
-NODE_ENV=development $BIN/browserify --debug --verbose \
-  --no-bundle-external \
-  --extension .es6 \
-  --transform babelify \
-  --transform envify \
-  index.es6 | \
-  $BIN/exorcist $PANELS_DST.js.map > $PANELS_DST.js
-
-NODE_ENV=production $BIN/browserify --debug --verbose \
-  --no-bundle-external \
-  --extension .es6 \
-  --transform babelify \
-  --transform envify \
-  index.es6 | \
-  $BIN/exorcist $PANELS_DST-prod.js.map > $PANELS_DST-prod.js &&
-  $BIN/uglifyjs --verbose \
-    --compress \
-    --mangle \
-    --screw-ie8 \
-    --in-source-map $PANELS_DST-prod.js.map \
-    --source-map $PANELS_DST.min.js.map $PANELS_DST-prod.js > $PANELS_DST.min.js
-rm $PANELS_DST-prod*
-echo "[bundle] panels done"
-ls -lha $PANELS_DST.*
-
+ls -lha $PANELS.*
 echo "[bundle] done"

@@ -1,4 +1,4 @@
-import { normalize } from 'path-browserify';
+import normalize from '../utils/normalize-path';
 import Url from 'lite-url';
 
 const PROTOCOL_REGEX = /https?:\/\//;

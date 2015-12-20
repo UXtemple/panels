@@ -1,69 +1,40 @@
 import { connect } from 'react-redux';
-import { loadPanelIfNeeded } from './actions';
-import { navigate } from '../router/actions';
-import { Provider } from 'react-redux';
-import withContext from 'recompose/withContext';
-import appShape from '../apps/app-shape';
-import getPanelPathFromRoute from '../router/get-panel-path-from-route';
-import knockKnockGo from '../knock-knock-go';
-import panelShape from './panel-shape';
-import prepare from './prepare';
-import React, { PropTypes } from 'react';
-import routeShape from '../router/route-shape';
+import { reset } from '../runtime/actions';
+import Panel from './panel';
+import React from 'react';
 
-const Panel = props => {
-  const dep = require(props.route.app);
-  const Type = dep.types[props.type];
-
-  const { props: typeProps, width, ...rest } = props;
+const Panels = props => {
+  const finalStyle = {
+    ...style,
+    paddingLeft: props.snapPoint,
+    width: props.width
+  };
 
   return (
-    <Provider store={props.appStore}>
-      <Type {...typeProps} width={width} panel={rest} />
-    </Provider>
+    <div style={finalStyle}>
+      {props.routes.map((route, i) => <Panel key={i} route={route} width={props.widths[i]} />)}
+    </div>
   );
-};
-Panel.propTypes = {
-  ...panelShape,
-  appStore: appShape.store,
-  route: routeShape.isRequired,
-  routeAfter: PropTypes.oneOfType([PropTypes.bool, routeShape]).isRequired
-};
+}
+export default Panels;
 
-const PanelInContext = withContext({
-    isActive: PropTypes.func.isRequired,
-    navigate: PropTypes.func.isRequired,
-    route: routeShape.isRequired
-  },
-  props => ({
-    isActive: path => props.routeAfter && `${props.route.context}${path}` === props.routeAfter.context,
-    navigate: toUri => props.dispatch(navigate(`${props.route.context}${toUri}`)),
-    route: props.route
-  }),
-  Panel
-);
-
-const KnockKnockPanelInContext = knockKnockGo(
-  props => props.isLoading,
-  props => props.error,
-  PanelInContext,
-  props => props.dispatch(loadPanelIfNeeded(props.route))
-);
+const style = {
+  flexDirection: 'row',
+  msFlexDirection: 'row',
+  WebkitBoxOrient: 'horizontal',
+  WebkitBoxDirection: 'normal',
+  WebkitFlexDirection: 'row',
+  height: '100vh'
+};
 
 function mapStateToProps(state, props) {
-  const routeIndex = state.router.routes.findIndex(panel => panel.context === props.route.context);
-  let panel = state.panels[getPanelPathFromRoute(props.route)] || {
-    isLoading: true
-  };
-  // TODO FIXME
-  if (panel && panel.isReady) {
-    panel = prepare(panel, props.appStore.getState)
-  }
+  const { router, runtime } = state;
 
   return {
-    ...panel,
-    routeAfter: state.router.routes[routeIndex + 1] || false
+    routes: router.routes,
+    snapPoint: runtime.snapPoint,
+    width: runtime.width,
+    widths: runtime.widths
   };
 }
-
-export default connect(mapStateToProps)(KnockKnockPanelInContext);
+export default connect(mapStateToProps)(Panels);

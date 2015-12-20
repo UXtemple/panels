@@ -1,6 +1,5 @@
 import { navigate } from './actions';
 
-// TODO as middleware
 export default function history(store) {
   const navigateHandler = () => store.dispatch(navigate(location.href));
 

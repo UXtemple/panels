@@ -1,14 +1,9 @@
 #!/usr/bin/env bash
 
-# read -p "New version (enter nothing for patch): " VERSION;
-# VERSION=${VERSION:-patch};
-
 git pull &&
 git push &&
-# npm version $VERSION &&
 npm run clean &&
-npm run bundle &&
 npm run build &&
+npm run bundle `node -e "console.log(require('./package.json').version)"` &&
 npm publish &&
-git push --follow-tags &&
 npm run clean

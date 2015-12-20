@@ -17,7 +17,11 @@ export default function routerReducer(state={routes: [], uri: undefined}, action
     case SHOW:
       nextState = {
         ...state,
-        routes: state.routes.map(route => action.payload.context === route.context ? {...route, visible: true} : route)
+        routes: state.routes.map(route => (
+          action.payload.context === route.context ?
+            {...route, visible: true} :
+            route
+        ))
       };
       break;
 

@@ -1,12 +1,10 @@
-import { PANELS_APP } from './middleware';
+import get from './get';
 
 export const LOAD = 'panels/apps/LOAD';
 export function load(app) {
   return {
     type: LOAD,
-    payload: {
-      [PANELS_APP]: true
-    },
+    payload: get(app),
     meta: {
       app
     }
