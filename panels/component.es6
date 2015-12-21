@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import { reset } from '../runtime/actions';
-import Panel from './panel';
+import WrapPanelIfNeeded from './wrap-panel-if-needed';
 import React from 'react';
 
 const Panels = props => {
@@ -12,7 +12,13 @@ const Panels = props => {
 
   return (
     <div style={finalStyle}>
-      {props.routes.map((route, i) => <Panel key={i} route={route} width={props.widths[i]} />)}
+      {props.routes.map((route, i) => (
+        <WrapPanelIfNeeded
+          shouldWrap={i === props.routes.length - 1}
+          key={i}
+          route={route}
+          width={props.widths[i]} />
+      ))}
     </div>
   );
 }
