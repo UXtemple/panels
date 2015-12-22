@@ -26,7 +26,7 @@ export default function get(app, props) {
       const requiredApp = require(app);
 
       return typeof requiredApp.configureStore === 'function' ?
-        requiredApp.configureStore(props) : false;
+        requiredApp.configureStore(initialState) : false;
     }))
     .catch(err => {
       throw new Error(err);

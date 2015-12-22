@@ -12,21 +12,21 @@ import withContext from 'recompose/withContext';
 
 const Panel = props => {
   const dep = require(props.route.app);
-  const Type = dep.types[props.type];
-  const { props: typeProps, width, ...rest } = props;
+  const Type = dep.types[props.panel.type];
+  const { dispatch, width, ...rest } = props;
 
   if (props.route.visible) {
-    if (props.appStore) {
+    if (props.app.store) {
       return (
-        <Provider store={props.appStore}>
-          <Type {...typeProps} panel={rest} width={width} />
+        <Provider store={props.app.store}>
+          <Type {...props.panel.props} panel={rest} width={width} />
         </Provider>
       );
     } else {
-      return <Type {...typeProps} panel={rest} width={width} />;
+      return <Type {...props.panel.props} panel={rest} width={width} />;
     }
   } else {
-    return <Sliced {...typeProps} route={props.route} uri={props.uri} width={width} />;
+    return <Sliced {...props.panel.props} route={props.route} uri={props.uri} width={width} />;
   }
 };
 
@@ -59,9 +59,18 @@ function mapStateToProps(state, props) {
     isLoading: true
   };
 
+  const isLoading = app.isLoading || panel.isLoading;
+  const isReady = app.isReady && panel.isReady;
+  const error = app.error || panel.error;
+  const message = panel.message || app.message;
+
   return {
-    ...panel,
-    appStore: app.store,
+    app,
+    error,
+    isLoading,
+    isReady,
+    message,
+    panel,
     routeAfter: state.router.routes[routeIndex + 1] || false,
     uri: state.router.uri,
     width: props.width

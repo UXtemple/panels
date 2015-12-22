@@ -2,8 +2,15 @@
 
 BIN=node_modules/.bin
 
+NODE_ENV=development $BIN/browserify --debug --verbose --extension .es6 \
+  --external panels-ui \
+  --external react \
+  --require ./playground/panels.dev.es6:panels.dev \
+  ./playground/panels.dev.es6 > playground/panels.dev.js
+
 NODE_ENV=development $BIN/watchify --debug --verbose --extension .es6 \
-  --require ./playground/panels.dev:panels.dev \
-  --outfile playground/app.js index.es6 & \
-sudo $BIN/babel-node ./.bin/server.es6 & \
-wait
+  --require panels-ui \
+  --require react \
+  --outfile playground/panels.js index.es6 & \
+  sudo $BIN/babel-node ./.bin/server.es6 & \
+  wait

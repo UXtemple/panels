@@ -5,7 +5,7 @@ const KnownError = props => (
 );
 
 const UnknownError = props => {
-  console.error(component.props.message);
+  console.error(props.message);
 
   return (
     <div style={style.wrapper}>

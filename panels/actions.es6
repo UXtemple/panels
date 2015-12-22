@@ -35,11 +35,13 @@ export function loadPanelIfNeeded(route) {
     if (typeof app === 'undefined' || !(app.isLoading || app.isReady || app.error)) {
       dispatch(loadApp(route.app));
     } else {
-      const panel = getPanelPathFromRoute(route);
-      const thePanel = getState().panels[panel];
+      if (app.isReady || app.error) {
+        const panel = getPanelPathFromRoute(route);
+        const thePanel = getState().panels[panel];
 
-      if (typeof thePanel === 'undefined' || !(thePanel.isLoading || thePanel.isReady || thePanel.error)) {
-        dispatch(load(route));
+        if (typeof thePanel === 'undefined' || !(thePanel.isLoading || thePanel.isReady || thePanel.error)) {
+          dispatch(load(route));
+        }
       }
     }
   };
