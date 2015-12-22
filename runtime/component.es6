@@ -2,8 +2,10 @@ import { connect } from 'react-redux';
 import { reset, setX } from './actions';
 import canUseDOM from 'can-use-dom';
 import debounce from 'lodash.debounce';
+import ExpandFocus from './expand-focus';
 import getFocusPanel from '../panels/get-focus-panel';
 import getViewportWidth from './get-viewport-width';
+import MoveLeft from './move-left';
 import Panels from '../panels/component';
 import React, { Component } from 'react';
 import shallowEqual from '../utils/shallow-equal';
@@ -67,7 +69,9 @@ export class Runtime extends Component {
 
     return (
       <div ref='runtime' style={{...style, ...backgroundStyle}}>
+        {!props.shouldGoMobile && props.x > 0 && <MoveLeft {...props} />}
         <Panels />
+        {!props.shouldGoMobile && <ExpandFocus {...props} />}
       </div>
     );
   }
@@ -93,6 +97,8 @@ function mapStateToProps(state, props) {
   return {
     background: focusPanel.background,
     routes: state.router.routes,
+    shouldExpandFocus: state.runtime.shouldExpandFocus,
+    shouldGoMobile: state.runtime.shouldGoMobile,
     title: focusPanel.title,
     x: state.runtime.x
   };

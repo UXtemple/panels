@@ -10,6 +10,10 @@ import Runtime from './runtime/component';
 import routerReducer from './router/reducer';
 import unpack from './unpack';
 
+if (!window.Promise) {
+  require('native-promise-only');
+}
+
 const initialState = typeof window.__panels__ === 'undefined' ?
   {router: routerReducer({}, navigate(location.href))} :
   unpack(window.__panels__);

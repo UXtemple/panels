@@ -7,8 +7,8 @@ test('#getHrefToUnsliceUri', t => {
       {context: "http://panels.dev/", path: "/"},
       'http://panels.dev/)a'
     ),
-    'a',
-    'http://panels.dev/)a => a'
+    '../',
+    'http://panels.dev/)a => ../'
   );
 
   t.equals(
@@ -16,8 +16,8 @@ test('#getHrefToUnsliceUri', t => {
       {context: "http://panels.dev/(a)/", path: "/a"},
       'http://panels.dev/(a)/b'
     ),
-    '../a/b',
-    'http://panels.dev/(a)/b => ../a/b'
+    '../a',
+    'http://panels.dev/(a)/b => ../a'
   );
 
   t.end();

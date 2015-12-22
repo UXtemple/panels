@@ -4,6 +4,73 @@ import getPanelPathFromRoute from '../router/get-panel-path-from-route';
 import getXToSnapTo from './get-x-to-snap-to';
 import sum from '../utils/sum';
 
+export const TOGGLE_SHOULD_EXPAND_FOCUS = 'panels/runtime/TOGGLE_SHOULD_EXPAND_FOCUS';
+export function toggleShouldExpandFocus() {
+  return function toggleShouldExpandFocusThunk(dispatch, getState) {
+    dispatch({
+      type: TOGGLE_SHOULD_EXPAND_FOCUS,
+      payload: {
+        shouldExpandFocus: !getState().runtime.shouldExpandFocus
+      }
+    });
+
+    dispatch(reset());
+  }
+}
+
+export const MOVE_LEFT = 'panels/runtime/MOVE_LEFT';
+export function moveLeft() {
+  return function moveLeftThunk(dispatch, getState) {
+    const { runtime } = getState();
+
+    const index = getIndexOfPanelToShow(runtime.x, runtime.regions) - 1;
+
+    if (index >= 0) {
+      dispatch({
+        type: MOVE_LEFT,
+        payload: {
+          x: runtime.widths.slice(0, index).reduce(sum, 0)
+        }
+      });
+    }
+  }
+}
+
+export const RESET = 'panels/runtime/RESET';
+export function reset(preferredSnapPoint, nextViewportWidth) {
+  return function resetThunk(dispatch, getState) {
+    const { panels, router, runtime } = getState();
+    const viewportWidth = nextViewportWidth || runtime.viewportWidth;
+    const snapPoint = preferredSnapPoint || runtime.snapPoint;
+
+    const panelsWidths = router.routes.map((route, i) => {
+      const panel = panels[getPanelPathFromRoute(route)];
+
+      if (runtime.shouldExpandFocus && i === router.routes.length - 1) {
+        return viewportWidth - snapPoint;
+      } else {
+        return route.visible ? (panel && panel.width) || 360 : 32;
+      }
+    });
+
+    const nextState = calculateState(viewportWidth, panelsWidths, snapPoint);
+
+    // if the viewport changed, readjust our position to the panel we were looking at
+    // otherwise use the newly added panel
+    const index = nextViewportWidth ?
+      getIndexOfPanelToShow(runtime.x, runtime.regions) :
+      panelsWidths.length - 1;
+
+    dispatch({
+      type: RESET,
+      payload: {
+        ...nextState,
+        x: nextState.widths.slice(0, index).reduce(sum, 0)
+      }
+    });
+  }
+}
+
 export const SET_X = 'panels/runtime/SET_X';
 export function setX(fromX) {
   return function setXThunk(dispatch, getState) {
@@ -28,34 +95,5 @@ export function setX(fromX) {
         }
       });
     }
-  }
-}
-
-export const RESET = 'panels/runtime/RESET';
-export function reset(preferredSnapPoint, nextViewportWidth) {
-  return function resetThunk(dispatch, getState) {
-    const { panels, router, runtime } = getState();
-
-    const panelsWidths = router.routes.map(route => {
-      const panel = panels[getPanelPathFromRoute(route)];
-      return route.visible ? (panel && panel.width) || 360 : 32;
-    });
-
-    const viewportWidth = nextViewportWidth || runtime.viewportWidth;
-    const nextState = calculateState(viewportWidth, panelsWidths, preferredSnapPoint);
-
-    // if the viewport changed, readjust our position to the panel we were looking at
-    // otherwise use the newly added panel
-    const index = nextViewportWidth ?
-      getIndexOfPanelToShow(runtime.x, runtime.regions) :
-      panelsWidths.length - 1;
-
-    dispatch({
-      type: RESET,
-      payload: {
-        ...nextState,
-        x: nextState.widths.slice(0, index).reduce(sum, 0)
-      }
-    });
   }
 }

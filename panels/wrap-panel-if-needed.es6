@@ -1,3 +1,4 @@
+import { flex1 } from 'browser-vendor-prefix';
 import Panel from './panel';
 import React from 'react';
 
@@ -14,7 +15,6 @@ const WrapPanelIfNeeded = props => {
 export default WrapPanelIfNeeded;
 
 const style = {
-  flex: 1,
-  WebkitFlex: 1,
+  ...flex1,
   overflowY: 'auto'
 };

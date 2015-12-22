@@ -1,5 +1,6 @@
 import easeOutCubic from './ease-out-cubic';
 
+const DELAY = 10;
 const DURATION = 75;
 const STEP = 5;
 
@@ -18,5 +19,5 @@ export default function snap($el, to) {
     }
   };
 
-  animate();
+  setTimeout(animate, DELAY);
 }

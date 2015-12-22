@@ -1,4 +1,5 @@
 import { connect } from 'react-redux';
+import { flexDirectionRow } from 'browser-vendor-prefix';
 import { reset } from '../runtime/actions';
 import WrapPanelIfNeeded from './wrap-panel-if-needed';
 import React from 'react';
@@ -25,11 +26,7 @@ const Panels = props => {
 export default Panels;
 
 const style = {
-  flexDirection: 'row',
-  msFlexDirection: 'row',
-  WebkitBoxOrient: 'horizontal',
-  WebkitBoxDirection: 'normal',
-  WebkitFlexDirection: 'row',
+  ...flexDirectionRow,
   height: '100vh'
 };
 
