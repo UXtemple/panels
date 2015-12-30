@@ -17,6 +17,7 @@ NODE_ENV=development $BIN/browserify --verbose --debug \
   --require lite-url \
   --require lodash.debounce \
   --require panels-ui \
+  --require ./knock-knock-go:panels-knock-knock-go \
   --require recompose/withContext \
   --require react \
   --require react-dom \
@@ -38,6 +39,7 @@ NODE_ENV=production $BIN/browserify --verbose --debug \
   --require knock-knock-go \
   --require lite-url \
   --require lodash.debounce \
+  --require ./knock-knock-go:panels-knock-knock-go \
   --require panels-ui \
   --require recompose/withContext \
   --require react \

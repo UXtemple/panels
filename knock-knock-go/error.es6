@@ -13,8 +13,8 @@ const UnknownError = props => {
         Something bad happened.
         Sorry.
       </div>
-      <div style={style.line}>{props.message.message}</div>
-      {props.message.stack.split("\n").map((line, i) => <div key={i} style={style.line}>{line.toString()}</div>)}
+      <div style={style.line}>{props.message.message || props.message}</div>
+      {props.message.stack && props.message.stack.split("\n").map((line, i) => <div key={i} style={style.line}>{line.toString()}</div>)}
       <div style={style.line}>The error is also logged on the console.</div>
       <div style={style.line}>You can click to the source from there.</div>
     </div>
