@@ -51,3 +51,22 @@ export function loadPanelIfNeeded(route) {
     }
   };
 }
+
+export const UPDATE_SETTINGS = 'panels/panels/UPDATE_SETTINGS';
+export function updateSettings(route, {background, title}) {
+  const settings = {};
+  if (background) {
+    settings.background = background;
+  }
+  if (title) {
+    settings.title = title;
+  }
+
+  return {
+    type: UPDATE_SETTINGS,
+    payload: {
+      panel: getPanelPathFromRoute(route),
+      settings
+    }
+  };
+}

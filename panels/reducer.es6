@@ -1,11 +1,13 @@
-import { LOAD } from './actions';
+import { LOAD, UPDATE_SETTINGS } from './actions';
 
 export default function panels(state={}, action) {
   let nextState = state;
+  let nextPanel;
+  let id;
 
   switch(action.type) {
   case LOAD:
-    let nextPanel;
+    id = action.meta.panel;
 
     if (action.error) {
       nextPanel = {
@@ -25,14 +27,24 @@ export default function panels(state={}, action) {
         width: action.payload.width
       };
     }
+    break;
 
-    nextState = {
-      ...state,
-      [action.meta.panel]: nextPanel
+  case UPDATE_SETTINGS:
+    id = action.payload.panel;
+    nextPanel = {
+      ...state[id],
+      ...action.payload.settings
     };
     break;
 
   default: break;
+  }
+
+  if (nextPanel) {
+    nextState = {
+      ...state,
+      [id]: nextPanel
+    };
   }
 
   return nextState;
