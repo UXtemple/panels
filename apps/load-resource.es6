@@ -38,7 +38,7 @@ function setSource(resource, file) {
   }
 }
 
-export default function load(file, head=document.getElementsByTagName('head')[0]) {
+export default function load(file) {
   return new Promise((resolve, reject) => {
     if (typeof file === 'undefined') {
       return resolve();
@@ -72,6 +72,6 @@ export default function load(file, head=document.getElementsByTagName('head')[0]
     }, 3e4);
 
     setSource(resource, file);
-    head.appendChild(resource);
+    document.getElementsByTagName('head')[0].appendChild(resource);
   });
 }

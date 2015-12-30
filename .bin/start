@@ -5,12 +5,16 @@ BIN=node_modules/.bin
 NODE_ENV=development $BIN/browserify --debug --verbose --extension .es6 \
   --external panels-ui \
   --external react \
+  --transform envify \
+  --transform babelify \
   --require ./playground/panels.dev.es6:panels.dev \
   ./playground/panels.dev.es6 > playground/panels.dev.js
 
 NODE_ENV=development $BIN/watchify --debug --verbose --extension .es6 \
   --require panels-ui \
   --require react \
+  --transform envify \
+  --transform babelify \
   --outfile playground/panels.js index.es6 & \
   sudo $BIN/babel-node ./.bin/server.es6 & \
   wait

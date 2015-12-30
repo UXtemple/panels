@@ -23,9 +23,9 @@ export default function apps(state = {}, action={}) {
     } else {
       nextApp = {
         ...state[app],
+        ...action.payload,
         isLoading: false,
-        isReady: true,
-        store: action.payload
+        isReady: true
       };
     }
 

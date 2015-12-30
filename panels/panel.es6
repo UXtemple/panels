@@ -1,3 +1,4 @@
+import 'core-js/fn/array/find-index';
 import { connect } from 'react-redux';
 import { loadPanelIfNeeded } from './actions';
 import { navigate } from '../router/actions';
@@ -11,8 +12,8 @@ import Sliced from './sliced';
 import withContext from 'recompose/withContext';
 
 const Panel = props => {
-  const dep = require(props.route.app);
-  const Type = dep.types[props.panel.type];
+  const module = require(props.app.moduleName);
+  const Type = module.types[props.panel.type];
   const { dispatch, width, ...rest } = props;
 
   if (props.route.visible) {
@@ -62,7 +63,7 @@ function mapStateToProps(state, props) {
   const isLoading = app.isLoading || panel.isLoading;
   const isReady = app.isReady && panel.isReady;
   const error = app.error || panel.error;
-  const message = panel.message || app.message;
+  const message = app.message || panel.message;
 
   return {
     app,

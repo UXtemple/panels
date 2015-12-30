@@ -5,23 +5,28 @@ import prepare from './prepare';
 
 export const LOAD = 'panels/panels/LOAD';
 export function load(route) {
-  let action = {
-    type: LOAD,
-    meta: {
-      panel: getPanelPathFromRoute(route)
+  return function loadThunk(dispatch, getState) {
+    const app = getState().apps[route.app];
+
+    let action = {
+      type: LOAD,
+      meta: {
+        panel: getPanelPathFromRoute(route)
+      }
+    };
+
+    try {
+      const panel = getPanelFromApp(route, app.moduleName);
+      action.payload = prepare(panel, app.store.getState);
+    } catch(err) {
+      err.status = 404;
+
+      action.error = true;
+      action.payload = err;
     }
-  };
 
-  try {
-    action.payload = prepare(getPanelFromApp(route));
-  } catch(err) {
-    err.status = 404;
-
-    action.error = true;
-    action.payload = err;
+    dispatch(action);
   }
-
-  return action;
 }
 /**
  *  Load apps on demand

@@ -1,7 +1,7 @@
 import match from './match';
 
-export default function getPanelFromApp(route) {
-  const dep = require(route.app);
+export default function getPanelFromApp(route, moduleName) {
+  const module = require(moduleName);
 
-  return dep.panels[route.path] || match(route);
+  return module.panels[route.path] || match(route, moduleName);
 }

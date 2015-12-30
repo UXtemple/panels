@@ -11,15 +11,15 @@ function parseProps(params, props) {
   return newProps;
 }
 
-export default function match(route) {
-  const dep = require(route.app);
+export default function match(route, moduleName) {
+  const module = require(moduleName);
 
   const panelMatch = new RLookup({
-    patterns: dep.lookup
+    patterns: module.lookup
   }).match(route.path);
 
   if (typeof panelMatch !== 'undefined') {
-    const panel = dep.panels[panelMatch.pattern];
+    const panel = module.panels[panelMatch.pattern];
 
     return {
       background: panel.background,
