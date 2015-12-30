@@ -61,11 +61,19 @@ export function reset(preferredSnapPoint, nextViewportWidth) {
       getIndexOfPanelToShow(runtime.x, runtime.regions) :
       panelsWidths.length - 1;
 
+    const xWithContextPanel = nextState.widths.slice(0, index - 1).reduce(sum, 0);
+    const xWithoutContextPanel = xWithContextPanel + nextState.widths[index - 1];
+
+    const focusPanelWidth = nextState.widths[nextState.widths.length - 1];
+    const x = xWithoutContextPanel - xWithContextPanel + focusPanelWidth + snapPoint <= viewportWidth ?
+      xWithContextPanel :
+      xWithoutContextPanel;
+
     dispatch({
       type: RESET,
       payload: {
         ...nextState,
-        x: nextState.widths.slice(0, index).reduce(sum, 0)
+        x
       }
     });
   }

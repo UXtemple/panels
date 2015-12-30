@@ -52,7 +52,7 @@ export class Runtime extends Component {
   render() {
     const { props } = this;
 
-    let backgroundStyle = {};
+    const backgroundStyle = {};
     if (props.background) {
       if (props.background.image) {
         backgroundStyle.backgroundImage = `url(${props.background.image})`;
@@ -71,7 +71,6 @@ export class Runtime extends Component {
       <div ref='runtime' style={{...style, ...backgroundStyle}}>
         {!props.shouldGoMobile && props.x > 0 && <MoveLeft {...props} />}
         <Panels />
-        {!props.shouldGoMobile && <ExpandFocus {...props} />}
       </div>
     );
   }
