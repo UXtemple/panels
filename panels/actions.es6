@@ -16,7 +16,7 @@ export function load(route) {
     };
 
     try {
-      const panel = getPanelFromApp(route, app.moduleName);
+      const panel = getPanelFromApp(route, app.module.name);
       action.payload = prepare(panel, app.store.getState);
     } catch(err) {
       err.status = 404;

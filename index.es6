@@ -14,19 +14,21 @@ if (!window.Promise) {
   require('native-promise-only');
 }
 
-const initialState = typeof window.__panels__ === 'undefined' ?
-  {router: routerReducer({}, navigate(location.href))} :
-  unpack(window.__panels__);
+window.addEventListener('load', function() {
+  const initialState = typeof window.__panels__ === 'undefined' ?
+    {router: routerReducer({}, navigate(location.href))} :
+    unpack(window.__panels__);
 
-const store = configureStore(initialState);
+  const store = configureStore(initialState);
 
-window.$ps = store;
+  window.$ps = store;
 
-history(store);
+  history(store);
 
-render(
-  <Provider store={store}>
-    <Runtime preferredSnapPoint={90} />
-  </Provider>,
-  document.getElementById('root')
-);
+  render(
+    <Provider store={store}>
+      <Runtime preferredSnapPoint={90} />
+    </Provider>,
+    document.getElementById('root')
+  );
+});

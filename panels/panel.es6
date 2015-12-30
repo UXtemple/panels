@@ -12,7 +12,7 @@ import Sliced from './sliced';
 import withContext from 'recompose/withContext';
 
 const Panel = props => {
-  const module = require(props.app.moduleName);
+  const module = require(props.app.module.name);
   const Type = module.types[props.panel.type];
   const { dispatch, width, ...rest } = props;
 
