@@ -2,7 +2,6 @@ import { connect } from 'react-redux';
 import { reset, setX } from './actions';
 import canUseDOM from 'can-use-dom';
 import debounce from 'lodash.debounce';
-import ExpandFocus from './expand-focus';
 import getFocusPanel from '../panels/get-focus-panel';
 import getViewportWidth from './get-viewport-width';
 import MoveLeft from './move-left';
@@ -97,7 +96,6 @@ function mapStateToProps(state, props) {
     background: focusPanel.background,
     routes: state.router.routes,
     snapPoint: state.runtime.snapPoint,
-    // shouldExpandFocus: state.runtime.shouldExpandFocus,
     shouldGoMobile: state.runtime.shouldGoMobile,
     title: focusPanel.title,
     x: state.runtime.x

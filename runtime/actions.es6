@@ -4,20 +4,6 @@ import getPanelPathFromRoute from '../router/get-panel-path-from-route';
 import getXToSnapTo from './get-x-to-snap-to';
 import sum from '../utils/sum';
 
-export const TOGGLE_SHOULD_EXPAND_FOCUS = 'panels/runtime/TOGGLE_SHOULD_EXPAND_FOCUS';
-export function toggleShouldExpandFocus() {
-  return function toggleShouldExpandFocusThunk(dispatch, getState) {
-    dispatch({
-      type: TOGGLE_SHOULD_EXPAND_FOCUS,
-      payload: {
-        shouldExpandFocus: !getState().runtime.shouldExpandFocus
-      }
-    });
-
-    dispatch(reset());
-  }
-}
-
 export const MOVE_LEFT = 'panels/runtime/MOVE_LEFT';
 export function moveLeft() {
   return function moveLeftThunk(dispatch, getState) {
@@ -43,14 +29,11 @@ export function reset(preferredSnapPoint, nextViewportWidth) {
     const viewportWidth = nextViewportWidth || runtime.viewportWidth;
     const snapPoint = preferredSnapPoint || runtime.snapPoint;
 
+    const maxWidth = viewportWidth - snapPoint;
     const panelsWidths = router.routes.map((route, i) => {
       const panel = panels[getPanelPathFromRoute(route)];
-
-      if (runtime.shouldExpandFocus && i === router.routes.length - 1) {
-        return viewportWidth - snapPoint;
-      } else {
-        return route.visible ? (panel && panel.width) || 360 : 32;
-      }
+      const width = route.visible ? (panel && panel.width) || 360 : 32;
+      return Math.min(maxWidth, width);
     });
 
     const nextState = calculateState(viewportWidth, panelsWidths, snapPoint);
