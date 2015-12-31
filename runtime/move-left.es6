@@ -3,7 +3,7 @@ import { ArrowLeft } from 'panels-ui';
 import { moveLeft } from './actions';
 import React from 'react';
 
-const DIAMETER = 26;
+const DIAMETER = 40;
 
 const MoveLeft = props => (
   <div onClick={() => props.dispatch(moveLeft())} style={{...style, left: props.snapPoint - DIAMETER / 2}}>
@@ -16,11 +16,11 @@ const style = {
   ...alignItemsCenter,
   backgroundColor: '#00ADEE',
   borderRadius: DIAMETER,
-  bottom: 39,
+  bottom: 32,
   cursor: 'pointer',
   height: DIAMETER,
   ...justifyContentCenter,
   position: 'fixed',
   width: DIAMETER,
-  zIndex: 1
+  zIndex: 2
 };

@@ -4,6 +4,7 @@ import { reset } from '../runtime/actions';
 import WrapPanelIfNeeded from './wrap-panel-if-needed';
 import React from 'react';
 
+// TODO isVisible is also a "do I fit on the viewport" calc
 const Panels = props => {
   const finalStyle = {
     ...style,
@@ -15,6 +16,9 @@ const Panels = props => {
     <div style={finalStyle}>
       {props.routes.map((route, i) => (
         <WrapPanelIfNeeded
+          isFocus={i === props.routes.length - 1}
+          isContext={i === props.routes.length - 2}
+          isVisible={route.visible}
           shouldWrap={i === props.routes.length - 1}
           key={i}
           route={route}

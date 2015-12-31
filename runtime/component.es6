@@ -31,6 +31,10 @@ export class Runtime extends Component {
       snap(this.refs.runtime, this.props.x);
     }
 
+    if (!shallowEqual(this.props.panels, prevProps.panels)) {
+      this.props.dispatch(reset(this.props.preferredSnapPoint, undefined, this.props.isExpanded));
+    }
+
     if (!shallowEqual(this.props.routes, prevProps.routes)) {
       this.props.dispatch(reset(this.props.preferredSnapPoint));
     }
@@ -91,9 +95,17 @@ const style = {
 
 function mapStateToProps(state, props) {
   const focusPanel = getFocusPanel(state.router.routes, state.panels);
+  let isExpanded = false;
+  const panels = Object.keys(state.panels).map(k => {
+    const panel = state.panels[k];
+    isExpanded = isExpanded || panel.isExpanded;
+    return panel.isExpanded ? panel.maxWidth : panel.width;
+  });
 
   return {
     background: focusPanel.background,
+    isExpanded,
+    panels,
     routes: state.router.routes,
     snapPoint: state.runtime.snapPoint,
     shouldGoMobile: state.runtime.shouldGoMobile,

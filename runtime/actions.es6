@@ -1,4 +1,4 @@
-import calculateState from './calculate-state';
+import calculateState, { MOBILE_THRESHOLD } from './calculate-state';
 import getIndexOfPanelToShow from './get-index-of-panel-to-show';
 import getPanelPathFromRoute from '../router/get-panel-path-from-route';
 import getXToSnapTo from './get-x-to-snap-to';
@@ -23,24 +23,41 @@ export function moveLeft() {
 }
 
 export const RESET = 'panels/runtime/RESET';
-export function reset(preferredSnapPoint, nextViewportWidth) {
+export function reset(preferredSnapPoint, nextViewportWidth, didExpand) {
   return function resetThunk(dispatch, getState) {
     const { panels, router, runtime } = getState();
     const viewportWidth = nextViewportWidth || runtime.viewportWidth;
     const snapPoint = preferredSnapPoint || runtime.snapPoint;
 
     const maxWidth = viewportWidth - snapPoint;
+    const shouldGoMobile = viewportWidth < MOBILE_THRESHOLD;
+
     const panelsWidths = router.routes.map((route, i) => {
       const panel = panels[getPanelPathFromRoute(route)];
-      const width = route.visible ? (panel && panel.width) || 360 : 32;
-      return Math.min(maxWidth, width);
+
+      if (shouldGoMobile) {
+        return viewportWidth;
+      } else {
+        let width = 360;
+
+        // TODO if reset is because of expanded, we shouldn't snap
+        if (route.visible) {
+          if (panel) {
+            width = panel.isExpanded ? panel.maxWidth : panel.width;
+          }
+        } else {
+          width = 32;
+        }
+
+        return Math.min(maxWidth, width);
+      }
     });
 
-    const nextState = calculateState(viewportWidth, panelsWidths, snapPoint);
+    const nextState = calculateState(viewportWidth, panelsWidths, snapPoint, shouldGoMobile);
 
     // if the viewport changed, readjust our position to the panel we were looking at
     // otherwise use the newly added panel
-    const index = nextViewportWidth ?
+    const index = nextViewportWidth || didExpand ?
       getIndexOfPanelToShow(runtime.x, runtime.regions) :
       panelsWidths.length - 1;
 

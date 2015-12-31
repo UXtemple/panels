@@ -1,4 +1,5 @@
 import { Action, Panel } from 'panels-ui';
+import Expand from './expand';
 import React from 'react';
 
 const Content = props => (
@@ -8,11 +9,22 @@ const Content = props => (
   </div>
 );
 
+const style = {
+  innerWrapper: {
+    height: '100vh',
+    overflow: 'auto',
+    padding: 20
+  }
+}
+
 export const types = {
   'Lightgreen': props => (
-    <Panel style={{backgroundColor: 'lightyellow', padding: 20, width: props.width}}>
-      <Action href='a'>{'/a'}</Action>
-      <Content />
+    <Panel style={{backgroundColor: 'lightyellow', width: props.width}}>
+      <div style={style.innerWrapper}>
+        <Action href='a'>{'/a'}</Action>
+        <Content />
+      </div>
+      <Expand {...props.panel.panel} />
     </Panel>
   ),
   'Lightyellow': props => (
@@ -30,10 +42,13 @@ export const types = {
     </Panel>
   ),
   'Lightpink': props => (
-    <Panel style={{backgroundColor: 'lightpink', padding: 20, width: props.width}}>
-      <Action href='d'>{'/a/b/c/d'}</Action>
-      <Action href='..'>..</Action>
-      <Content />
+    <Panel style={{backgroundColor: 'lightpink', width: props.width}}>
+      <div style={style.innerWrapper}>
+        <Action href='d'>{'/a/b/c/d'}</Action>
+        <Action href='..'>..</Action>
+        <Content />
+      </div>
+      <Expand {...props.panel.panel} />
     </Panel>
   ),
   'Fuchsia': props => (
@@ -45,9 +60,9 @@ export const types = {
 };
 
 export const panels = {
-  '/': {type: 'Lightgreen', background: {color: '#f2f2f2'}, title: 'main'},
+  '/': {type: 'Lightgreen', background: {color: '#f2f2f2'}, maxWidth: 720, title: 'main'},
   '/a': {type: 'Lightyellow'},
   '/a/b': {type: 'Lightblue', width: 720},
-  '/a/b/c': {type: 'Lightpink'},
+  '/a/b/c': {type: 'Lightpink', maxWidth: 560},
   '/a/b/c/d': {type: 'Fuchsia'}
 };
