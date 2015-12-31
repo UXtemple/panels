@@ -3,6 +3,16 @@ import getPanelFromApp from './get-panel-from-app';
 import getPanelPathFromRoute from '../router/get-panel-path-from-route';
 import prepare from './prepare';
 
+export const TOGGLE_EXPAND = 'panels/panels/TOGGLE_EXPAND';
+export function toggleExpand(route) {
+  return {
+    type: TOGGLE_EXPAND,
+    payload: {
+      id: getPanelPathFromRoute(route)
+    }
+  };
+}
+
 export const LOAD = 'panels/panels/LOAD';
 export function load(route) {
   return function loadThunk(dispatch, getState) {
@@ -11,7 +21,7 @@ export function load(route) {
     let action = {
       type: LOAD,
       meta: {
-        panel: getPanelPathFromRoute(route)
+        id: getPanelPathFromRoute(route)
       }
     };
 
@@ -65,7 +75,7 @@ export function updateSettings(route, {background, title}) {
   return {
     type: UPDATE_SETTINGS,
     payload: {
-      panel: getPanelPathFromRoute(route),
+      id: getPanelPathFromRoute(route),
       settings
     }
   };

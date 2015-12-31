@@ -1,4 +1,4 @@
-import { LOAD, UPDATE_SETTINGS } from './actions';
+import { LOAD, TOGGLE_EXPAND, UPDATE_SETTINGS } from './actions';
 
 export default function panels(state={}, action) {
   let nextState = state;
@@ -7,11 +7,12 @@ export default function panels(state={}, action) {
 
   switch(action.type) {
   case LOAD:
-    id = action.meta.panel;
+    id = action.meta.id;
 
     if (action.error) {
       nextPanel = {
         error: true,
+        isExpanded: false,
         isLoading: false,
         isReady: false,
         message: action.payload
@@ -21,6 +22,7 @@ export default function panels(state={}, action) {
         background: action.payload.background,
         isLoading: false,
         isReady: true,
+        maxWidth: action.payload.maxWidth,
         props: action.payload.props,
         title: action.payload.title,
         type: action.payload.type,
@@ -29,8 +31,17 @@ export default function panels(state={}, action) {
     }
     break;
 
+  case TOGGLE_EXPAND:
+    id = action.payload.id;
+
+    nextPanel = {
+      ...state[id],
+      isExpanded: !state[id].isExpanded
+    };
+    break;
+
   case UPDATE_SETTINGS:
-    id = action.payload.panel;
+    id = action.payload.id;
     nextPanel = {
       ...state[id],
       ...action.payload.settings

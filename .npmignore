@@ -1,2 +1,4 @@
 **/*.es6
 .babelrc
+examples/
+playground/

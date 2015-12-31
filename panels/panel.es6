@@ -1,6 +1,6 @@
 import 'core-js/fn/array/find-index';
 import { connect } from 'react-redux';
-import { loadPanelIfNeeded, updateSettings } from './actions';
+import { loadPanelIfNeeded, toggleExpand, updateSettings } from './actions';
 import { navigate } from '../router/actions';
 import { Provider } from 'react-redux';
 import getPanelPathFromRoute from '../router/get-panel-path-from-route';
@@ -35,12 +35,14 @@ const PanelInContext = withContext({
     isActive: PropTypes.func.isRequired,
     navigate: PropTypes.func.isRequired,
     route: routeShape.isRequired,
+    toggleExpand: PropTypes.func.isRequired,
     updateSettings: PropTypes.func.isRequired
   },
   props => ({
     isActive: path => props.routeAfter && `${props.route.context}${path}` === props.routeAfter.context,
     navigate: toUri => props.dispatch(navigate(`${props.route.context}${toUri}`)),
     route: props.route,
+    toggleExpand: () => props.dispatch(toggleExpand(props.route)),
     updateSettings: settings => props.dispatch(updateSettings(props.route, settings))
   }),
   Panel

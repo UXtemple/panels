@@ -66,8 +66,8 @@ And launch it on a browser:
   </head>
   <body>
     <div id=root></div>
-    <script src=app.com.js></script>
     <script src=panels.js></script>
+    <script src=app.com.js></script>
   </body>
 </html>
 ```

@@ -5,8 +5,7 @@ import getWidths from './get-widths';
 
 export const MOBILE_THRESHOLD = 720;
 
-export default function calculateState(viewportWidth, panelsWidths, preferredSnapPoint) {
-  const shouldGoMobile = viewportWidth < MOBILE_THRESHOLD;
+export default function calculateState(viewportWidth, panelsWidths, preferredSnapPoint, shouldGoMobile) {
   const widths = getWidths(panelsWidths, shouldGoMobile, viewportWidth);
   const halves = getHalves(widths);
   const regions = getRegions(widths, halves);
