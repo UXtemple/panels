@@ -96,7 +96,8 @@ function mapStateToProps(state, props) {
   return {
     background: focusPanel.background,
     routes: state.router.routes,
-    shouldExpandFocus: state.runtime.shouldExpandFocus,
+    snapPoint: state.runtime.snapPoint,
+    // shouldExpandFocus: state.runtime.shouldExpandFocus,
     shouldGoMobile: state.runtime.shouldGoMobile,
     title: focusPanel.title,
     x: state.runtime.x

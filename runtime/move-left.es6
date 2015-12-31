@@ -1,28 +1,26 @@
 import { alignItemsCenter, justifyContentCenter } from 'browser-vendor-prefix';
+import { ArrowLeft } from 'panels-ui';
 import { moveLeft } from './actions';
 import React from 'react';
 
+const DIAMETER = 26;
+
 const MoveLeft = props => (
-  <div onClick={() => props.dispatch(moveLeft())} style={style}>
-    BACK
+  <div onClick={() => props.dispatch(moveLeft())} style={{...style, left: props.snapPoint - DIAMETER / 2}}>
+    <ArrowLeft />
   </div>
 );
 export default MoveLeft;
 
 const style = {
   ...alignItemsCenter,
-  backgroundColor: 'rgba(0,0,0,0.3)',
-  borderRadius: 64,
-  bottom: 20,
-  color: 'white',
+  backgroundColor: '#00ADEE',
+  borderRadius: DIAMETER,
+  bottom: 39,
   cursor: 'pointer',
-  fontFamily: 'sans-serif',
-  fontSize: 10,
-  fontWeight: 'bold',
-  height: 64,
-  left: 13,
+  height: DIAMETER,
   ...justifyContentCenter,
   position: 'fixed',
-  width: 64,
+  width: DIAMETER,
   zIndex: 1
 };

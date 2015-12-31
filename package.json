@@ -36,7 +36,7 @@
     "lite-url": "^1.0.4",
     "lodash.debounce": "^3.1.1",
     "native-promise-only": "^0.8.1",
-    "panels-ui": "^1.0.1",
+    "panels-ui": "^1.1.0",
     "react": "^0.14.2",
     "react-dom": "^0.14.2",
     "react-redux": "^4.0.0",
