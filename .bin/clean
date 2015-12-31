@@ -2,5 +2,4 @@
 
 find . -name '*.js*' -type f \
   -not -path './node_modules/*' \
-  -not -path './playground/panels.json' \
-  -not -path './package.json' -exec rm {} \;
+  -not -path '*.json' -exec rm {} \;
