@@ -22,11 +22,8 @@ export default function match(route, moduleName) {
     const panel = module.panels[panelMatch.pattern];
 
     return {
-      background: panel.background,
-      props: parseProps(panelMatch.params, panel.props),
-      title: panel.title,
-      type: panel.type,
-      width: panel.width
+      ...panel,
+      props: parseProps(panelMatch.params, panel.props)
     };
   }
 }
