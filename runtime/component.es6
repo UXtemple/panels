@@ -71,7 +71,7 @@ export class Runtime extends Component {
     }
 
     return (
-      <div ref='runtime' style={{...style, ...backgroundStyle}}>
+      <div className='runtime' ref='runtime' style={{...style, ...backgroundStyle}}>
         {!props.shouldGoMobile && props.x > 0 && <MoveLeft {...props} />}
         <Panels />
       </div>
