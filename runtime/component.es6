@@ -88,6 +88,7 @@ export class Runtime extends Component {
 }
 
 const style = {
+  height: '100vh',
   overflowX: 'auto',
   overflowY: 'hidden',
   width: '100vw'
