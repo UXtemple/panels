@@ -22,5 +22,5 @@ const style = {
   ...justifyContentCenter,
   position: 'fixed',
   width: DIAMETER,
-  zIndex: 2
+  zIndex: 10
 };

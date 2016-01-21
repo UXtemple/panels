@@ -46,7 +46,7 @@ export function reset(preferredSnapPoint, nextViewportWidth, didExpand) {
             width = panel.isExpanded ? panel.maxWidth : panel.width;
           }
         } else {
-          width = 32;
+          width = 0; // 32;
         }
 
         return Math.min(maxWidth, width);
