@@ -20,7 +20,7 @@ const Panels = props => {
           isContext={i === props.routes.length - 2}
           isVisible={route.visible}
           shouldWrap={i === props.routes.length - 1}
-          key={i}
+          key={route.context}
           route={route}
           width={props.widths[i]} />
       ))}
