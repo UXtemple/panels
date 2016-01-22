@@ -22,6 +22,7 @@ export const types = {
     <Panel style={{backgroundColor: 'lightyellow', width: props.width}}>
       <div style={style.innerWrapper}>
         <Action href='a'>{'/a'}</Action>
+        <Action href='..'>..</Action>
         <Content />
       </div>
       <Expand {...props.panel.panel} />
@@ -30,6 +31,7 @@ export const types = {
   'Lightyellow': props => (
     <Panel style={{backgroundColor: 'lightgreen', padding: 20, width: props.width}}>
       <Action href='b'>{'/a/b'}</Action>
+      <Action href='http://panels.dev/'>{'teleport /'}</Action>
       <Action href='..'>..</Action>
       <Content />
     </Panel>

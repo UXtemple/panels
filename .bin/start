@@ -11,6 +11,7 @@ NODE_ENV=development $BIN/watchify --debug --verbose --extension .es6 \
   --outfile playground/panels.dev.js & \
 NODE_ENV=development $BIN/watchify --debug --verbose --extension .es6 \
   --require panels-ui \
+  --require ./router/normalize-uri:panels-normalize-uri \
   --require react \
   --transform envify \
   --transform babelify \

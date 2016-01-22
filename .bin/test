@@ -3,4 +3,4 @@
 BIN=./node_modules/.bin
 
 TESTS=${1:-**/__tests__/*-test.es6}
-$BIN/babel-node $BIN/tape "$TESTS" | $BIN/faucet
+$BIN/babel-node $BIN/tape "$TESTS"

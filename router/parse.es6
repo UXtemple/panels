@@ -1,32 +1,29 @@
-import normalize from '../utils/normalize-path';
 import Url from 'lite-url';
+import withTrailingSlash from './with-trailing-slash';
 
 const PROTOCOL_REGEX = /https?:\/\//;
 const SLICE_END = ')';
 const SLICE_START = '(';
 const SLICE_MARKERS = new RegExp(`[${SLICE_START}${SLICE_END}]`, 'g');
-const TRAILING_SLASH_REGEX = /\/$/;
-
-function withTrailingSlash(uri) {
-  return TRAILING_SLASH_REGEX.test(uri) ? uri : `${uri}/`;
-}
 
 export default function parse(uri) {
   let panels = [];
   // Make sure we always have a trailing slash on the URI
   let nextUri = withTrailingSlash(uri);
 
+  let i = 0;
+
   do {
     const parsed = new Url(nextUri);
 
     if (parsed && parsed.protocol && parsed.host) {
-      let path = normalize(parsed.pathname);
+      let path = parsed.pathname;
+
+      nextUri = undefined;
 
       if (PROTOCOL_REGEX.test(parsed.pathname)) {
         path = parsed.pathname.split(PROTOCOL_REGEX)[0];
         nextUri = parsed.pathname.replace(path, '');
-      } else {
-        nextUri = undefined;
       }
 
       const base = `${parsed.protocol}//${parsed.host}`;
