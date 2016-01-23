@@ -49,7 +49,7 @@ export function reset(preferredSnapPoint, nextViewportWidth, didExpand) {
             width = panel.isExpanded ? panel.maxWidth : panel.width;
           }
         } else {
-          width = 0; // 32;
+          width = 0;
         }
 
         return Math.min(maxWidth, width);
@@ -60,9 +60,12 @@ export function reset(preferredSnapPoint, nextViewportWidth, didExpand) {
 
     // if the viewport changed, readjust our position to the panel we were looking at
     // otherwise use the newly added panel
-    const index = nextViewportWidth || didExpand ?
+    let index = nextViewportWidth || didExpand ?
       getIndexOfPanelToShow(runtime.x, runtime.regions) :
       panelsWidths.length - 1;
+    if (panelsWidths[index] === 0) {
+      index--;
+    }
 
     const xWithContextPanel = nextState.widths.slice(0, index - 1).reduce(sum, 0);
     const xWithoutContextPanel = xWithContextPanel + nextState.widths[index - 1];
