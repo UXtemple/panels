@@ -12,11 +12,11 @@ import Sliced from './sliced';
 import withContext from 'recompose/withContext';
 
 const Panel = props => {
-  const module = require(props.app.module.name);
-  const Type = module.types[props.panel.type];
-  const { dispatch, width, ...rest } = props;
-
   if (props.route.visible) {
+    const module = require(props.app.module.name);
+    const Type = module.types[props.panel.type];
+    const { dispatch, width, ...rest } = props;
+
     if (props.app.store) {
       return (
         <Provider store={props.app.store}>
@@ -27,7 +27,7 @@ const Panel = props => {
       return <Type {...props.panel.props} panel={rest} width={width} />;
     }
   } else {
-    return <Sliced {...props.panel.props} route={props.route} uri={props.uri} width={width} />;
+    return <Sliced />;
   }
 };
 
@@ -49,7 +49,7 @@ const PanelInContext = withContext({
 );
 
 const KnockKnockPanelInContext = knockKnockGo(
-  props => props.isLoading,
+  props => props.isLoading && props.route.visible,
   props => props.error,
   PanelInContext,
   props => props.dispatch(loadPanelIfNeeded(props.route))

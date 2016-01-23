@@ -9,7 +9,10 @@ export function moveLeft() {
   return function moveLeftThunk(dispatch, getState) {
     const { runtime } = getState();
 
-    const index = getIndexOfPanelToShow(runtime.x, runtime.regions) - 1;
+    let index = getIndexOfPanelToShow(runtime.x, runtime.regions) - 1;
+    if (runtime.widths[index] === 0) {
+      index--;
+    }
 
     if (index >= 0) {
       dispatch({
