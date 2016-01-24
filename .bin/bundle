@@ -28,6 +28,7 @@ NODE_ENV=development $BIN/browserify --verbose --debug \
   --require redux-promise \
   --require redux-thunk \
   --require rlookup \
+  --require waiting \
   --extension .es6 \
   --transform babelify \
   --transform envify \
@@ -52,6 +53,7 @@ NODE_ENV=production $BIN/browserify --verbose --debug \
   --require redux-promise \
   --require redux-thunk \
   --require rlookup \
+  --require waiting \
   --extension .es6 \
   --transform babelify \
   --transform envify \
