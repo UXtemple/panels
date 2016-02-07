@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "build": ".bin/build",
-    "bundle": ".bin/bundle",
+    "bundle": ".bin/bundle `node -e \"console.log(require('./package.json').version)\"`",
     "clean": ".bin/clean",
     "start": ".bin/start",
     "postpublish": "rm -rf bundle && git checkout package.json && git push && git push --tags",
