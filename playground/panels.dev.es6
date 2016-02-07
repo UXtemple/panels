@@ -1,4 +1,4 @@
-import { Action, Panel } from 'panels-ui';
+import { Teleport, Panel } from 'panels-ui';
 import Expand from './expand';
 import React from 'react';
 
@@ -21,8 +21,11 @@ export const types = {
   'Lightgreen': props => (
     <Panel style={{backgroundColor: 'lightyellow', width: props.width}}>
       <div style={style.innerWrapper}>
-        <Action href='a'>{'/a'}</Action>
-        <Action href='..'>..</Action>
+        <Teleport to='a/'
+          style={{color: 'lightgreen', paddingBottom: 10, paddingTop: 10, textDecoration: 'none'}}
+          styleActive={{backgroundColor: 'white', color: 'lightgreen'}}
+          styleHover={{backgroundColor: 'lightgreen', color: 'white'}}>{'/a'}</Teleport>
+        <Teleport to='..'>..</Teleport>
         <Content />
       </div>
       <Expand {...props.panel.panel} />
@@ -30,24 +33,24 @@ export const types = {
   ),
   'Lightyellow': props => (
     <Panel style={{backgroundColor: 'lightgreen', padding: 20, width: props.width}}>
-      <Action href='b'>{'/a/b'}</Action>
-      <Action href='http://panels.dev/'>{'teleport /'}</Action>
-      <Action href='..'>..</Action>
+      <Teleport to='b/'>{'/a/b'}</Teleport>
+      <Teleport to='http://panels.dev/'>{'teleport /'}</Teleport>
+      <Teleport to='..'>..</Teleport>
       <Content />
     </Panel>
   ),
   'Lightblue': props => (
     <Panel style={{backgroundColor: 'lightblue', padding: 20, width: props.width}}>
-      <Action href='c'>{'/a/b/c'}</Action>
-      <Action href='..'>..</Action>
+      <Teleport to='c/'>{'/a/b/c'}</Teleport>
+      <Teleport to='..'>..</Teleport>
       <Content />
     </Panel>
   ),
   'Lightpink': props => (
     <Panel style={{backgroundColor: 'lightpink', width: props.width}}>
       <div style={style.innerWrapper}>
-        <Action href='d'>{'/a/b/c/d'}</Action>
-        <Action href='..'>..</Action>
+        <Teleport to='d/'>{'/a/b/c/d'}</Teleport>
+        <Teleport to='..'>..</Teleport>
         <Content />
       </div>
       <Expand {...props.panel.panel} />
@@ -55,7 +58,7 @@ export const types = {
   ),
   'Fuchsia': props => (
     <Panel style={{backgroundColor: 'fuchsia', padding: 20, width: props.width}}>
-      <Action href='..'>..</Action>
+      <Teleport to='..'>..</Teleport>
       <Content />
     </Panel>
   )

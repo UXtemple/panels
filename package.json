@@ -7,7 +7,9 @@
     "bundle": ".bin/bundle",
     "clean": ".bin/clean",
     "start": ".bin/start",
-    "push": ".bin/push",
+    "postpublish": "rm -rf bundle && git checkout package.json && git push && git push --tags",
+    "prepublish": "npm run bundle",
+    "push": "git tag $(npm version $VERSION) && npm publish",
     "test": ".bin/test"
   },
   "repository": {
@@ -36,7 +38,7 @@
     "lite-url": "^1.0.4",
     "lodash.debounce": "^3.1.1",
     "native-promise-only": "^0.8.1",
-    "panels-ui": "^1.1.1",
+    "panels-ui": "^2.0.0",
     "react": "^0.14.2",
     "react-dom": "^0.14.2",
     "react-redux": "^4.0.0",
