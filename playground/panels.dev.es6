@@ -1,6 +1,6 @@
 import { Teleport, Panel } from 'panels-ui';
 import Expand from './expand';
-import React from 'react';
+import React, { Component, PropTypes } from 'react';
 
 const Content = props => (
   <div style={{marginTop: 25}}>
@@ -17,20 +17,39 @@ const style = {
   }
 }
 
+class Lightgreen extends Component {
+  update() {
+    this.context.updateSettings({
+      maxWidth: 400,
+      width: 200
+    })
+  }
+
+  render() {
+    const { props } = this;
+
+    return (
+      <Panel style={{backgroundColor: 'lightyellow', width: props.width}}>
+        <div style={style.innerWrapper}>
+          <button onClick={() => this.update()}>update</button>
+          <Teleport to='a/'
+            style={{color: 'lightgreen', paddingBottom: 10, paddingTop: 10, textDecoration: 'none'}}
+            styleActive={{backgroundColor: 'white', color: 'lightgreen'}}
+            styleHover={{backgroundColor: 'lightgreen', color: 'white'}}>{'/a'}</Teleport>
+          <Teleport to='..'>..</Teleport>
+          <Content />
+        </div>
+        <Expand {...props.panel.panel} />
+      </Panel>
+    );
+  }
+}
+Lightgreen.contextTypes = {
+  updateSettings: PropTypes.func
+}
+
 export const types = {
-  'Lightgreen': props => (
-    <Panel style={{backgroundColor: 'lightyellow', width: props.width}}>
-      <div style={style.innerWrapper}>
-        <Teleport to='a/'
-          style={{color: 'lightgreen', paddingBottom: 10, paddingTop: 10, textDecoration: 'none'}}
-          styleActive={{backgroundColor: 'white', color: 'lightgreen'}}
-          styleHover={{backgroundColor: 'lightgreen', color: 'white'}}>{'/a'}</Teleport>
-        <Teleport to='..'>..</Teleport>
-        <Content />
-      </div>
-      <Expand {...props.panel.panel} />
-    </Panel>
-  ),
+  'Lightgreen': Lightgreen,
   'Lightyellow': props => (
     <Panel style={{backgroundColor: 'lightgreen', padding: 20, width: props.width}}>
       <Teleport to='b/'>{'/a/b'}</Teleport>

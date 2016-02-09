@@ -63,13 +63,19 @@ export function loadPanelIfNeeded(route) {
 }
 
 export const UPDATE_SETTINGS = 'panels/panels/UPDATE_SETTINGS';
-export function updateSettings(route, {background, title}) {
+export function updateSettings(route, {background, maxWidth, title, width}) {
   const settings = {};
   if (background) {
     settings.background = background;
   }
+  if (maxWidth) {
+    settings.maxWidth = maxWidth;
+  }
   if (title) {
     settings.title = title;
+  }
+  if (width) {
+    settings.width = width;
   }
 
   return {
