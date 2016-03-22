@@ -1,11 +1,11 @@
-import normalizeUri from './normalize-uri';
+import normaliseUri from 'panels-normalise-uri';
 
 export const NAVIGATE = 'panels/router/NAVIGATE';
 export function navigate(uri) {
   return {
     type: NAVIGATE,
     payload: {
-      uri: normalizeUri(uri)
+      uri: normaliseUri(uri)
     }
   };
 }

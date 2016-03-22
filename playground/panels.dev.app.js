@@ -90,3 +90,8 @@ export const panels = {
   '/a/b/c': {type: 'Lightpink', maxWidth: 560},
   '/a/b/c/d': {type: 'Fuchsia'}
 };
+
+export async function setup(app, props, context) {
+  console.log('app setup', app, props, context);
+  return false;
+}

@@ -1,9 +1,8 @@
 {
-  "presets": ["es2015", "react"],
+  "presets": ["react"],
   "plugins": [
-    "syntax-async-functions",
+    "kneden",
     "transform-export-extensions",
-    "transform-object-rest-spread",
-    "transform-regenerator"
+    "transform-object-rest-spread"
   ]
 }

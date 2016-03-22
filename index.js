@@ -1,5 +1,3 @@
-import 'whatwg-fetch';
-import 'core-js/modules/es6.array.find-index';
 import { navigate } from './router/actions';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';

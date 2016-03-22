@@ -2,5 +2,5 @@
 
 BIN=./node_modules/.bin
 
-TESTS=${1:-**/__tests__/*-test.es6}
-$BIN/babel-node $BIN/tape "$TESTS"
+TESTS=${1:-**/__tests__/*-test.js}
+$BIN/babel-node --presets es2015 $BIN/tape "$TESTS"

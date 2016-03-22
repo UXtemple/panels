@@ -13,13 +13,10 @@ echo "[bundle] v${VERSION}..."
 NODE_ENV=development $BIN/browserify --verbose --debug \
   --require browser-vendor-prefix \
   --require can-use-dom \
-  --require knock-knock-go \
   --require lite-url \
   --require lodash.debounce \
-  --require ./knock-knock-go:panels-knock-knock-go \
-  --require ./router/normalize-uri:panels-normalize-uri \
+  --require panels-normalise-uri \
   --require panels-ui \
-  --require recompose/withContext \
   --require react \
   --require react-dom \
   --require react-redux \
@@ -30,22 +27,18 @@ NODE_ENV=development $BIN/browserify --verbose --debug \
   --require rlookup \
   --require style-to-css \
   --require waiting \
-  --extension .es6 \
-  --transform babelify \
+  --transform [rollupify --config rollup.config.js] \
   --transform envify \
-  index.es6 | \
+  index.js | \
   $BIN/exorcist $PANELS.js.map > $PANELS.js
 
 NODE_ENV=production $BIN/browserify --verbose --debug \
   --require browser-vendor-prefix \
   --require can-use-dom \
-  --require knock-knock-go \
   --require lite-url \
   --require lodash.debounce \
-  --require ./knock-knock-go:panels-knock-knock-go \
-  --require ./router/normalize-uri:panels-normalize-uri \
+  --require panels-normalise-uri \
   --require panels-ui \
-  --require recompose/withContext \
   --require react \
   --require react-dom \
   --require react-redux \
@@ -56,10 +49,9 @@ NODE_ENV=production $BIN/browserify --verbose --debug \
   --require rlookup \
   --require style-to-css \
   --require waiting \
-  --extension .es6 \
-  --transform babelify \
+  --transform [rollupify --config rollup.config.js] \
   --transform envify \
-  index.es6 | \
+  index.js | \
   $BIN/exorcist $PANELS-prod.js.map > $PANELS-prod.js &&
   $BIN/uglifyjs --verbose \
     --compress \

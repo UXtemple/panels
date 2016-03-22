@@ -1,17 +1,21 @@
-import 'regenerator/runtime';
 import isRequireable from '../utils/is-requireable';
 import loadResource from './load-resource';
 
 async function loadModule(app) {
+  let module = {};
+
   try {
     const response = await fetch(`//${app}/panels.json`);
     const data = await response.json();
+    if (data.module) {
+      module = data.module;
+    }
+
     const resources = [loadResource(data.logic)];
     if (data.style) {
       resources.push(loadResource(data.style));
     }
-    const loadedResources = await Promise.all(resources);
-    return data.module || {};
+    await Promise.all(resources);
   } catch(err) {
     if (err instanceof SyntaxError) {
       throw new Error(`We can't load ${app}.
@@ -29,11 +33,14 @@ async function loadModule(app) {
         }`);
     }
   }
+
+  return module;
 }
 
-export default async function get(app) {
+export default async function get(app, context) {
   let name = app;
   let props = {};
+  // let data;
 
   if (!isRequireable(name)) {
     const data = await loadModule(app);
@@ -45,21 +52,14 @@ export default async function get(app) {
       props = data.props;
     }
   }
+
   const module = require(name);
-
-  let store = false;
-  if (typeof module.configureStore === 'function') {
-    const initialState = typeof module.getInitialState === 'function' ?
-      await module.getInitialState(app, props) : {};
-
-    store = module.configureStore(initialState);
-  }
 
   return {
     module: {
       name,
       props
     },
-    store
+    store: typeof module.setup === 'function' && await module.setup(app, props, context)
   };
 }

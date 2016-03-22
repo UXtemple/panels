@@ -2,16 +2,13 @@
 
 BIN=node_modules/.bin
 
-NODE_ENV=development $BIN/watchify --debug --verbose --extension .es6 \
+NODE_ENV=development $BIN/watchify --debug --verbose \
   --external browser-vendor-prefix \
   --external can-use-dom \
-  --external knock-knock-go \
   --external lite-url \
   --external lodash.debounce \
-  --external panels-knock-knock-go \
-  --external panels-normalize-uri \
+  --external panels-normalise-uri \
   --external panels-ui \
-  --external recompose/withContext \
   --external react \
   --external react-dom \
   --external react-redux \
@@ -22,20 +19,17 @@ NODE_ENV=development $BIN/watchify --debug --verbose --extension .es6 \
   --external rlookup \
   --external style-to-css \
   --external waiting \
+  --transform [rollupify --config rollup.config.js] \
   --transform envify \
-  --transform babelify \
-  --require ./playground/panels.dev.es6:panels.dev \
+  --require ./playground/panels.dev.app.js:panels.dev \
   --outfile playground/panels.dev.js & \
-NODE_ENV=development $BIN/watchify --debug --verbose --extension .es6 \
+NODE_ENV=development $BIN/watchify --debug --verbose \
   --require browser-vendor-prefix \
   --require can-use-dom \
-  --require knock-knock-go \
   --require lite-url \
   --require lodash.debounce \
-  --require ./knock-knock-go:panels-knock-knock-go \
-  --require ./router/normalize-uri:panels-normalize-uri \
+  --require panels-normalise-uri \
   --require panels-ui \
-  --require recompose/withContext \
   --require react \
   --require react-dom \
   --require react-redux \
@@ -46,8 +40,8 @@ NODE_ENV=development $BIN/watchify --debug --verbose --extension .es6 \
   --require rlookup \
   --require style-to-css \
   --require waiting \
+  --transform [rollupify --config rollup.config.js] \
   --transform envify \
-  --transform babelify \
-  --outfile playground/panels.js index.es6 & \
-  sudo $BIN/babel-node ./.bin/server.es6 & \
+  --outfile playground/panels.js index.js & \
+  sudo $BIN/babel-node --presets es2015 ./.bin/server.js & \
   wait

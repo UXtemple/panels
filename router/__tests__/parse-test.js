@@ -1,4 +1,4 @@
-import normalizeUri from '../normalize-uri';
+import normaliseUri from 'panels-normalise-uri';
 import parse from '../parse';
 import test from 'tape';
 
@@ -19,7 +19,7 @@ test('#parse', t => {
   );
 
   t.deepEquals(
-    parse(normalizeUri('https://UXtemple.com/panels/../back')), [
+    parse(normaliseUri('https://UXtemple.com/panels/../back')), [
       {app: 'UXtemple.com', path: '/', context: 'https://UXtemple.com/', visible: true},
       {app: 'UXtemple.com', path: '/back', context: 'https://UXtemple.com/back/', visible: true}
     ],
@@ -109,7 +109,7 @@ test('#parse', t => {
   );
 
   t.deepEquals(
-    parse(normalizeUri('https://UXtemple.com/panels/https://usepanels.com/..')), [
+    parse(normaliseUri('https://UXtemple.com/panels/https://usepanels.com/..')), [
       {app: 'UXtemple.com', path: '/', context: 'https://UXtemple.com/', visible: true},
       {app: 'UXtemple.com', path: '/panels', context: 'https://UXtemple.com/panels/', visible: true}
     ],
