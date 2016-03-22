@@ -11,10 +11,12 @@ mkdir -p $BUNDLE
 
 echo "[bundle] v${VERSION}..."
 NODE_ENV=development $BIN/browserify --verbose --debug \
+  --require array-find-index \
   --require browser-vendor-prefix \
   --require can-use-dom \
   --require lite-url \
   --require lodash.debounce \
+  --require mini-unique-id \
   --require panels-normalise-uri \
   --require panels-ui \
   --require react \
@@ -33,10 +35,12 @@ NODE_ENV=development $BIN/browserify --verbose --debug \
   $BIN/exorcist $PANELS.js.map > $PANELS.js
 
 NODE_ENV=production $BIN/browserify --verbose --debug \
+  --require array-find-index \
   --require browser-vendor-prefix \
   --require can-use-dom \
   --require lite-url \
   --require lodash.debounce \
+  --require mini-unique-id \
   --require panels-normalise-uri \
   --require panels-ui \
   --require react \
