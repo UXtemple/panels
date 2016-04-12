@@ -5,7 +5,7 @@ const KnownError = props => (
 );
 
 const UnknownError = props => {
-  console.error(props.message);
+  console.error(props.message, props);
 
   return (
     <div style={style.wrapper}>
@@ -13,15 +13,21 @@ const UnknownError = props => {
         Something bad happened.
         Sorry.
       </div>
-      <div style={style.line}>{props.message.message || props.message}</div>
-      {props.message.stack && props.message.stack.split("\n").map((line, i) => <div key={i} style={style.line}>{line.toString()}</div>)}
+      {
+        props.message && (
+          <div>
+            <div style={style.line}>{props.message.message || props.message}</div>
+            {props.message.stack && props.message.stack.split("\n").map((line, i) => <div key={i} style={style.line}>{line.toString()}</div>)}
+          </div>
+        )
+      }
       <div style={style.line}>The error is also logged on the console.</div>
       <div style={style.line}>You can click to the source from there.</div>
     </div>
   );
 }
 
-const ErrorComponent = props => props.message.status ?
+const ErrorComponent = props => props.message && props.message.status ?
   <KnownError status={props.message.status} /> :
   <UnknownError {...props} />;
 
