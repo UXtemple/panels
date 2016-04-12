@@ -1,5 +1,4 @@
 import { load as loadApp } from '../apps/actions';
-import getPanelFromApp from './get-panel-from-app';
 import getPanelPathFromRoute from '../router/get-panel-path-from-route';
 import prepare from './prepare';
 
@@ -26,7 +25,7 @@ export function load(route) {
     };
 
     try {
-      const panel = getPanelFromApp(route, app.module.name);
+      const panel = app.findPanel(route.path);
       action.payload = prepare(panel, app.store.getState);
     } catch(err) {
       err.status = 404;
@@ -51,10 +50,10 @@ export function loadPanelIfNeeded(route) {
       dispatch(loadApp(route.app));
     } else {
       if (app.isReady || app.error) {
-        const panel = getPanelPathFromRoute(route);
-        const thePanel = getState().panels[panel];
+        const path = getPanelPathFromRoute(route);
+        const panel = getState().panels[path] || {};
 
-        if (typeof thePanel === 'undefined' || !(thePanel.isLoading || thePanel.isReady || thePanel.error)) {
+        if (typeof panel === 'undefined' || !(panel.isLoading || panel.isReady || panel.error)) {
           dispatch(load(route));
         }
       }

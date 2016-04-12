@@ -7,7 +7,6 @@ import findIndex from 'array-find-index';
 import getPanelPathFromRoute from '../router/get-panel-path-from-route';
 import prepare from './prepare';
 import React, { Component, PropTypes } from 'react';
-import routeShape from '../router/route-shape';
 import Sliced from './sliced';
 import Waiting from 'waiting';
 
@@ -39,11 +38,9 @@ class Panel extends Component {
       if (isLoading) {
         return <Waiting />;
       } else if (error) {
-        return <DisplayError />;
+        return <DisplayError error={error} />;
       } else {
-        // TODO bring required module back in state
-        const module = require(app.module.name);
-        const Type = module.types[panel.type];
+        const Type = app.types[panel.type];
 
         if (app.store) {
           return (
@@ -63,7 +60,12 @@ class Panel extends Component {
 Panel.childContextTypes = {
   isActive: PropTypes.func.isRequired,
   navigate: PropTypes.func.isRequired,
-  route: routeShape.isRequired,
+  route: PropTypes.shape({
+    app: PropTypes.string.isRequired,
+    context: PropTypes.string.isRequired,
+    path: PropTypes.string.isRequired,
+    visible: PropTypes.bool.isRequired
+  }).isRequired,
   toggleExpand: PropTypes.func.isRequired,
   updateSettings: PropTypes.func.isRequired
 };
@@ -80,14 +82,12 @@ function mapStateToProps(state, props) {
   const isLoading = app.isLoading || panel.isLoading;
   const isReady = app.isReady && panel.isReady;
   const error = app.error || panel.error;
-  const message = app.message || panel.message;
 
   return {
     app,
     error,
     isLoading,
     isReady,
-    message,
     panel,
     routeAfter: state.router.routes[routeIndex + 1] || false,
     uri: state.router.uri,

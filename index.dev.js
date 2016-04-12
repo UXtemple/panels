@@ -1,7 +1,7 @@
 import { navigate } from './router/actions';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
-import configureStore from './configure-store';
+import configureStore from './configure-store.dev';
 import history from './router/history';
 import React from 'react';
 import Runtime from './runtime/component';

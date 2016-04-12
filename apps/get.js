@@ -1,3 +1,4 @@
+import createFindPanel from './create-find-panel';
 import isRequireable from '../utils/is-requireable';
 import loadResource from './load-resource';
 
@@ -40,7 +41,6 @@ async function loadModule(app) {
 export default async function get(app, context) {
   let name = app;
   let props = {};
-  // let data;
 
   if (!isRequireable(name)) {
     const data = await loadModule(app);
@@ -53,13 +53,11 @@ export default async function get(app, context) {
     }
   }
 
-  const module = require(name);
+  const { lookup, panels, setup, types } = require(name);
 
   return {
-    module: {
-      name,
-      props
-    },
-    store: typeof module.setup === 'function' && await module.setup(app, props, context)
+    findPanel: createFindPanel(panels, lookup),
+    store: typeof setup === 'function' && await setup(app, props, context),
+    types
   };
 }

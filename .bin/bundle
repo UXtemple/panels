@@ -14,6 +14,7 @@ NODE_ENV=development $BIN/browserify --verbose --debug \
   --require array-find-index \
   --require browser-vendor-prefix \
   --require can-use-dom \
+  --require houkou \
   --require lite-url \
   --require lodash.debounce \
   --require mini-unique-id \
@@ -24,20 +25,20 @@ NODE_ENV=development $BIN/browserify --verbose --debug \
   --require react-redux \
   --require redux \
   --require redux-logger \
-  --require redux-promise \
+  --require ./utils/redux-promise:redux-promise \
   --require redux-thunk \
-  --require rlookup \
   --require style-to-css \
   --require waiting \
   --transform [rollupify --config rollup.config.js] \
-  --transform envify \
-  index.js | \
+  --transform loose-envify \
+  index.dev.js | \
   $BIN/exorcist $PANELS.js.map > $PANELS.js
 
 NODE_ENV=production $BIN/browserify --verbose --debug \
   --require array-find-index \
   --require browser-vendor-prefix \
   --require can-use-dom \
+  --require houkou \
   --require lite-url \
   --require lodash.debounce \
   --require mini-unique-id \
@@ -47,14 +48,12 @@ NODE_ENV=production $BIN/browserify --verbose --debug \
   --require react-dom \
   --require react-redux \
   --require redux \
-  --require redux-logger \
-  --require redux-promise \
+  --require ./utils/redux-promise:redux-promise \
   --require redux-thunk \
-  --require rlookup \
   --require style-to-css \
   --require waiting \
   --transform [rollupify --config rollup.config.js] \
-  --transform envify \
+  --transform loose-envify \
   index.js | \
   $BIN/exorcist $PANELS-prod.js.map > $PANELS-prod.js &&
   $BIN/uglifyjs --verbose \

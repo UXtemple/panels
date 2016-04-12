@@ -1,6 +1,6 @@
 import { LOAD } from './actions';
 
-export default function apps(state = {}, action={}) {
+export default function apps(state={}, action) {
   let nextState = state;
 
   switch (action.type) {
@@ -17,8 +17,7 @@ export default function apps(state = {}, action={}) {
       nextApp = {
         ...state[app],
         isLoading: false,
-        error: true,
-        message: action.payload
+        error: action.payload
       };
     } else {
       nextApp = {
