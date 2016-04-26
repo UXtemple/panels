@@ -9,6 +9,7 @@ NODE_ENV=development $BIN/watchify --debug --verbose \
   --external houkou \
   --external lite-url \
   --external lodash.debounce \
+  --external mini-unique-id \
   --external panels-normalise-uri \
   --external panels-ui \
   --external react \
@@ -16,7 +17,7 @@ NODE_ENV=development $BIN/watchify --debug --verbose \
   --external react-redux \
   --external redux \
   --external redux-logger \
-  --external redux-promise \
+  --external ./utils/redux-promise:redux-promise \
   --external redux-thunk \
   --external style-to-css \
   --external waiting \
@@ -31,6 +32,7 @@ NODE_ENV=development $BIN/watchify --debug --verbose \
   --require houkou \
   --require lite-url \
   --require lodash.debounce \
+  --require mini-unique-id \
   --require panels-normalise-uri \
   --require panels-ui \
   --require react \
@@ -38,7 +40,7 @@ NODE_ENV=development $BIN/watchify --debug --verbose \
   --require react-redux \
   --require redux \
   --require redux-logger \
-  --require redux-promise:./utils/redux-promise \
+  --require ./utils/redux-promise:redux-promise \
   --require redux-thunk \
   --require style-to-css \
   --require waiting \

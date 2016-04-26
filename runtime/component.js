@@ -11,6 +11,7 @@ import shallowEqual from '../utils/shallow-equal';
 import snap from './snap';
 
 const DEBOUNCE = 50;
+const REBOUND = 500;
 
 export class Runtime extends Component {
   componentDidMount() {
@@ -21,6 +22,7 @@ export class Runtime extends Component {
       this.setViewportWidthDebounced = debounce(this.setViewportWidth.bind(this), DEBOUNCE);
       window.addEventListener('resize', this.setViewportWidthDebounced, false);
       window.addEventListener('orientationchange', this.setViewportWidthDebounced, false);
+      document.addEventListener('visibilitychange', () => this.onVisibilityChange());
 
       this.setViewportWidth();
     }
@@ -49,6 +51,20 @@ export class Runtime extends Component {
       this.refs.runtime.removeEventListener('scroll', this.setXDebounced);
       window.removeEventListener('resize', this.setViewportWidthDebounced, false);
       window.removeEventListener('orientationchange', this.setViewportWidthDebounced, false);
+    }
+  }
+
+  onVisibilityChange() {
+    if (document.visibilityState === 'hidden') {
+      this.refs.runtime.removeEventListener('scroll', this.setXDebounced);
+      window.removeEventListener('resize', this.setViewportWidthDebounced, false);
+      window.removeEventListener('orientationchange', this.setViewportWidthDebounced, false);
+    } else {
+      setTimeout(() => {
+        this.refs.runtime.addEventListener('scroll', this.setXDebounced, false);
+        window.addEventListener('resize', this.setViewportWidthDebounced, false);
+        window.addEventListener('orientationchange', this.setViewportWidthDebounced, false);
+      }, REBOUND);
     }
   }
 
