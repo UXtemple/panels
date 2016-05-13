@@ -10,7 +10,7 @@ import React, { Component } from 'react';
 import shallowEqual from '../utils/shallow-equal';
 import snap from './snap';
 
-const DEBOUNCE = 50;
+const DEBOUNCE = 100;
 const REBOUND = 500;
 
 export class Runtime extends Component {
