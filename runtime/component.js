@@ -16,11 +16,10 @@ const REBOUND = 500;
 export class Runtime extends Component {
   componentDidMount() {
     if (canUseDOM) {
-      this.setXDebounced = debounce(this.setX.bind(this), DEBOUNCE);
+      this.setXDebounced = debounce(() => this.setX(), DEBOUNCE);
       this.refs.runtime.addEventListener('scroll', this.setXDebounced, false);
 
-      this.setViewportWidthDebounced = debounce(this.setViewportWidth.bind(this), DEBOUNCE);
-      window.addEventListener('resize', this.setViewportWidthDebounced, false);
+      this.setViewportWidthDebounced = debounce(() => this.setViewportWidth(), DEBOUNCE);
       window.addEventListener('orientationchange', this.setViewportWidthDebounced, false);
       document.addEventListener('visibilitychange', () => this.onVisibilityChange());
 
@@ -49,7 +48,6 @@ export class Runtime extends Component {
   componentWillUnmount() {
     if (canUseDOM) {
       this.refs.runtime.removeEventListener('scroll', this.setXDebounced);
-      window.removeEventListener('resize', this.setViewportWidthDebounced, false);
       window.removeEventListener('orientationchange', this.setViewportWidthDebounced, false);
     }
   }
@@ -57,12 +55,10 @@ export class Runtime extends Component {
   onVisibilityChange() {
     if (document.visibilityState === 'hidden') {
       this.refs.runtime.removeEventListener('scroll', this.setXDebounced);
-      window.removeEventListener('resize', this.setViewportWidthDebounced, false);
       window.removeEventListener('orientationchange', this.setViewportWidthDebounced, false);
     } else {
       setTimeout(() => {
         this.refs.runtime.addEventListener('scroll', this.setXDebounced, false);
-        window.addEventListener('resize', this.setViewportWidthDebounced, false);
         window.addEventListener('orientationchange', this.setViewportWidthDebounced, false);
       }, REBOUND);
     }
