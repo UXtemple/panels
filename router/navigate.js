@@ -15,7 +15,7 @@ export default function navigate(rawUri, currentFocus, nextFocus, nextContext) {
 
     // it might be a plain uri, i.e., without slicing
     let sliced = uri.split(')');
-    if (sliced === 1) {
+    if (sliced.length === 1) {
       // there we default to having the focus panel being the last route
       focus = routes.length - 1;
     } else {
