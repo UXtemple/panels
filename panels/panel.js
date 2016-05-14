@@ -24,7 +24,7 @@ class Panel extends Component {
 
     return {
       isActive: path => routeAfter && `${route.context}${path}` === routeAfter.context,
-      navigate: toUri => dispatch(navigate(`${route.context}${toUri}`)),
+      navigate: (toUri, focus, context) => dispatch(navigate(`${route.context}${toUri}`, focus, context)),
       route,
       routeIndex,
       router,
