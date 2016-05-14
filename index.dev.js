@@ -1,18 +1,22 @@
-import { navigate } from './router/actions';
+import * as actions from './router/actions';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import configureStore from './configure-store.dev';
 import history from './router/history';
+import navigate from './router/navigate';
+import parseUri from './router/parse';
 import React from 'react';
 import Runtime from './runtime/component';
-import router from './router/reducer';
 
 window.addEventListener('load', function() {
   const store = configureStore({
-    router: router({}, navigate(window.location.href))
+    router: navigate(window.location.href, 0)
   });
 
   history(store);
+
+  window._navigate = actions.navigate;
+  window._store = store;
 
   render(
     <Provider store={store}>

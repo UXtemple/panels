@@ -77,6 +77,20 @@ export const types = {
   ),
   'Fuchsia': props => (
     <Panel style={{backgroundColor: 'fuchsia', padding: 20, width: props.width}}>
+      <Teleport to='e/'>{'/a/b/c/d/e'}</Teleport>
+      <Teleport to='..'>..</Teleport>
+      <Content />
+    </Panel>
+  ),
+  'Red': props => (
+    <Panel style={{backgroundColor: 'red', width: props.width}}>
+      <Teleport to='f/'>{'/a/b/c/d/e/f'}</Teleport>
+      <Teleport to='..'>..</Teleport>
+      <Content />
+    </Panel>
+  ),
+  'Blue': props => (
+    <Panel style={{backgroundColor: 'blue', width: props.width}}>
       <Teleport to='..'>..</Teleport>
       <Content />
     </Panel>
@@ -88,7 +102,9 @@ export const panels = {
   '/a': {type: 'Lightyellow'},
   '/a/b': {type: 'Lightblue', width: 720},
   '/a/b/c': {type: 'Lightpink', maxWidth: 560},
-  '/a/b/c/d': {type: 'Fuchsia'}
+  '/a/b/c/d': {type: 'Fuchsia'},
+  '/a/b/c/d/e': {type: 'Red'},
+  '/a/b/c/d/e/f': {type: 'Blue'},
 };
 
 export async function setup(app, props, context) {

@@ -1,3 +1,3 @@
-export default function getPanelFromRoute(route = {}) {
-  return `${route.app}${route.path}`;
+export default function getPanelFromRoute({app, path}) {
+  return `${app}${path}`;
 }

@@ -1,16 +1,15 @@
 import { NAVIGATE, SHOW } from './actions';
-import parse from './parse';
 
-export default function routerReducer(state={routes: [], uri: undefined}, action) {
+export default function routerReducer(state={routes: []}, action) {
   let nextState = state;
 
   switch (action.type) {
     case NAVIGATE:
-      const { uri } = action.payload;
-
       nextState = {
-        routes: parse(uri),
-        uri
+        context: action.payload.context,
+        focus: action.payload.focus,
+        routes: action.payload.routes,
+        uri: action.payload.uri
       };
       break;
 

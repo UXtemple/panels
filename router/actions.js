@@ -1,13 +1,15 @@
-import normaliseUri from 'panels-normalise-uri';
+import doNavigate from './navigate';
 
 export const NAVIGATE = 'panels/router/NAVIGATE';
-export function navigate(uri) {
-  return {
-    type: NAVIGATE,
-    payload: {
-      uri: normaliseUri(uri)
-    }
-  };
+export function navigate(rawUri, nextFocus=1, nextContext=0) {
+  return function navigateThunk(dispatch, getState) {
+    const { router } = getState();
+
+    dispatch({
+      type: NAVIGATE,
+      payload: doNavigate(rawUri, getState().router.focus, nextFocus, nextContext)
+    });
+  }
 }
 
 export const SHOW = 'panels/router/SHOW';

@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import { reset, setX } from './actions';
 import canUseDOM from 'can-use-dom';
 import debounce from 'lodash.debounce';
-import getFocusPanel from '../panels/get-focus-panel';
+import getPanelFromRoute from '../router/get-panel-path-from-route';
 import getViewportWidth from './get-viewport-width';
 import MoveLeft from './move-left';
 import Panels from '../panels/component';
@@ -107,7 +107,7 @@ const style = {
 };
 
 function mapStateToProps(state, props) {
-  const focusPanel = getFocusPanel(state.router.routes, state.panels);
+  const focusPanel = state.panels[getPanelFromRoute(state.router.routes[state.router.focus])] || {};
   let isExpanded = false;
   const panels = Object.keys(state.panels).map(k => {
     const panel = state.panels[k];

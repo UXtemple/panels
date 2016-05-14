@@ -58,22 +58,17 @@ export function reset(preferredSnapPoint, nextViewportWidth, didExpand) {
 
     const nextState = calculateState(viewportWidth, panelsWidths, snapPoint, shouldGoMobile);
 
-    // if the viewport changed, readjust our position to the panel we were looking at
-    // otherwise use the newly added panel
-    let index = nextViewportWidth || didExpand ?
-      getIndexOfPanelToShow(runtime.x, runtime.regions) :
-      panelsWidths.length - 1;
-    if (panelsWidths[index] === 0) {
-      index--;
+    const { context, focus } = router;
+    const focusWidth = nextState.widths[focus];
+    let x = nextState.widths.slice(0, focus).reduce(sum, 0);
+    let leftForContext = viewportWidth - snapPoint - focusWidth;
+    let contextsLeft = focus - context;
+
+    while (contextsLeft > 0 && leftForContext >= nextState.widths[--contextsLeft]) {
+      const contextWidth = nextState.widths[contextsLeft]
+      leftForContext -= contextWidth;
+      x -= contextWidth;
     }
-
-    const xWithContextPanel = nextState.widths.slice(0, index - 1).reduce(sum, 0);
-    const xWithoutContextPanel = xWithContextPanel + nextState.widths[index - 1];
-
-    const focusPanelWidth = nextState.widths[nextState.widths.length - 1];
-    const x = xWithoutContextPanel - xWithContextPanel + focusPanelWidth + snapPoint <= viewportWidth ?
-      xWithContextPanel :
-      xWithoutContextPanel;
 
     dispatch({
       type: RESET,
