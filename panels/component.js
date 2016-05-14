@@ -16,12 +16,12 @@ const Panels = props => {
     <div style={finalStyle}>
       {props.routes.map((route, i) => (
         <WrapPanelIfNeeded
-          isFocus={i === props.routes.length - 1}
-          isContext={i === props.routes.length - 2}
+          isContext={i >= props.context}
+          isFocus={i === props.focus}
           isVisible={route.visible}
-          shouldWrap={i === props.routes.length - 1}
           key={route.context}
           route={route}
+          shouldWrap={i === props.focus}
           width={props.widths[i]} />
       ))}
     </div>
@@ -38,6 +38,8 @@ function mapStateToProps(state, props) {
   const { router, runtime } = state;
 
   return {
+    context: router.context,
+    focus: router.focus,
     routes: router.routes,
     snapPoint: runtime.snapPoint,
     width: runtime.width,
