@@ -20,12 +20,14 @@ class Panel extends Component {
   }
 
   getChildContext() {
-    const { dispatch, route, routeAfter } = this.props;
+    const { dispatch, route, routeAfter, routeIndex, router } = this.props;
 
     return {
       isActive: path => routeAfter && `${route.context}${path}` === routeAfter.context,
       navigate: toUri => dispatch(navigate(`${route.context}${toUri}`)),
       route,
+      routeIndex,
+      router,
       toggleExpand: () => dispatch(toggleExpand(route)),
       updateSettings: settings => dispatch(updateSettings(route, settings))
     };
@@ -57,15 +59,22 @@ class Panel extends Component {
     }
   }
 }
+const routeShape = PropTypes.shape({
+  app: PropTypes.string.isRequired,
+  context: PropTypes.string.isRequired,
+  path: PropTypes.string.isRequired,
+  visible: PropTypes.bool.isRequired
+});
+
 Panel.childContextTypes = {
   isActive: PropTypes.func.isRequired,
   navigate: PropTypes.func.isRequired,
-  route: PropTypes.shape({
-    app: PropTypes.string.isRequired,
-    context: PropTypes.string.isRequired,
-    path: PropTypes.string.isRequired,
-    visible: PropTypes.bool.isRequired
-  }).isRequired,
+  route: routeShape.isRequired,
+  routeIndex: PropTypes.number.isRequired,
+  router: PropTypes.shape({
+    routes: PropTypes.arrayOf(routeShape),
+    uri: PropTypes.string.isRequired
+  }),
   toggleExpand: PropTypes.func.isRequired,
   updateSettings: PropTypes.func.isRequired
 };
@@ -90,6 +99,8 @@ function mapStateToProps(state, props) {
     isReady,
     panel,
     routeAfter: state.router.routes[routeIndex + 1] || false,
+    routeIndex: routeIndex,
+    router: state.router,
     uri: state.router.uri,
     width: props.width
   };
