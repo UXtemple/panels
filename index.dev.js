@@ -1,10 +1,8 @@
-import * as actions from './router/actions';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import configureStore from './configure-store.dev';
 import history from './router/history';
 import navigate from './router/navigate';
-import parseUri from './router/parse';
 import React from 'react';
 import Runtime from './runtime/component';
 
@@ -15,7 +13,6 @@ window.addEventListener('load', function() {
 
   history(store);
 
-  window._navigate = actions.navigate;
   window._store = store;
 
   render(
