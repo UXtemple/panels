@@ -21,7 +21,7 @@ const Panels = props => {
           isVisible={route.visible}
           key={route.context}
           route={route}
-          shouldWrap={i === props.focus}
+          shouldWrap={i === props.routes.length - 1}
           width={props.widths[i]} />
       ))}
     </div>
