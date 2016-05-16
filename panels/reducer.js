@@ -1,6 +1,7 @@
 import { LOAD, TOGGLE_EXPAND, UPDATE_SETTINGS } from './actions';
 
-export default function panels(state={}, action) {
+export default function panels(state={byId: {}, items: []}, action) {
+  let nextItems = state.items;
   let nextState = state;
   let nextPanel;
   let id;
@@ -19,15 +20,16 @@ export default function panels(state={}, action) {
       };
     } else {
       nextPanel = {
-        background: action.payload.background,
         isLoading: false,
         isReady: true,
         maxWidth: action.payload.maxWidth,
         props: action.payload.props,
+        styleBackground: action.payload.styleBackground,
         title: action.payload.title,
         type: action.payload.type,
         width: action.payload.width
       };
+      nextItems = [...state.items, id];
     }
     break;
 
@@ -35,15 +37,16 @@ export default function panels(state={}, action) {
     id = action.payload.id;
 
     nextPanel = {
-      ...state[id],
-      isExpanded: !state[id].isExpanded
+      ...state.byId[id],
+      isExpanded: !state.byId[id].isExpanded
     };
     break;
 
   case UPDATE_SETTINGS:
     id = action.payload.id;
+
     nextPanel = {
-      ...state[id],
+      ...state.byId[id],
       ...action.payload.settings
     };
     break;
@@ -53,8 +56,11 @@ export default function panels(state={}, action) {
 
   if (nextPanel) {
     nextState = {
-      ...state,
-      [id]: nextPanel
+      byId: {
+        ...state.byId,
+        [id]: nextPanel
+      },
+      items: nextItems
     };
   }
 

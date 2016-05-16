@@ -38,6 +38,11 @@ class Lightgreen extends Component {
             styleHover={{backgroundColor: 'lightgreen', color: 'white'}}>{'/a'}</Teleport>
           <Teleport to='..'>..</Teleport>
           <Content />
+          <Teleport to='a/'
+            style={{color: 'lightgreen', paddingBottom: 10, paddingTop: 10, textDecoration: 'none'}}
+            styleActive={{backgroundColor: 'white', color: 'lightgreen'}}
+            styleHover={{backgroundColor: 'lightgreen', color: 'white'}}>{'/a'}</Teleport>
+          <Teleport to='..'>..</Teleport>
         </div>
         <Expand {...props.panel.panel} />
       </Panel>
@@ -98,7 +103,7 @@ export const types = {
 };
 
 export const panels = {
-  '/': {type: 'Lightgreen', background: {color: '#f2f2f2'}, maxWidth: 720, title: 'main'},
+  '/': {type: 'Lightgreen', maxWidth: 720, styleBackground: {backgroundColor: '#f2f2f2'}, title: 'main'},
   '/a': {type: 'Lightyellow'},
   '/a/b': {type: 'Lightblue', width: 720},
   '/a/b/c': {type: 'Lightpink', maxWidth: 560},

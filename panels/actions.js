@@ -51,7 +51,7 @@ export function loadPanelIfNeeded(route) {
     } else {
       if (app.isReady || app.error) {
         const path = getPanelPathFromRoute(route);
-        const panel = getState().panels[path] || {};
+        const panel = getState().panels.byId[path];
 
         if (typeof panel === 'undefined' || !(panel.isLoading || panel.isReady || panel.error)) {
           dispatch(load(route));
@@ -62,16 +62,16 @@ export function loadPanelIfNeeded(route) {
 }
 
 export const UPDATE_SETTINGS = 'panels/panels/UPDATE_SETTINGS';
-export function updateSettings(route, {background, maxWidth, title, width}) {
+export function updateSettings(route, {maxWidth, title, styleBackground, width}) {
   const settings = {};
-  if (background) {
-    settings.background = background;
-  }
   if (maxWidth) {
     settings.maxWidth = maxWidth;
   }
   if (title) {
     settings.title = title;
+  }
+  if (styleBackground) {
+    settings.styleBackground = styleBackground;
   }
   if (width) {
     settings.width = width;

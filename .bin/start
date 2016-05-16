@@ -5,7 +5,6 @@ BIN=node_modules/.bin
 NODE_ENV=development $BIN/watchify --debug --verbose \
   --external array-find-index \
   --external browser-vendor-prefix \
-  --external can-use-dom \
   --external houkou \
   --external lite-url \
   --external lodash.debounce \
@@ -28,7 +27,6 @@ NODE_ENV=development $BIN/watchify --debug --verbose \
 NODE_ENV=development $BIN/watchify --debug --verbose \
   --require array-find-index \
   --require browser-vendor-prefix \
-  --require can-use-dom \
   --require houkou \
   --require lite-url \
   --require lodash.debounce \
@@ -47,5 +45,5 @@ NODE_ENV=development $BIN/watchify --debug --verbose \
   --transform [rollupify --config rollup.config.js] \
   --transform loose-envify \
   --outfile playground/panels.js index.dev.js & \
-  sudo $BIN/babel-node --presets es2015 ./.bin/server.js & \
+  sudo $BIN/babel-node --plugins transform-es2015-modules-commonjs .bin/server.js & \
   wait

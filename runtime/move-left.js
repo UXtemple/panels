@@ -1,12 +1,11 @@
 import { alignItemsCenter, justifyContentCenter } from 'browser-vendor-prefix';
 import { ArrowLeft } from 'panels-ui';
-import { moveLeft } from './actions';
 import React from 'react';
 
 const DIAMETER = 40;
 
-const MoveLeft = props => (
-  <div onClick={() => props.dispatch(moveLeft())} style={{...style, left: props.snapPoint - DIAMETER / 2}}>
+const MoveLeft = ({onClick, snapPoint}) => (
+  <div onClick={onClick} style={{...style, left: snapPoint - DIAMETER / 2}}>
     <ArrowLeft />
   </div>
 );

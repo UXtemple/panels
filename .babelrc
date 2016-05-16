@@ -1,8 +1,5 @@
 {
-  "presets": ["react"],
-  "plugins": [
-    "kneden",
-    "transform-export-extensions",
-    "transform-object-rest-spread"
+  "presets": [
+    "es-uxtemple"
   ]
 }

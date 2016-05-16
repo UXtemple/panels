@@ -4,6 +4,7 @@ import getPanelPathFromRoute from '../router/get-panel-path-from-route';
 import getXToSnapTo from './get-x-to-snap-to';
 import sum from '../utils/sum';
 
+// TODO either store the currently snapped panel or memoise this
 export const MOVE_LEFT = 'panels/runtime/MOVE_LEFT';
 export function moveLeft() {
   return function moveLeftThunk(dispatch, getState) {
@@ -25,8 +26,10 @@ export function moveLeft() {
   }
 }
 
+// TODO simplify
+// TODO extract preferredSnapPoint into state
 export const RESET = 'panels/runtime/RESET';
-export function reset(preferredSnapPoint, nextViewportWidth, didExpand) {
+export function reset(preferredSnapPoint, nextViewportWidth) {
   return function resetThunk(dispatch, getState) {
     const { panels, router, runtime } = getState();
     const viewportWidth = nextViewportWidth || runtime.viewportWidth;
@@ -36,7 +39,7 @@ export function reset(preferredSnapPoint, nextViewportWidth, didExpand) {
     const shouldGoMobile = viewportWidth < MOBILE_THRESHOLD;
 
     const panelsWidths = router.routes.map((route, i) => {
-      const panel = panels[getPanelPathFromRoute(route)];
+      const panel = panels.byId[getPanelPathFromRoute(route)];
 
       if (shouldGoMobile) {
         return viewportWidth;
@@ -59,15 +62,25 @@ export function reset(preferredSnapPoint, nextViewportWidth, didExpand) {
     const nextState = calculateState(viewportWidth, panelsWidths, snapPoint, shouldGoMobile);
 
     const { context, focus } = router;
-    const focusWidth = nextState.widths[focus];
-    let x = nextState.widths.slice(0, focus).reduce(sum, 0);
-    let leftForContext = viewportWidth - snapPoint - focusWidth;
-    let contextsLeft = focus - context;
+    // get how large our focus panel is
+    const focusWidth = nextState.widths[focus]; // >> 500
+    // get the focus panel's x real position in our runtime if it were flat
+    let x = nextState.widths.slice(0, focus).reduce(sum, 0); // >> 860
+    // get how much space we have left for context panels
+    let leftForContext = viewportWidth - snapPoint - focusWidth; // >> 1089
+    // assess how many context panels we should try to show
+    let contextsLeft = focus - context; // >> 1
 
-    while (contextsLeft > 0 && leftForContext >= nextState.widths[--contextsLeft]) {
-      const contextWidth = nextState.widths[contextsLeft]
+    // try to fit those context panels within that space that's left
+    while (contextsLeft > 0 && leftForContext >= nextState.widths[contextsLeft]) {
+      // get the context's width
+      const contextWidth = nextState.widths[contextsLeft];
+      // remove it from the space left for context
       leftForContext -= contextWidth;
+      // shift x to include that panel
       x -= contextWidth;
+      // decrease the amount of contexts left
+      contextsLeft--;
     }
 
     dispatch({

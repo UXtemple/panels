@@ -1,8 +1,10 @@
 import { MOVE_LEFT, RESET, SET_X } from './actions';
+import { LOAD, TOGGLE_EXPAND, UPDATE_SETTINGS } from '../panels/actions';
 
 const DEFAULT = {
   halves: [],
   regions: [],
+  shouldReset: false,
   shouldGoMobile: true,
   x: 0,
   width: 0,
@@ -16,7 +18,8 @@ export default function runtimeReducer(state=DEFAULT, action) {
   case RESET:
     nextState = {
       ...state,
-      ...action.payload
+      ...action.payload,
+      shouldReset: false
     };
     break;
 
@@ -25,6 +28,15 @@ export default function runtimeReducer(state=DEFAULT, action) {
     nextState = {
       ...state,
       x: action.payload.x
+    };
+    break;
+
+  case LOAD:
+  case TOGGLE_EXPAND:
+  case UPDATE_SETTINGS:
+    nextState = {
+      ...state,
+      shouldReset: true
     };
     break;
 
