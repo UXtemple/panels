@@ -15,7 +15,7 @@ Content.contextTypes = {
 
 const style = {
   innerWrapper: {
-    height: '100vh',
+    height: '100%',
     overflow: 'auto',
     padding: 20
   }

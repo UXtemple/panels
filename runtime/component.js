@@ -23,7 +23,7 @@ export class Runtime extends Component {
   }
 
   componentDidMount() {
-    this.refs.runtime.addEventListener('scroll', this.setXDebounced, false);
+    this.$runtime.addEventListener('scroll', this.setXDebounced, false);
     window.addEventListener('resize', this.setViewportWidthDebounced, false);
     window.addEventListener('orientationchange', this.setViewportWidthDebounced, false);
     document.addEventListener('visibilitychange', this.onVisibilityChange);
@@ -47,24 +47,24 @@ export class Runtime extends Component {
     }
 
     if (props.x !== prevProps.x) {
-      snapX(this.refs.runtime, props.x);
+      snapX(this.$runtime, props.x);
     }
   }
 
   componentWillUnmount() {
-    this.refs.runtime.removeEventListener('scroll', this.setXDebounced);
+    this.$runtime.removeEventListener('scroll', this.setXDebounced);
     window.removeEventListener('resize', this.setViewportWidthDebounced, false);
     window.removeEventListener('orientationchange', this.setViewportWidthDebounced, false);
   }
 
   onVisibilityChange() {
     if (document.visibilityState === 'hidden') {
-      this.refs.runtime.removeEventListener('scroll', this.setXDebounced);
+      this.$runtime.removeEventListener('scroll', this.setXDebounced);
       window.removeEventListener('resize', this.setViewportWidthDebounced, false);
       window.removeEventListener('orientationchange', this.setViewportWidthDebounced, false);
     } else {
       setTimeout(() => {
-        this.refs.runtime.addEventListener('scroll', this.setXDebounced, false);
+        this.$runtime.addEventListener('scroll', this.setXDebounced, false);
         window.addEventListener('resize', this.setViewportWidthDebounced, false);
         window.addEventListener('orientationchange', this.setViewportWidthDebounced, false);
       }, REBOUND);
@@ -81,7 +81,7 @@ export class Runtime extends Component {
     } : style;
 
     return (
-      <div className='runtime' ref='runtime' style={runtimeStyle}>
+      <div ref={ $e => this.$runtime = $e } style={runtimeStyle}>
         { canMoveLeft && <MoveLeft onClick={moveLeft} snapPoint={snapPoint} /> }
 
         <div style={{ ...stylePanels, paddingLeft: snapPoint, width }}>
@@ -106,12 +106,12 @@ export class Runtime extends Component {
   }
 
   setX() {
-    this.props.setX(this.refs.runtime.scrollLeft);
+    this.props.setX(this.$runtime.scrollLeft);
   }
 }
 
 const style = {
-  height: '100vh',
+  height: '100%',
   overflowX: 'auto',
   overflowY: 'hidden',
   width: '100vw'
@@ -119,7 +119,7 @@ const style = {
 
 const stylePanels = {
   ...flexDirectionRow,
-  height: '100vh'
+  height: '100%'
 };
 
 const getFocusPanel = ({panels, router}) => {

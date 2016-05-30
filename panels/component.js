@@ -53,7 +53,11 @@ class Panel extends Component {
 
     if (route.visible) {
       if (isLoading) {
-        return <Waiting />;
+        return (
+          <div style={{ width }}>
+            <Waiting />
+          </div>
+        );
       } else if (error) {
         return <DisplayError error={error} />;
       } else {
