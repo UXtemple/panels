@@ -38,7 +38,7 @@
     "lodash.debounce": "^4.0.5",
     "mini-unique-id": "^1.0.1",
     "panels-normalise-uri": "^1.0.3",
-    "panels-ui": "^2.3.0",
+    "panels-ui": "^2.5.0",
     "react": "^15.1.0",
     "react-dom": "^15.1.0",
     "react-redux": "^4.4.5",

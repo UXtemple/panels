@@ -3,11 +3,11 @@ import { createSelector } from 'reselect';
 import { flexDirectionRow } from 'browser-vendor-prefix';
 import { moveLeft } from './actions';
 import { reset, setX } from './actions';
+import { snapX } from 'panels-ui';
 import debounce from 'lodash.debounce';
 import getViewportWidth from './get-viewport-width';
 import MoveLeft from './move-left';
 import React, { Component } from 'react';
-import snap from './snap';
 import Panel from '../panels/component';
 
 const DEBOUNCE = 150;
@@ -47,7 +47,7 @@ export class Runtime extends Component {
     }
 
     if (props.x !== prevProps.x) {
-      snap(this.refs.runtime, props.x);
+      snapX(this.refs.runtime, props.x);
     }
   }
 
