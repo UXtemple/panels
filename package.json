@@ -31,7 +31,6 @@
   "homepage": "https://github.com/UXtemple/panels#readme",
   "dependencies": {
     "array-find-index": "^1.0.1",
-    "babel-preset-es-uxtemple": "^1.0.1",
     "browser-vendor-prefix": "^2.2.0",
     "houkou": "^0.2.2",
     "lite-url": "^1.0.4",
@@ -41,6 +40,7 @@
     "panels-ui": "^2.5.0",
     "react": "^15.1.0",
     "react-dom": "^15.1.0",
+    "react-motion": "^0.4.4",
     "react-redux": "^4.4.5",
     "redux": "^3.5.2",
     "redux-thunk": "^2.1.0",
@@ -50,6 +50,7 @@
   },
   "devDependencies": {
     "babel-cli": "^6.3.17",
+    "babel-preset-es-uxtemple": "^1.0.1",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.8.0",
     "browserify": "^13.0.0",
     "eslint": "^2.10.2",
@@ -66,10 +67,12 @@
     "proxyquire": "^1.7.2",
     "redux-logger": "^2.6.1",
     "rollup-plugin-babel": "^2.4.0",
-    "rollupify": "^0.2.0",
+    "rollup": "^0.30.0",
+    "rollupify": "^0.3.1",
     "sinon": "^1.16.1",
     "tape": "^4.2.0",
     "uglify-js": "^2.4.24",
     "watchify": "^3.4.0"
-  }
+  },
+  "version": "7.0.3-beta.1"
 }

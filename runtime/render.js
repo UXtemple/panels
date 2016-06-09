@@ -5,7 +5,7 @@ import navigate from '../router/navigate';
 import React from 'react';
 import Runtime from './component';
 
-export default function runtimeRender(configureStore) {
+export default function runtimeRender(configureStore, preferredSnapPoint = 90) {
   const store = configureStore({
     router: navigate(window.location.href)
   });
@@ -14,7 +14,7 @@ export default function runtimeRender(configureStore) {
 
   render(
     <Provider store={store}>
-      <Runtime preferredSnapPoint={90} />
+      <Runtime preferredSnapPoint={preferredSnapPoint} />
     </Provider>,
     document.getElementById('root')
   );

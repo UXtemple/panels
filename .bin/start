@@ -13,6 +13,7 @@ NODE_ENV=development $BIN/watchify --debug --verbose \
   --external panels-ui \
   --external react \
   --external react-dom \
+  --external react-motion \
   --external react-redux \
   --external redux \
   --external redux-logger \
@@ -35,6 +36,7 @@ NODE_ENV=development $BIN/watchify --debug --verbose \
   --require panels-ui \
   --require react \
   --require react-dom \
+  --require react-motion \
   --require react-redux \
   --require redux \
   --require redux-logger \

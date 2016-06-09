@@ -33,7 +33,7 @@ export function reset(preferredSnapPoint, nextViewportWidth) {
   return function resetThunk(dispatch, getState) {
     const { panels, router, runtime } = getState();
     const viewportWidth = nextViewportWidth || runtime.viewportWidth;
-    const snapPoint = preferredSnapPoint || runtime.snapPoint;
+    const snapPoint = typeof preferredSnapPoint === 'number' ? preferredSnapPoint : runtime.snapPoint;
 
     const maxWidth = viewportWidth - snapPoint;
     const shouldGoMobile = viewportWidth < MOBILE_THRESHOLD;

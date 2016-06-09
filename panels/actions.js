@@ -62,7 +62,7 @@ export function loadPanelIfNeeded(route) {
 }
 
 export const UPDATE_SETTINGS = 'panels/panels/UPDATE_SETTINGS';
-export function updateSettings(route, {maxWidth, title, styleBackground, width}) {
+export function updateSettings(route, { maxWidth, title, styleBackground, width }) {
   const settings = {};
   if (maxWidth) {
     settings.maxWidth = maxWidth;
