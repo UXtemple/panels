@@ -135,8 +135,3 @@ export const panels = {
   '/a/b/c/d/e': {type: 'Red'},
   '/a/b/c/d/e/f': {type: 'Blue'},
 };
-
-export async function setup(app, props, context) {
-  console.log('app setup', app, props, context);
-  return false;
-}

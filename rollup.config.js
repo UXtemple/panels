@@ -1,8 +1,14 @@
 module.exports = {
+  onwarn: function(str) {
+    if (!/^Treating/.test(str)) {
+      console.error(str);
+    }
+  },
   plugins: [
     require('rollup-plugin-babel')({
       exclude: 'node_modules/**',
-      presets: ['es2015-rollup']
+      plugins: [require('babel-plugin-external-helpers')],
+      presets: [require('babel-preset-es-uxtemple')]
     })
   ]
 }

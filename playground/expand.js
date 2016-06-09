@@ -14,7 +14,6 @@ export default class Expand extends Component {
 Expand.contextTypes = {
   toggleExpand: PropTypes.func
 };
-export default Expand;
 
 const DIAMETER = 40;
 const style = {

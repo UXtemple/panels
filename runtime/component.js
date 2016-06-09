@@ -4,11 +4,12 @@ import { flexDirectionRow } from 'browser-vendor-prefix';
 import { moveLeft } from './actions';
 import { reset, setX } from './actions';
 import { snapX } from 'panels-ui';
+import { spring, TransitionMotion } from 'react-motion';
 import debounce from 'lodash.debounce';
 import getViewportWidth from './get-viewport-width';
 import MoveLeft from './move-left';
-import React, { Component } from 'react';
 import Panel from '../panels/component';
+import React, { Component } from 'react';
 
 const DEBOUNCE = 150;
 const REBOUND = 500;
@@ -20,6 +21,9 @@ export class Runtime extends Component {
     this.onVisibilityChange = this.onVisibilityChange.bind(this);
     this.setXDebounced = debounce(this.setX.bind(this), DEBOUNCE);
     this.setViewportWidthDebounced = debounce(this.setViewportWidth.bind(this), DEBOUNCE);
+
+    this.willEnter = this.willEnter.bind(this);
+    this.willLeave = this.willLeave.bind(this);
   }
 
   componentDidMount() {
@@ -71,6 +75,18 @@ export class Runtime extends Component {
     }
   }
 
+  willEnter() {
+    return {
+      translateX: -100
+    };
+  }
+
+  willLeave() {
+    return {
+      translateX: spring(-100)
+    };
+  }
+
   render() {
     const {
       canMoveLeft, context, focus, focusPanel, moveLeft, routes, snapPoint, width, widths
@@ -84,19 +100,37 @@ export class Runtime extends Component {
       <div ref={ $e => this.$runtime = $e } style={runtimeStyle}>
         { canMoveLeft && <MoveLeft onClick={moveLeft} snapPoint={snapPoint} /> }
 
-        <div style={{ ...stylePanels, paddingLeft: snapPoint, width }}>
-          { routes.map((route, i) => (
-            <Panel
-              isContext={i >= context}
-              isFocus={i === focus}
-              isVisible={route.visible}
-              key={route.context}
-              route={route}
-              shouldWrap={i === routes.length - 1}
-              width={widths[i]}
-            />
-          )) }
-        </div>
+        <TransitionMotion
+          willEnter={this.willEnter}
+          willLeave={this.willLeave}
+          styles={routes.map((route, i) => ({
+            key: route.context,
+            data: {
+              route,
+              width: widths[i] || 360
+            },
+            style: {
+              translateX: spring(0)
+            }
+          }))}>
+          {interpolatedStyles => (
+            <div style={{ ...stylePanels, paddingLeft: snapPoint, width }}>
+              { interpolatedStyles.map((config, i) => (
+                <Panel
+                  isContext={i >= context}
+                  isFocus={i === focus}
+                  isVisible={config.data.route.visible}
+                  key={config.data.route.context}
+                  route={config.data.route}
+                  shouldWrap={i === routes.length - 1}
+                  translateX={config.style.translateX}
+                  zIndex={routes.length - i}
+                  width={config.data.width}
+                />
+              )) }
+            </div>
+          )}
+        </TransitionMotion>
       </div>
     );
   }

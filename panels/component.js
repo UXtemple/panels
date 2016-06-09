@@ -49,33 +49,38 @@ class Panel extends Component {
   // }
 
   render() {
-    const { app, dispatch, error, isLoading, panel, route, width, ...rest } = this.props;
+    const { app, dispatch, error, isLoading, panel, route, translateX, width, zIndex, ...rest } = this.props;
 
+    const finalWidth = route.visible ? width : 0;
+
+    let children;
     if (route.visible) {
       if (isLoading) {
-        return (
-          <div style={{ width }}>
-            <Waiting />
-          </div>
-        );
+        children = <Waiting />;
       } else if (error) {
-        return <DisplayError error={error} />;
+        children = <DisplayError error={error} />;
       } else {
         const Type = app.types[panel.type];
 
         if (app.store) {
-          return (
+          children = (
             <Provider store={app.store}>
-              <Type {...panel.props} panel={rest} width={width} ref='panel' />
+              <Type {...panel.props} panel={rest} width={width} />
             </Provider>
           );
         } else {
-          return <Type {...panel.props} panel={rest} width={width} />;
+          children = <Type {...panel.props} panel={rest} width={width} />;
         }
       }
-    } else {
-      return <Sliced />;
     }
+
+
+    console.log('translateX', translateX, 'width', width)
+    return (
+      <div style={{ transform: `translateX(${translateX}%)`, width: finalWidth, zIndex }}>
+        { children }
+      </div>
+    );
   }
 }
 const routeShape = PropTypes.shape({
