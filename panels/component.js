@@ -49,7 +49,7 @@ class Panel extends Component {
   // }
 
   render() {
-    const { app, dispatch, error, isLoading, panel, route, translateX, width, zIndex, ...rest } = this.props;
+    const { app, dispatch, error, isLoading, panel, route, width, x, zIndex, ...rest } = this.props;
 
     const finalWidth = route.visible ? width : 0;
 
@@ -74,10 +74,8 @@ class Panel extends Component {
       }
     }
 
-
-    console.log('translateX', translateX, 'width', width)
     return (
-      <div style={{ transform: `translateX(${translateX}%)`, width: finalWidth, zIndex }}>
+      <div style={{ opacity: x, transform: `translateX(${-1 * Math.abs(100 - x * 100)}%)`, width: finalWidth, zIndex }}>
         { children }
       </div>
     );

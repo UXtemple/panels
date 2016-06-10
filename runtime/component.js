@@ -77,13 +77,13 @@ export class Runtime extends Component {
 
   willEnter() {
     return {
-      translateX: -100
+      x: 0
     };
   }
 
   willLeave() {
     return {
-      translateX: spring(-100)
+      x: spring(0, { stifness: 210 })
     };
   }
 
@@ -104,13 +104,13 @@ export class Runtime extends Component {
           willEnter={this.willEnter}
           willLeave={this.willLeave}
           styles={routes.map((route, i) => ({
-            key: route.context,
+            key: i, // route.context,
             data: {
               route,
               width: widths[i] || 360
             },
             style: {
-              translateX: spring(0)
+              x: spring(1, { stifness: 210 })
             }
           }))}>
           {interpolatedStyles => (
@@ -120,10 +120,10 @@ export class Runtime extends Component {
                   isContext={i >= context}
                   isFocus={i === focus}
                   isVisible={config.data.route.visible}
-                  key={config.data.route.context}
+                  key={config.key}
                   route={config.data.route}
                   shouldWrap={i === routes.length - 1}
-                  translateX={config.style.translateX}
+                  x={config.style.x}
                   zIndex={routes.length - i}
                   width={config.data.width}
                 />
