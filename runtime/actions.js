@@ -55,6 +55,11 @@ export function reset(preferredSnapPoint, nextViewportWidth) {
           width = 0;
         }
 
+        const percentageMatch = typeof width === 'string' && width.match(/([0-9]+)%/);
+        if (percentageMatch) {
+          width = maxWidth * parseInt(percentageMatch, 10) / 100;
+        }
+
         return Math.min(maxWidth, width);
       }
     });
