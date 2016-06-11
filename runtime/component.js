@@ -38,8 +38,9 @@ export class Runtime extends Component {
   componentDidUpdate(prevProps) {
     const { props } = this;
 
-    if (prevProps.focusPanel && props.focusPanel && props.focusPanel.title !== prevProps.focusPanel.title) {
-      window.document.title = props.focusPanel.title;
+    // TODO FIXME this needs to be reworked :/
+    if ((!prevProps.focusPanel && props.focusPanel) || (prevProps.focusPanel && props.focusPanel && props.focusPanel.title !== prevProps.focusPanel.title)) {
+      window.document.title = props.focusPanel.title || props.focusPanel.type;
     }
 
     if (props.routes !== prevProps.routes) {
