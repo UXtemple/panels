@@ -53,6 +53,7 @@ class Lightgreen extends Component {
         <div style={style.innerWrapper} ref={ $e => this.$scroller = $e }>
           <button onClick={() => this.update()}>update</button>
           <Teleport to='a/'
+            context={0}
             style={{color: 'lightgreen', paddingBottom: 10, paddingTop: 10, textDecoration: 'none'}}
             styleActive={{backgroundColor: 'white', color: 'lightgreen'}}
             styleHover={{backgroundColor: 'lightgreen', color: 'white'}}>{'/a'}</Teleport>
@@ -123,15 +124,27 @@ export const types = {
       <Teleport to='..'>..</Teleport>
       <Content />
     </Panel>
+  ),
+  'Random': props => (
+    <Panel style={{border: '1px solid black'}}>random { props.id }</Panel>
   )
 };
 
 export const panels = {
   '/': {type: 'Lightgreen', maxWidth: 720, styleBackground: {backgroundColor: '#f2f2f2'}, title: 'main'},
-  '/a': {type: 'Lightyellow'},
+  '/a': {type: 'Lightyellow', width: '50%' },
   '/a/b': {type: 'Lightblue', width: 720},
   '/a/b/c': {type: 'Lightpink', maxWidth: 560},
   '/a/b/c/d': {type: 'Fuchsia'},
   '/a/b/c/d/e': {type: 'Red'},
   '/a/b/c/d/e/f': {type: 'Blue'},
+  '/random:id': (state, props) => ({
+    context: 0,
+    title: props.id,
+    props,
+    type: 'Random',
+    width: 360 * parseFloat(props.id, 10)
+  })
 };
+
+export const lookup = ['/random:id']

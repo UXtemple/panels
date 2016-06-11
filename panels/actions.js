@@ -1,6 +1,5 @@
 import { load as loadApp } from '../apps/actions';
 import getPanelPathFromRoute from '../router/get-panel-path-from-route';
-import prepare from './prepare';
 
 export const TOGGLE_EXPAND = 'panels/panels/TOGGLE_EXPAND';
 export function toggleExpand(route) {
@@ -25,8 +24,11 @@ export function load(route) {
     };
 
     try {
-      const panel = app.findPanel(route.path);
-      action.payload = prepare(panel, app.store.getState);
+      const { panel, props } = app.findPanel(route.path);
+      // TODO check for a malformed panel
+      action.payload = typeof panel === 'function' ?
+        panel(app.store && app.store.getState(), props) :
+        { ...panel, props };
     } catch(err) {
       err.status = 404;
 
