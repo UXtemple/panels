@@ -66,6 +66,7 @@ class Panel extends Component {
         style={{
           height: '100%',
           opacity: x,
+          overflowY: 'hidden',
           transform: `translateX(${-Math.abs(100 - x * 100)}%)`,
           width: finalWidth,
           zIndex

@@ -14,9 +14,10 @@ const DEBOUNCE = 150;
 const REBOUND = 500;
 
 export class Runtime extends Component {
-  // state = {
-  //   presenterIsFocused: false
-  // };
+  state = {
+    opacity: 1,
+    presenter: null
+  };
 
   componentDidMount() {
     this.$runtime.addEventListener('scroll', this.setX, false);
@@ -25,15 +26,13 @@ export class Runtime extends Component {
     document.addEventListener('visibilitychange', this.onVisibilityChange);
   }
 
-  // componentWillReceiveProps(nextProps) {
-  //   const { props, state } = this;
+  componentWillReceiveProps(nextProps) {
+    const { props } = this;
 
-  //   if (state.Presenter && (props.focusPanel !== nextProps.focusPanel || props.x !== nextProps.x)) {
-  //     this.setState({
-  //       presenterIsFocused: !state.presenterIsFocused
-  //     });
-  //   }
-  // }
+    if (props.focusPanel !== nextProps.focusPanel || props.x !== nextProps.x) {
+      this.toggleOpacityIfPresenting();
+    }
+  }
 
   componentDidUpdate(prevProps) {
     const { props } = this;
@@ -74,12 +73,11 @@ export class Runtime extends Component {
 
   getChildContext() {
     return {
-      present: (app, presenter, presenterProps) => {
-        // this.setState({
-        //   presenterIsFocused: true,
-        //   Presenter: this.props.apps[app].presenters[presenter],
-        //   presenterProps
-        // });
+      present: (presenter = null) => {
+        this.setState({
+          opacity: presenter ? 0 : 1,
+          presenter
+        });
       }
     }
   }
@@ -108,11 +106,13 @@ export class Runtime extends Component {
       ...focusPanel.styleBackground
     } : style;
 
-    // const { Presenter, presenterProps } = this.state;
+    const { presenter } = this.state;
 
     return (
       <div ref={ $e => this.$runtime = $e } style={runtimeStyle}>
         { canMoveLeft && <MoveLeft onClick={moveLeft} snapPoint={snapPoint} /> }
+
+        { presenter }
 
         <TransitionMotion
           styles={this.mapRoutesToMotionStyles()}
@@ -127,15 +127,18 @@ export class Runtime extends Component {
 
   renderPanels = (interpolatedStyles) => {
     const { context, focus, routes, snapPoint, width } = this.props;
-    // const { presenterIsFocused } = this.state;
+    const { opacity } = this.state;
 
     return (
       <div
+        onClick={this.toggleOpacityIfPresenting}
         style={{
           flexDirection: 'row',
-          // opacity: presenterIsFocused ? 0 : 1,
+          height: '100%',
+          opacity,
+          overflowY: 'hidden',
           paddingLeft: snapPoint,
-          transition: 'opacity 2s linear',
+          transition: 'opacity 0.5s ease-in',
           width
         }}
       >
@@ -164,6 +167,16 @@ export class Runtime extends Component {
   setX = debounce(() => {
     this.props.setX(this.$runtime.scrollLeft);
   }, DEBOUNCE)
+
+  toggleOpacityIfPresenting = event => {
+    const { state } = this;
+
+    if (state.presenter && state.opacity === 0) {
+      this.setState({
+        opacity: state.opacity === 1 ? 0 : 1
+      })
+    }
+  };
 
   willEnter = () => ({
     x: 0
