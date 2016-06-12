@@ -67,7 +67,7 @@
     "loose-envify": "^1.1.0",
     "proxyquire": "^1.7.2",
     "redux-logger": "^2.6.1",
-    "rollup": "^0.30.0",
+    "rollup": "^0.31.1",
     "rollup-plugin-babel": "^2.4.0",
     "rollupify": "^0.3.1",
     "sinon": "^1.16.1",

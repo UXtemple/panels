@@ -1,20 +1,17 @@
 import { NAVIGATE, SHOW } from './actions';
 
-export default function routerReducer(state={routes: []}, action) {
-  let nextState = state;
-
+export default function routerReducer(state={ routes: [] }, action) {
   switch (action.type) {
     case NAVIGATE:
-      nextState = {
+      return {
         context: action.payload.context,
         focus: action.payload.focus,
         routes: action.payload.routes,
         uri: action.payload.uri
       };
-      break;
 
     case SHOW:
-      nextState = {
+      return {
         ...state,
         routes: state.routes.map(route => (
           action.payload.context === route.context ?
@@ -22,10 +19,7 @@ export default function routerReducer(state={routes: []}, action) {
             route
         ))
       };
-      break;
 
-    default: break;
+    default: return state;
   }
-
-  return nextState;
 }

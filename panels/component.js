@@ -5,7 +5,6 @@ import { Provider } from 'react-redux';
 import DisplayError from '../display-error';
 import findIndex from 'array-find-index';
 import getPanelPathFromRoute from '../router/get-panel-path-from-route';
-import prepare from './prepare';
 import React, { Component, PropTypes } from 'react';
 import Sliced from './sliced';
 import shallowEqual from '../utils/shallow-equal';
@@ -19,13 +18,6 @@ class Panel extends Component {
   componentDidUpdate() {
     this.props.dispatch(loadPanelIfNeeded(this.props.route));
   }
-
-  // componentWillReceiveProps(nextProps) {
-  //   // debugger
-  // //   if (!props.isLoading) {
-  // //     this.props.dispatch(loadPanelIfNeeded(this.props.route));
-  // //   }
-  // }
 
   getChildContext() {
     const { dispatch, panel, route, routeAfter, routeIndex, router } = this.props;
@@ -42,11 +34,6 @@ class Panel extends Component {
       updateSettings: settings => dispatch(updateSettings(route, settings))
     };
   }
-
-  // shouldComponentUpdate(nextProps) {
-  //   console.log('shouldComponentUpdate', this.props.panel, nextProps.panel, !shallowEqual(this.props.panel, nextProps.panel))
-  //   return !shallowEqual(this.props.panel, nextProps.panel);
-  // }
 
   render() {
     const { app, dispatch, error, isLoading, panel, route, width, x, zIndex, ...rest } = this.props;
@@ -75,7 +62,15 @@ class Panel extends Component {
     }
 
     return (
-      <div style={{ opacity: x, transform: `translateX(${-1 * Math.abs(100 - x * 100)}%)`, width: finalWidth, zIndex }}>
+      <div
+        style={{
+          height: '100%',
+          opacity: x,
+          transform: `translateX(${-Math.abs(100 - x * 100)}%)`,
+          width: finalWidth,
+          zIndex
+        }}
+      >
         { children }
       </div>
     );
@@ -103,7 +98,7 @@ Panel.childContextTypes = {
 };
 
 function mapStateToProps(state, props) {
-  const routeIndex = findIndex(state.router.routes, panel => panel.context === props.route.context);
+  // const routeIndex = findIndex(state.router.routes, panel => panel.context === props.route.context);
   const app = state.apps[props.route.app] || {
     isLoading: true
   };
@@ -121,8 +116,8 @@ function mapStateToProps(state, props) {
     isLoading,
     isReady,
     panel,
-    routeAfter: state.router.routes[routeIndex + 1] || false,
-    routeIndex: routeIndex,
+    routeAfter: state.router.routes[props.routeIndex + 1] || false,
+    // routeIndex: routeIndex,
     router: state.router,
     uri: state.router.uri,
     width: props.width

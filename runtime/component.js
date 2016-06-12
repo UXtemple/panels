@@ -1,6 +1,5 @@
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import { flexDirectionRow } from 'browser-vendor-prefix';
 import { moveLeft } from './actions';
 import { reset, setX } from './actions';
 import { snapX } from 'panels-ui';
@@ -9,45 +8,42 @@ import debounce from 'lodash.debounce';
 import getViewportWidth from './get-viewport-width';
 import MoveLeft from './move-left';
 import Panel from '../panels/component';
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 
 const DEBOUNCE = 150;
 const REBOUND = 500;
 
 export class Runtime extends Component {
-  constructor(props) {
-    super(props);
-
-    this.onVisibilityChange = this.onVisibilityChange.bind(this);
-    this.setXDebounced = debounce(this.setX.bind(this), DEBOUNCE);
-    this.setViewportWidthDebounced = debounce(this.setViewportWidth.bind(this), DEBOUNCE);
-
-    this.willEnter = this.willEnter.bind(this);
-    this.willLeave = this.willLeave.bind(this);
-  }
+  // state = {
+  //   presenterIsFocused: false
+  // };
 
   componentDidMount() {
-    this.$runtime.addEventListener('scroll', this.setXDebounced, false);
-    window.addEventListener('resize', this.setViewportWidthDebounced, false);
-    window.addEventListener('orientationchange', this.setViewportWidthDebounced, false);
+    this.$runtime.addEventListener('scroll', this.setX, false);
+    window.addEventListener('resize', this.setViewportWidth, false);
+    window.addEventListener('orientationchange', this.setViewportWidth, false);
     document.addEventListener('visibilitychange', this.onVisibilityChange);
-
-    this.setViewportWidth();
   }
+
+  // componentWillReceiveProps(nextProps) {
+  //   const { props, state } = this;
+
+  //   if (state.Presenter && (props.focusPanel !== nextProps.focusPanel || props.x !== nextProps.x)) {
+  //     this.setState({
+  //       presenterIsFocused: !state.presenterIsFocused
+  //     });
+  //   }
+  // }
 
   componentDidUpdate(prevProps) {
     const { props } = this;
 
-    // TODO FIXME this needs to be reworked :/
-    if ((!prevProps.focusPanel && props.focusPanel) || (prevProps.focusPanel && props.focusPanel && props.focusPanel.title !== prevProps.focusPanel.title)) {
+    if (props.focusPanel) {
       window.document.title = props.focusPanel.title || props.focusPanel.type;
     }
 
-    if (props.routes !== prevProps.routes) {
-      props.reset(props.preferredSnapPoint);
-    }
-
-    if (props.shouldReset !== prevProps.shouldReset && props.shouldReset) {
+    if (props.routes !== prevProps.routes ||
+       (props.shouldReset !== prevProps.shouldReset && props.shouldReset)) {
       props.reset(props.preferredSnapPoint);
     }
 
@@ -57,93 +53,135 @@ export class Runtime extends Component {
   }
 
   componentWillUnmount() {
-    this.$runtime.removeEventListener('scroll', this.setXDebounced);
-    window.removeEventListener('resize', this.setViewportWidthDebounced, false);
-    window.removeEventListener('orientationchange', this.setViewportWidthDebounced, false);
+    this.$runtime.removeEventListener('scroll', this.setX);
+    window.removeEventListener('resize', this.setViewportWidth, false);
+    window.removeEventListener('orientationchange', this.setViewportWidth, false);
   }
 
-  onVisibilityChange() {
+  onVisibilityChange = () => {
     if (document.visibilityState === 'hidden') {
-      this.$runtime.removeEventListener('scroll', this.setXDebounced);
-      window.removeEventListener('resize', this.setViewportWidthDebounced, false);
-      window.removeEventListener('orientationchange', this.setViewportWidthDebounced, false);
+      this.$runtime.removeEventListener('scroll', this.setX);
+      window.removeEventListener('resize', this.setViewportWidth, false);
+      window.removeEventListener('orientationchange', this.setViewportWidth, false);
     } else {
       setTimeout(() => {
-        this.$runtime.addEventListener('scroll', this.setXDebounced, false);
-        window.addEventListener('resize', this.setViewportWidthDebounced, false);
-        window.addEventListener('orientationchange', this.setViewportWidthDebounced, false);
+        this.$runtime.addEventListener('scroll', this.setX, false);
+        window.addEventListener('resize', this.setViewportWidth, false);
+        window.addEventListener('orientationchange', this.setViewportWidth, false);
       }, REBOUND);
     }
   }
 
-  willEnter() {
+  getChildContext() {
     return {
-      x: 0
-    };
+      present: (app, presenter, presenterProps) => {
+        // this.setState({
+        //   presenterIsFocused: true,
+        //   Presenter: this.props.apps[app].presenters[presenter],
+        //   presenterProps
+        // });
+      }
+    }
   }
 
-  willLeave() {
-    return {
-      x: spring(0, { stifness: 210 })
-    };
+  mapRoutesToMotionStyles() {
+    const { routes, widths } = this.props;
+
+    return routes.map((route, routeIndex) => ({
+      data: {
+        route,
+        routeIndex,
+        width: widths[routeIndex] || 360
+      },
+      key: routeIndex,
+      style: {
+        x: spring(1, { stifness: 210 })
+      }
+    }));
   }
 
   render() {
-    const {
-      canMoveLeft, context, focus, focusPanel, moveLeft, routes, snapPoint, width, widths
-    } = this.props;
+    const { canMoveLeft, focusPanel, moveLeft, snapPoint } = this.props;
+
     const runtimeStyle = focusPanel ? {
       ...style,
       ...focusPanel.styleBackground
     } : style;
+
+    // const { Presenter, presenterProps } = this.state;
 
     return (
       <div ref={ $e => this.$runtime = $e } style={runtimeStyle}>
         { canMoveLeft && <MoveLeft onClick={moveLeft} snapPoint={snapPoint} /> }
 
         <TransitionMotion
+          styles={this.mapRoutesToMotionStyles()}
           willEnter={this.willEnter}
           willLeave={this.willLeave}
-          styles={routes.map((route, i) => ({
-            key: i, // route.context,
-            data: {
-              route,
-              width: widths[i] || 360
-            },
-            style: {
-              x: spring(1, { stifness: 210 })
-            }
-          }))}>
-          {interpolatedStyles => (
-            <div style={{ ...stylePanels, paddingLeft: snapPoint, width }}>
-              { interpolatedStyles.map((config, i) => (
-                <Panel
-                  isContext={i >= context}
-                  isFocus={i === focus}
-                  isVisible={config.data.route.visible}
-                  key={config.key}
-                  route={config.data.route}
-                  shouldWrap={i === routes.length - 1}
-                  x={config.style.x}
-                  zIndex={routes.length - i}
-                  width={config.data.width}
-                />
-              )) }
-            </div>
-          )}
+        >
+          {this.renderPanels}
         </TransitionMotion>
       </div>
     );
   }
 
-  setViewportWidth() {
-    this.props.reset(this.props.preferredSnapPoint, getViewportWidth());
+  renderPanels = (interpolatedStyles) => {
+    const { context, focus, routes, snapPoint, width } = this.props;
+    // const { presenterIsFocused } = this.state;
+
+    return (
+      <div
+        style={{
+          flexDirection: 'row',
+          // opacity: presenterIsFocused ? 0 : 1,
+          paddingLeft: snapPoint,
+          transition: 'opacity 2s linear',
+          width
+        }}
+      >
+        { interpolatedStyles.map((config, i) => (
+          <Panel
+            isContext={i >= context}
+            isFocus={i === focus}
+            isVisible={config.data.route.visible}
+            key={config.key}
+            route={config.data.route}
+            routeIndex={config.data.routeIndex}
+            shouldWrap={i === routes.length - 1}
+            x={config.style.x}
+            zIndex={routes.length - i}
+            width={config.data.width}
+          />
+        )) }
+      </div>
+    );
   }
 
-  setX() {
+  setViewportWidth = debounce(() => {
+    this.props.reset(this.props.preferredSnapPoint, getViewportWidth());
+  }, DEBOUNCE)
+
+  setX = debounce(() => {
     this.props.setX(this.$runtime.scrollLeft);
-  }
+  }, DEBOUNCE)
+
+  willEnter = () => ({
+    x: 0
+  })
+
+  willLeave = () => ({
+    x: spring(0, { stifness: 210 })
+  })
 }
+Runtime.childContextTypes = {
+  present: PropTypes.func
+};
+
+// { Presenter ? (
+//   <Presenter {...presenterProps}
+//     onClick={() => this.setState({ presenterIsFocused: !presenterIsFocused })}
+//     style={{ position: 'fixed', left: 0, top: 0, height: '100%', width: '100%' }} />
+//   ) : null }
 
 const style = {
   height: '100%',
@@ -152,32 +190,16 @@ const style = {
   width: '100vw'
 };
 
-const stylePanels = {
-  ...flexDirectionRow,
-  height: '100%'
-};
-
 const getFocusPanel = ({panels, router}) => {
   const focusRoute = router.routes[router.focus];
   return panels.byId[`${focusRoute.app}${focusRoute.path}`];
 };
 
-// const getFocusPanel = createSelector(
-//   state => state.panels,
-//   state => state.router.routes[state.router.focus],
-//   (panels, focusRoute) => panels[`${focusRoute.app}${focusRoute.path}`]
-// );
-
-// const getCanMoveLeft = createSelector(
-//   state => state.runtime.shouldGoMobile,
-//   state => state.runtime.x,
-//   (shouldGoMobile, x) => !shouldGoMobile && x > 0
-// );
-
 const getCanMoveLeft = ({runtime}) => !runtime.shouldGoMobile && runtime.x > 0;
 
 function mapStateToProps(state, props) {
   return {
+    // apps: state.apps,
     canMoveLeft: getCanMoveLeft(state),
     context: state.router.context,
     focus: state.router.focus,

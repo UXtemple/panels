@@ -1,13 +1,13 @@
 import doNavigate from './navigate';
 
 export const NAVIGATE = 'panels/router/NAVIGATE';
-export function navigate(rawUri, nextFocus=1, nextContext=0) {
+export function navigate(rawUri, nextFocus = 1, nextContext) {
   return function navigateThunk(dispatch, getState) {
     const { router } = getState();
 
     dispatch({
       type: NAVIGATE,
-      payload: doNavigate(rawUri, getState().router.focus, nextFocus, nextContext)
+      payload: doNavigate(rawUri, router.focus, router.context, nextFocus, nextContext)
     });
   }
 }

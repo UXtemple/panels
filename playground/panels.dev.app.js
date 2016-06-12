@@ -49,19 +49,21 @@ class Lightgreen extends Component {
     const { props } = this;
 
     return (
-      <Panel style={{backgroundColor: 'lightyellow', width: props.width}}>
+      <Panel style={{backgroundColor: 'lightgreen', width: props.width}}>
         <div style={style.innerWrapper} ref={ $e => this.$scroller = $e }>
           <button onClick={() => this.update()}>update</button>
           <Teleport to='a/'
-            context={0}
-            style={{color: 'lightgreen', paddingBottom: 10, paddingTop: 10, textDecoration: 'none'}}
+            style={{paddingBottom: 10, paddingTop: 10, textDecoration: 'none'}}
             styleActive={{backgroundColor: 'white', color: 'lightgreen'}}
             styleHover={{backgroundColor: 'lightgreen', color: 'white'}}>{'/a'}</Teleport>
           <Teleport to='..'>..</Teleport>
+
+          <Teleport context={0} to='how'>how!</Teleport>
+
           <Content />
           <div onClick={() => this.scrollTo(100) }>scroll</div>
           <Teleport to='a/'
-            style={{color: 'lightgreen', paddingBottom: 10, paddingTop: 10, textDecoration: 'none'}}
+            style={{paddingBottom: 10, paddingTop: 10, textDecoration: 'none'}}
             styleActive={{backgroundColor: 'white', color: 'lightgreen'}}
             styleHover={{backgroundColor: 'lightgreen', color: 'white'}}>{'/a'}</Teleport>
           <Teleport to='..'>..</Teleport>
@@ -78,11 +80,22 @@ Lightgreen.childContextTypes = {
   scrollTo: PropTypes.func
 }
 
+const How = ({ width }, { present }) => (
+  <Panel style={{ width }}>
+    <div onClick={() => present('panels.dev', 'Video', { src: 'http://ak2.picdn.net/shutterstock/videos/2909092/preview/stock-footage-beautiful-sunrise-over-the-earth-cities-at-night-hd.mp4' })}>
+      Go to video!
+    </div>
+  </Panel>
+);
+How.contextTypes = {
+  present: PropTypes.func.isRequired
+};
+
 export const types = {
   'Lightgreen': Lightgreen,
   'Lightyellow': props => (
-    <Panel style={{backgroundColor: 'lightgreen', padding: 20, width: props.width}}>
-      <Teleport to='b/'>{'/a/b'}</Teleport>
+    <Panel style={{backgroundColor: 'lightyellow', padding: 20, width: props.width}}>
+      <Teleport context={0} to='b/'>{'/a/b'}</Teleport>
       <Teleport to='http://panels.dev/'>{'teleport /'}</Teleport>
       <Teleport to='..'>..</Teleport>
       <Content />
@@ -127,7 +140,8 @@ export const types = {
   ),
   'Random': props => (
     <Panel style={{border: '1px solid black'}}>random { props.id }</Panel>
-  )
+  ),
+  How
 };
 
 export const panels = {
@@ -144,7 +158,14 @@ export const panels = {
     props,
     type: 'Random',
     width: 360 * parseFloat(props.id, 10)
-  })
+  }),
+  '/how': { type: 'How' }
 };
 
-export const lookup = ['/random:id']
+export const lookup = ['/random:id'];
+
+export const presenters = {
+  Video: props => (
+    <video src={ props.src } autoPlay onClick={props.onClick} style={props.style} />
+  )
+};

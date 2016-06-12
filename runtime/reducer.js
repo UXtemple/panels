@@ -1,12 +1,13 @@
 import { MOVE_LEFT, RESET, SET_X } from './actions';
 import { LOAD, TOGGLE_EXPAND, UPDATE_SETTINGS } from '../panels/actions';
+import getViewportWidth from './get-viewport-width';
 
 const DEFAULT = {
-  halves: [],
   regions: [],
   shouldReset: false,
   shouldGoMobile: true,
   x: 0,
+  viewportWidth: getViewportWidth(),
   width: 0,
   widths: []
 };

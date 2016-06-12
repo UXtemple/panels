@@ -29,6 +29,10 @@ export function load(route) {
       action.payload = typeof panel === 'function' ?
         panel(app.store && app.store.getState(), props) :
         { ...panel, props };
+
+      if (typeof action.payload.width !== 'number') {
+        action.payload.width = 360;
+      }
     } catch(err) {
       err.status = 404;
 

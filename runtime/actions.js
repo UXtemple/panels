@@ -35,34 +35,30 @@ export function reset(preferredSnapPoint, nextViewportWidth) {
     const viewportWidth = nextViewportWidth || runtime.viewportWidth;
     const snapPoint = typeof preferredSnapPoint === 'number' ? preferredSnapPoint : runtime.snapPoint;
 
-    const maxWidth = viewportWidth - snapPoint;
+    const maxFullPanelWidth = viewportWidth - snapPoint;
     const shouldGoMobile = viewportWidth < MOBILE_THRESHOLD;
 
+    // TODO if reset is because of expanded, we shouldn't snap
     const panelsWidths = router.routes.map((route, i) => {
       const panel = panels.byId[getPanelPathFromRoute(route)];
+      let width = 360;
 
       if (shouldGoMobile) {
-        return viewportWidth;
-      } else {
-        let width = 360;
-
-        // TODO if reset is because of expanded, we shouldn't snap
-        if (route.visible) {
-          if (panel) {
-            width = panel.isExpanded ? panel.maxWidth : panel.width;
-          }
-        } else {
-          width = 0;
-        }
+        width = viewportWidth;
+      } else if (!route.visible) {
+        width = 0;
+      } else if (panel) {
+        width = panel.isExpanded ? panel.maxWidth : panel.width;
 
         const percentageMatch = typeof width === 'string' && width.match(/([0-9]+)%/);
         if (percentageMatch) {
-          width = maxWidth * parseInt(percentageMatch, 10) / 100;
+          width = maxFullPanelWidth * parseInt(percentageMatch, 10) / 100;
         }
-
-        return Math.min(maxWidth, width);
       }
+
+      return width;
     });
+
 
     const nextState = calculateState(viewportWidth, panelsWidths, snapPoint, shouldGoMobile);
 
@@ -74,10 +70,10 @@ export function reset(preferredSnapPoint, nextViewportWidth) {
     // get how much space we have left for context panels
     let leftForContext = viewportWidth - snapPoint - focusWidth; // >> 1089
     // assess how many context panels we should try to show
-    let contextsLeft = focus - context; // >> 1
+    let contextsLeft = focus - context - 1;
 
     // try to fit those context panels within that space that's left
-    while (contextsLeft > 0 && leftForContext >= nextState.widths[contextsLeft]) {
+    while (contextsLeft >= 0 && leftForContext >= nextState.widths[contextsLeft]) {
       // get the context's width
       const contextWidth = nextState.widths[contextsLeft];
       // remove it from the space left for context

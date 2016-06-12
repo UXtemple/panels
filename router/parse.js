@@ -7,7 +7,7 @@ const SLICE_START = '(';
 const SLICE_MARKERS = new RegExp(`[${SLICE_START}${SLICE_END}]`, 'g');
 
 export default function parse(uri) {
-  let panels = [];
+  let routes = [];
   // Make sure we always have a trailing slash on the URI
   let nextUri = withTrailingSlash(uri);
 
@@ -27,10 +27,10 @@ export default function parse(uri) {
       }
 
       const base = `${parsed.protocol}//${parsed.host}`;
-      const context = panels.length > 0 ? panels[panels.length - 1].context : '';
+      const context = routes.length > 0 ? routes[routes.length - 1].context : '';
 
       // Get every path 'bit' which is indeed every panel we need to load
-      let pathPanels = [];
+      let pathRoute = [];
       let visible = true;
       do {
         path = path.split('/');
@@ -42,7 +42,7 @@ export default function parse(uri) {
 
         visible = hasSliceEndMarker || hasSliceStartMarker ? false : visible;
 
-        pathPanels.push({
+        pathRoute.push({
           app: parsed.host,
           context: `${context}${base}${withTrailingSlash(path)}`,
           path: path.replace(SLICE_MARKERS, '') || '/',
@@ -51,12 +51,11 @@ export default function parse(uri) {
 
         visible = hasSliceEndMarkerForRoot ? false : (hasSliceStartMarker ? true : visible);
       } while (path.length);
-
-      panels = panels.concat(pathPanels.reverse());
+      routes = routes.concat(pathRoute.reverse());
     } else {
       nextUri = undefined;
     }
   } while (nextUri);
 
-  return panels;
+  return routes;
 }
