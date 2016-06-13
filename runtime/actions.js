@@ -104,19 +104,23 @@ export function setX(fromX) {
       // it's a trick to force re-snapping if you've moved within the same panel's region
       // the initial set won't have any effect on the runtime renderer because the values are the
       // same so it will only try to snap on the second set below
-      dispatch({
-        type: SET_X,
-        payload: {
-          x: fromX
-        }
-      });
+      const xToSnapTo = getXToSnapTo(fromX, runtime.regions, runtime.widths);
 
-      dispatch({
-        type: SET_X,
-        payload: {
-          x: getXToSnapTo(fromX, runtime.regions, runtime.widths)
-        }
-      });
+      // if (xToSnapTo !== runtime.x) {
+        // dispatch({
+        //   type: SET_X,
+        //   payload: {
+        //     x: fromX
+        //   }
+        // });
+
+        dispatch({
+          type: SET_X,
+          payload: {
+            x: xToSnapTo
+          }
+        });
+      // }
     }
   }
 }
