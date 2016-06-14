@@ -7,7 +7,15 @@ const SLICE_START = '(';
 const SLICE_MARKERS = new RegExp(`[${SLICE_START}${SLICE_END}]`, 'g');
 
 export default function parse(uri) {
-  let routes = [];
+  const apps = {
+    byName: {},
+    items: []
+  };
+  const routes = {
+    byContext: {},
+    items: []
+  };
+
   // Make sure we always have a trailing slash on the URI
   let nextUri = withTrailingSlash(uri);
 
@@ -17,6 +25,7 @@ export default function parse(uri) {
     const parsed = new Url(nextUri);
 
     if (parsed && parsed.protocol && parsed.host) {
+      const app = parsed.host;
       let path = parsed.pathname;
 
       nextUri = undefined;
@@ -26,12 +35,12 @@ export default function parse(uri) {
         nextUri = parsed.pathname.replace(path, '');
       }
 
-      const base = `${parsed.protocol}//${parsed.host}`;
-      const context = routes.length > 0 ? routes[routes.length - 1].context : '';
+      const base = `${parsed.protocol}//${app}`;
+      const context = routes.items.length > 0 ? routes.items[routes.items.length - 1] : '';
 
       // Get every path 'bit' which is indeed every panel we need to load
       let pathRoute = [];
-      let visible = true;
+      let isVisible = true;
       do {
         path = path.split('/');
         const lastBit = path.length > 1 ? path[path.length - 2] : '';
@@ -40,22 +49,46 @@ export default function parse(uri) {
         const hasSliceEndMarker = !hasSliceEndMarkerForRoot && lastBit.indexOf(SLICE_END) > -1;
         const hasSliceStartMarker = lastBit.indexOf(SLICE_START) > -1;
 
-        visible = hasSliceEndMarker || hasSliceStartMarker ? false : visible;
+        isVisible = hasSliceEndMarker || hasSliceStartMarker ? false : isVisible;
+
+        const panelPath = path.replace(SLICE_MARKERS, '') || '/';
+
+        const panelId = `${app}${panelPath}`;
 
         pathRoute.push({
-          app: parsed.host,
+          app,
           context: `${context}${base}${withTrailingSlash(path)}`,
-          path: path.replace(SLICE_MARKERS, '') || '/',
-          visible
+          isVisible,
+          panelId,
+          path: panelPath
         });
 
-        visible = hasSliceEndMarkerForRoot ? false : (hasSliceStartMarker ? true : visible);
+        isVisible = hasSliceEndMarkerForRoot ? false : (hasSliceStartMarker ? true : isVisible);
       } while (path.length);
-      routes = routes.concat(pathRoute.reverse());
+
+      if (apps.items.indexOf(app) === -1) {
+        apps.items.push(app);
+        apps.byName[app] = {
+          app,
+          panels: []
+        };
+      }
+
+      pathRoute.reverse().forEach(route => {
+        routes.byContext[route.context] = route;
+        routes.items.push(route.context);
+
+        if (apps.byName[app].panels.indexOf(route.path) === -1) {
+          apps.byName[app].panels.push(route.path);
+        }
+      });
     } else {
       nextUri = undefined;
     }
   } while (nextUri);
 
-  return routes;
+  return {
+    apps,
+    routes
+  };
 }

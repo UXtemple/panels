@@ -1,4 +1,4 @@
-import { navigate } from './actions';
+import { navigate } from '../actions';
 
 export default function history(store) {
   const navigateHandler = () => store.dispatch(navigate(location.href));

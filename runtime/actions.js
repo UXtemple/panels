@@ -1,53 +1,51 @@
-import calculateState, { MOBILE_THRESHOLD } from './calculate-state';
 import getIndexOfPanelToShow from './get-index-of-panel-to-show';
-import getPanelPathFromRoute from '../router/get-panel-path-from-route';
-import getXToSnapTo from './get-x-to-snap-to';
-import sum from '../utils/sum';
 
-// TODO either store the currently snapped panel or memoise this
 export const MOVE_LEFT = 'panels/runtime/MOVE_LEFT';
 export function moveLeft() {
   return function moveLeftThunk(dispatch, getState) {
     const { runtime } = getState();
 
-    let index = getIndexOfPanelToShow(runtime.x, runtime.regions) - 1;
-    if (runtime.widths[index] === 0) {
-      index--;
-    }
+    if (runtime.snappedAt > 0) {
+      const nextSnappedAt = runtime.snappedAt - 1;
 
-    if (index >= 0) {
       dispatch({
         type: MOVE_LEFT,
         payload: {
-          x: runtime.widths.slice(0, index).reduce(sum, 0)
+          snappedAt: nextSnappedAt,
+          x: runtime.x - runtime.widths[nextSnappedAt]
         }
       });
     }
   }
 }
 
-// TODO simplify
-// TODO extract preferredSnapPoint into state
-export const RESET = 'panels/runtime/RESET';
-export function reset(preferredSnapPoint, nextViewportWidth) {
-  return function resetThunk(dispatch, getState) {
+export const MOBILE_THRESHOLD = 720;
+
+export const SET_VIEWPORT_WIDTH = 'panels/runtime/SET_VIEWPORT_WIDTH';
+export function setViewportWidth(nextViewportWidth) {
+  return function setViewportWidthThunk(dispatch, getState) {
     const { panels, router, runtime } = getState();
-    const viewportWidth = nextViewportWidth || runtime.viewportWidth;
-    const snapPoint = typeof preferredSnapPoint === 'number' ? preferredSnapPoint : runtime.snapPoint;
 
-    const maxFullPanelWidth = viewportWidth - snapPoint;
-    const shouldGoMobile = viewportWidth < MOBILE_THRESHOLD;
+    const nextShouldGoMobile = nextViewportWidth <= MOBILE_THRESHOLD;
+    const nextSnapPoint = nextShouldGoMobile ? 0 : runtime.preferredSnapPoint;
 
-    // TODO if reset is because of expanded, we shouldn't snap
-    const panelsWidths = router.routes.map((route, i) => {
-      const panel = panels.byId[getPanelPathFromRoute(route)];
-      let width = 360;
+    console.time('runtime');
+    const maxFullPanelWidth = nextShouldGoMobile ?
+      nextViewportWidth :
+      nextViewportWidth - nextSnapPoint;
 
-      if (shouldGoMobile) {
-        width = viewportWidth;
-      } else if (!route.visible) {
-        width = 0;
-      } else if (panel) {
+    const nextRoutes = {
+      byContext: router.routes.byContext,
+      items: router.routes.items
+    };
+    const widths = router.routes.items.map(context => {
+      const route = router.routes.byContext[context];
+      const panel = panels.byId[route.panelId];
+
+      let width;
+      if (nextShouldGoMobile) {
+        width = nextViewportWidth;
+      } else {
         width = panel.isExpanded ? panel.maxWidth : panel.width;
 
         const percentageMatch = typeof width === 'string' && width.match(/([0-9]+)%/);
@@ -56,26 +54,29 @@ export function reset(preferredSnapPoint, nextViewportWidth) {
         }
       }
 
+      if (width !== route.width) {
+        nextRoutes.byContext[context] = {
+          ...route,
+          width
+        };
+      }
+
       return width;
     });
 
-
-    const nextState = calculateState(viewportWidth, panelsWidths, snapPoint, shouldGoMobile);
-
-    const { context, focus } = router;
     // get how large our focus panel is
-    const focusWidth = nextState.widths[focus]; // >> 500
+    const focusWidth = widths[router.focus]; // >> 500
     // get the focus panel's x real position in our runtime if it were flat
-    let x = nextState.widths.slice(0, focus).reduce(sum, 0); // >> 860
+    let x = widths.slice(0, router.focus).reduce((a, b) => a + b, 0); // >> 860
     // get how much space we have left for context panels
-    let leftForContext = viewportWidth - snapPoint - focusWidth; // >> 1089
+    let leftForContext = maxFullPanelWidth - focusWidth; // >> 1089
     // assess how many context panels we should try to show
-    let contextsLeft = focus - context - 1;
+    let contextsLeft = router.focus - router.context - 1;
 
     // try to fit those context panels within that space that's left
-    while (contextsLeft >= 0 && leftForContext >= nextState.widths[contextsLeft]) {
+    while (contextsLeft >= 0 && leftForContext >= widths[contextsLeft]) {
       // get the context's width
-      const contextWidth = nextState.widths[contextsLeft];
+      const contextWidth = widths[contextsLeft];
       // remove it from the space left for context
       leftForContext -= contextWidth;
       // shift x to include that panel
@@ -83,11 +84,17 @@ export function reset(preferredSnapPoint, nextViewportWidth) {
       // decrease the amount of contexts left
       contextsLeft--;
     }
+    console.timeEnd('runtime');
 
     dispatch({
-      type: RESET,
+      type: SET_VIEWPORT_WIDTH,
       payload: {
-        ...nextState,
+        routes: nextRoutes,
+        shouldGoMobile: nextShouldGoMobile,
+        snapPoint: nextSnapPoint,
+        viewportWidth: nextViewportWidth,
+        width: maxFullPanelWidth + widths.reduce((a, b) => a + b, 0),
+        widths,
         x
       }
     });
@@ -100,27 +107,16 @@ export function setX(fromX) {
     const { runtime } = getState();
 
     if (runtime.x !== fromX) {
-      // TODO should we rework this?
-      // it's a trick to force re-snapping if you've moved within the same panel's region
-      // the initial set won't have any effect on the runtime renderer because the values are the
-      // same so it will only try to snap on the second set below
-      const xToSnapTo = getXToSnapTo(fromX, runtime.regions, runtime.widths);
+      const nextSnappedAt = getIndexOfPanelToShow(fromX, runtime.regions);
+      const nextX = runtime.widths.slice(0, nextSnappedAt).reduce((a, b) => a + b, 0);
 
-      // if (xToSnapTo !== runtime.x) {
-        // dispatch({
-        //   type: SET_X,
-        //   payload: {
-        //     x: fromX
-        //   }
-        // });
-
-        dispatch({
-          type: SET_X,
-          payload: {
-            x: xToSnapTo
-          }
-        });
-      // }
+      dispatch({
+        type: SET_X,
+        payload: {
+          snappedAt: nextSnappedAt,
+          x: nextX
+        }
+      });
     }
   }
 }

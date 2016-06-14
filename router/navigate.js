@@ -1,20 +1,15 @@
-import findIndex from 'array-find-index';
-import normaliseUri from 'panels-normalise-uri';
-import parse from './parse';
-
-export default function navigate(rawUri, currentFocus, currentContext, nextFocus, nextContext) {
-  const uri = normaliseUri(rawUri);
-  const routes = parse(uri);
+export default function navigate(uri, routesItems, currentFocus, currentContext, nextFocus, nextContext) {
   let context;
   let focus;
 
+  // TODO don't think we need this anymore!
   // currentFocus is unset on initial load
   if (typeof currentFocus === 'undefined') {
     // it might be a plain uri, i.e., without slicing
     let sliced = uri.split(')');
     if (sliced.length === 1) {
       // there we default to having the focus panel being the last route
-      focus = routes.length - 1;
+      focus = routesItems.length - 1;
     } else {
       // if we have more than one slice
       if (sliced.length > 2) {
@@ -26,26 +21,16 @@ export default function navigate(rawUri, currentFocus, currentContext, nextFocus
       }
 
       // then set the focus panel to whatever is after that slice!
-      focus = findIndex(routes, route => route.context === sliced[0]) + 1;
+      focus = routesItems.indexOf(sliced[0]) + 1;
     }
 
-    // TODO FIXME this is the point where we introduce a custom initial context I think
-    // we try to show as much context as we can
     context = 0;
-    // // TODO use stuff below
-    // if (typeof currentContext === 'number') {
-    //   context = currentContext;
-    // } else if (currentContext === 'any') {
-    //   context = focus;
-    // } else {
-    //   context = focus - currentContext;
-    // }
   } else {
     // focus works in relation to the currentFocus, so try to do what the user wants
     focus = currentFocus + nextFocus;
-    if (!(focus >= 0 && focus < routes.length)) {
+    if (!(focus >= 0 && focus < routesItems.length)) {
       // however, they may go out of boundaries; in such cases we default to the last route
-      focus = routes.length - 1;
+      focus = routesItems.length - 1;
     }
 
     // TODO FIXME this is too complex to reason about (plus we're using it the other way around in
@@ -71,8 +56,6 @@ export default function navigate(rawUri, currentFocus, currentContext, nextFocus
 
   return {
     context,
-    focus,
-    routes,
-    uri
+    focus
   };
 }

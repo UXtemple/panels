@@ -12,7 +12,6 @@ mkdir -p $BUNDLE
 echo "[bundle] v${VERSION}..."
 NODE_ENV=development $BIN/browserify --verbose --debug \
   --require array-find-index \
-  --require browser-vendor-prefix \
   --require houkou \
   --require lite-url \
   --require lodash.debounce \
@@ -35,7 +34,6 @@ NODE_ENV=development $BIN/browserify --verbose --debug \
 
 NODE_ENV=production $BIN/browserify --verbose --debug \
   --require array-find-index \
-  --require browser-vendor-prefix \
   --require houkou \
   --require lite-url \
   --require lodash.debounce \

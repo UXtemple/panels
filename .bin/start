@@ -4,7 +4,6 @@ BIN=node_modules/.bin
 
 NODE_ENV=development $BIN/watchify --debug --verbose \
   --external array-find-index \
-  --external browser-vendor-prefix \
   --external houkou \
   --external lite-url \
   --external lodash.debounce \
@@ -27,7 +26,6 @@ NODE_ENV=development $BIN/watchify --debug --verbose \
   --outfile playground/panels.dev.js & \
 NODE_ENV=development $BIN/watchify --debug --verbose \
   --require array-find-index \
-  --require browser-vendor-prefix \
   --require houkou \
   --require lite-url \
   --require lodash.debounce \

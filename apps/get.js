@@ -53,11 +53,11 @@ export default async function get(app, context) {
     }
   }
 
-  const { lookup, panels, presenters, setup, types } = require(name);
+  const { lookup, panels, setup, types } = require(name);
 
   return {
     findPanel: createFindPanel(panels, lookup),
-    presenters,
+    name,
     store: typeof setup === 'function' && await setup(app, props, context),
     types
   };

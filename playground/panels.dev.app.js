@@ -1,5 +1,4 @@
-import { Teleport, Panel } from 'panels-ui';
-import Expand from './expand';
+import { Expand, Teleport, Panel } from 'panels-ui';
 import React, { Component, PropTypes } from 'react';
 
 const Content = (props, context) => (

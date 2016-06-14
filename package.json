@@ -31,7 +31,6 @@
   "homepage": "https://github.com/UXtemple/panels#readme",
   "dependencies": {
     "array-find-index": "^1.0.1",
-    "browser-vendor-prefix": "^2.2.0",
     "houkou": "^0.2.2",
     "lite-url": "^1.0.4",
     "lodash.debounce": "^4.0.5",
@@ -44,7 +43,6 @@
     "react-redux": "^4.4.5",
     "redux": "^3.5.2",
     "redux-thunk": "^2.1.0",
-    "reselect": "^2.5.1",
     "style-to-css": "^1.0.1",
     "waiting": "^1.0.0"
   },
