@@ -114,8 +114,17 @@ export function navigate(rawUri, nextFocus = 1, nextContext) {
       uri, parsed.routes.items, router.focus, router.context, nextFocus, nextContext
     );
 
-    const widths = parsed.routes.items.map(context => {
-      const route = parsed.routes.byContext[context];
+    const routes = {
+      byContext: router.routes.byContext,
+      items: parsed.routes.items
+    };
+
+    const widths = routes.items.map(routeContext => {
+      if (routes.byContext[routeContext]) {
+        return routes.byContext[routeContext].width;
+      }
+
+      const route = parsed.routes.byContext[routeContext];
       const panel = panels.byId[route.panelId] || nextPanels.byId[route.panelId];
 
       let width;
@@ -123,7 +132,7 @@ export function navigate(rawUri, nextFocus = 1, nextContext) {
         if (runtime.shouldGoMobile) {
           width = runtime.viewportWidth;
         } else {
-          width = panel.isExpanded ? panel.maxWidth : panel.width;
+          width = route.isExpanded ? panel.maxWidth : panel.width;
 
           const percentageMatch = typeof width === 'string' && width.match(/([0-9]+)%/);
           if (percentageMatch) {
@@ -135,6 +144,8 @@ export function navigate(rawUri, nextFocus = 1, nextContext) {
       }
 
       route.width = width;
+
+      routes.byContext[routeContext] = route;
       return width;
     });
 
@@ -171,10 +182,11 @@ export function navigate(rawUri, nextFocus = 1, nextContext) {
         router: {
           context,
           focus,
-          routes: parsed.routes,
+          routes,
           uri
         },
         runtime: {
+          maxFullPanelWidth,
           regions: getRegions(widths),
           snappedAt: focus - contextsLeft,
           width: maxFullPanelWidth + widths.reduce((a, b) => a + b, 0),

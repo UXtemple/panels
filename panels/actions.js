@@ -1,11 +1,31 @@
+import getNextPosition from '../runtime/get-next-position';
+
 export const TOGGLE_EXPAND = 'panels/panels/TOGGLE_EXPAND';
 export function toggleExpand(route) {
-  return {
-    type: TOGGLE_EXPAND,
-    payload: {
-      id: route.panelId
-    }
-  };
+  return function toggleExpandThunk(dispatch, getState) {
+    const { panels, router, runtime } = getState();
+
+    const routes = router.routes;
+
+    routes.byContext[route.context] = {
+      ...route,
+      isExpanded: !route.isExpanded
+    };
+
+    const nextPosition = getNextPosition({
+      context: router.context,
+      focus: router.focus,
+      maxFullPanelWidth: runtime.maxFullPanelWidth,
+      routes,
+      panels,
+      shouldGoMobile: runtime.shouldGoMobile
+    });
+
+    dispatch({
+      type: TOGGLE_EXPAND,
+      payload: nextPosition
+    });
+  }
 }
 
 export const UPDATE_SETTINGS = 'panels/panels/UPDATE_SETTINGS';

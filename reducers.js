@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux';
 import { MOVE_LEFT, SET_X, SET_VIEWPORT_WIDTH } from './runtime/actions';
 import { NAVIGATE } from './actions';
+import { TOGGLE_EXPAND } from './panels/actions';
 import getViewportWidth from './runtime/get-viewport-width';
 
 function apps(state = { byName: {}, items: [] }, action) {
@@ -60,9 +61,13 @@ function router(state = { isLoading: true, routes: { byContext: {}, items: [] } 
       break;
 
     case SET_VIEWPORT_WIDTH:
+    case TOGGLE_EXPAND:
       return {
         ...state,
-        routes: action.payload.routes
+        routes: {
+          items: state.routes.items,
+          byContext: action.payload.routesByContext
+        }
       };
       break;
 
@@ -75,11 +80,13 @@ export const MOBILE_THRESHOLD = 720;
 const preferredSnapPoint = 90;
 const viewportWidth = getViewportWidth();
 const shouldGoMobile = viewportWidth < MOBILE_THRESHOLD;
+const snapPoint = shouldGoMobile ? 0 : preferredSnapPoint;
 
 const RUNTIME_DEFAULT_STATE = {
+  maxFullPanelWidth: viewportWidth - snapPoint,
   preferredSnapPoint,
   snappedAt: 0,
-  snapPoint: shouldGoMobile ? 0 : preferredSnapPoint,
+  snapPoint,
   shouldGoMobile,
   x: 0,
   viewportWidth,
@@ -98,22 +105,11 @@ function runtime(state = RUNTIME_DEFAULT_STATE, action) {
       };
       break;
 
-    case SET_VIEWPORT_WIDTH:
-      return {
-        ...state,
-        shouldGoMobile: action.payload.shouldGoMobile,
-        snapPoint: action.payload.snapPoint,
-        viewportWidth: action.payload.viewportWidth,
-        width: action.payload.width,
-        widths: action.payload.widths,
-        x: action.payload.x
-      };
-      break;
-
     case NAVIGATE:
       if (action.sequence.type === 'next') {
         return {
           ...state,
+          maxFullPanelWidth: action.payload.runtime.maxFullPanelWidth,
           regions: action.payload.runtime.regions,
           snappedAt: action.payload.runtime.snappedAt,
           width: action.payload.runtime.width,
@@ -123,6 +119,28 @@ function runtime(state = RUNTIME_DEFAULT_STATE, action) {
       } else {
         return state;
       }
+      break;
+
+    case SET_VIEWPORT_WIDTH:
+      return {
+        ...state,
+        maxFullPanelWidth: action.payload.maxFullPanelWidth,
+        shouldGoMobile: action.payload.shouldGoMobile,
+        snapPoint: action.payload.snapPoint,
+        viewportWidth: action.payload.viewportWidth,
+        width: action.payload.width,
+        widths: action.payload.widths,
+        x: action.payload.x
+      };
+      break;
+
+    case TOGGLE_EXPAND:
+      return {
+        ...state,
+        width: action.payload.width,
+        widths: action.payload.widths,
+        x: action.payload.x
+      };
       break;
 
     default: return state;

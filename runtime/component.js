@@ -1,14 +1,18 @@
 import { connect } from 'react-redux';
 import { moveLeft, setViewportWidth, setX } from './actions';
 import { Motion, spring, TransitionMotion } from 'react-motion';
+import { navigate } from '../actions';
+import { toggleExpand, updateSettings } from '../panels/actions';
 import debounce from 'lodash.debounce';
 import getViewportWidth from './get-viewport-width';
 import MoveLeft from './move-left';
-import Panel from '../panels/component';
 import React, { Component, PropTypes } from 'react';
+import Route from '../panels/component';
 import Waiting from 'waiting';
 
 const DEBOUNCE = 150;
+const LOADING_SIZE = 100;
+const LOADING_OFFSET = LOADING_SIZE / -2;
 const REBOUND = 500;
 
 export class Runtime extends Component {
@@ -92,18 +96,31 @@ export class Runtime extends Component {
   }
 
   mapRoutesToMotionStyles() {
-    const { router } = this.props;
+    const { apps, panels, router } = this.props;
 
-    return router.routes.items.map((context, i) => ({
-      data: {
-        route: router.routes.byContext[context],
-        routeIndex: i
-      },
-      key: context,
-      style: {
-        x: spring(1, { stiffness: 210 })
+    return router.routes.items.map((context, i) => {
+      const route = router.routes.byContext[context];
+      const app = apps[route.app];
+      const panel = panels[route.panelId];
+
+      return {
+        data: {
+          isContext: i >= router.context,
+          isFocus: i === router.focus,
+          panel,
+          route,
+          routeIndex: i,
+          store: app.store,
+          Type: app.types[panel.type],
+          zIndex: router.routes.items.length - i
+        },
+        key: context,
+        style: {
+          x: spring(1, { stiffness: 210 }),
+          width: spring(route.width, { stiffness: 210 })
+        }
       }
-    }));
+    });
   }
 
   render() {
@@ -139,18 +156,8 @@ export class Runtime extends Component {
     );
   }
 
-        // { autoScroll ? (
-        //     <Motion
-        //       onRest={() => this.setState({ autoScroll: null }) }
-        //       style={{ x: spring(autoScroll.gap, { stiffness: 210 }) }}
-        //     >
-        //       {this.scrollRuntime}
-        //     </Motion>
-        //   ) : null }
-
-
   renderPanels = (interpolatedStyles) => {
-    const { context, focus, router, runtime } = this.props;
+    const { navigate, router: { isLoading, routes }, runtime, toggleExpand, updateSettings } = this.props;
     const { opacity } = this.state;
 
     return (
@@ -166,23 +173,28 @@ export class Runtime extends Component {
           width: runtime.width
         }}
       >
-        { interpolatedStyles.map((config, i) => (
-          <Panel
-            isContext={i >= router.context}
-            isFocus={i === router.focus}
-            isVisible={config.data.route.isVisible}
-            key={config.key}
-            route={config.data.route}
-            routeIndex={config.data.routeIndex}
-            x={config.style.x}
-            zIndex={router.routes.items.length - i}
-            width={config.data.route.width}
+        { interpolatedStyles.map(({ data, key, style }) => (
+          <Route
+            {...data}
+            navigate={navigate}
+            key={key}
+            router={router} PASS THIS IN SOMEHOW, EITHER WITH CONTEXT OR AS A PROP
+            toggleExpand={toggleExpand}
+            updateSettings={updateSettings}
+            x={style.x}
+            width={style.width}
           />
         )) }
 
-        { router.isLoading ? (
-          <div style={{ justifyContent: 'center', left: -50, marginTop: -50 }}>
-            <Waiting size={100} />
+        { isLoading ? (
+          <div
+            style={{
+              justifyContent: 'center',
+              left: routes.items.length ? LOADING_OFFSET : LOADING_OFFSET - runtime.snapPoint,
+              marginTop: LOADING_OFFSET
+            }}
+          >
+            <Waiting size={LOADING_SIZE} />
           </div>
           ) : null }
       </div>
@@ -222,12 +234,14 @@ export class Runtime extends Component {
     }
   };
 
-  willEnter = () => ({
-    x: 0
+  willEnter = ({ style }) => ({
+    x: 0,
+    width: style.width
   })
 
   willLeave = () => ({
-    x: spring(0, { stiffness: 210 })
+    x: spring(0, { stiffness: 210 }),
+    width: style.width
   })
 }
 Runtime.childContextTypes = {
@@ -250,8 +264,10 @@ const getCanMoveLeft = ({ runtime }) => !runtime.shouldGoMobile && runtime.x > 0
 
 function mapStateToProps(state, props) {
   return {
+    apps: state.apps.byName,
     canMoveLeft: getCanMoveLeft(state),
     focusPanel: getFocusPanel(state),
+    panels: state.panels.byId,
     router: state.router,
     runtime: state.runtime
   };
@@ -259,7 +275,10 @@ function mapStateToProps(state, props) {
 
 const mapDispatchToProps = {
   moveLeft,
+  navigate,
   setViewportWidth,
-  setX
+  setX,
+  toggleExpand,
+  updateSettings
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Runtime);

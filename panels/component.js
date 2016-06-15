@@ -1,62 +1,69 @@
-import { connect } from 'react-redux';
-import { toggleExpand, updateSettings } from './actions';
-import { navigate } from '../actions';
 import { Provider } from 'react-redux';
 import React, { Component, PropTypes } from 'react';
 
-class Panel extends Component {
+export default class Route extends Component {
   getChildContext() {
-    const { dispatch, panel, route, routeAfter, routeIndex, router } = this.props;
+    const { isActive, navigate, toggleExpand, updateSettings } = this;
+    const { panel, route, routeIndex, router } = this.props;
 
     return {
-      isActive: path => routeAfter && `${route.context}${path}` === routeAfter.context,
-      // TODO allow for route without context
-      navigate: (toUri, focus, context) => dispatch(navigate(`${route.context}${toUri}`, focus, context)),
-      panel,
-      route,
-      routeIndex,
-      router,
-      toggleExpand: () => dispatch(toggleExpand(route)),
-      updateSettings: settings => dispatch(updateSettings(route, settings))
+      panels: {
+        isActive,
+        navigate,
+        panel,
+        route,
+        routeIndex,
+        router,
+        toggleExpand,
+        updateSettings
+      }
     };
   }
 
+  // tell if a path is active
+  isActive = path => {
+    const { route, router, routeIndex } = this;
+
+    const routeAfterContext = router.routes.items[routeIndex + 1];
+    return routeAfterContext && `${route.context}${path}` === routeAfterContext;
+  }
+
+  navigate = (toUri, focus, context, raw = false) => (
+    this.props.navigate(raw ? toUri : `${this.props.route.context}${toUri}`, focus, context)
+  )
+
+  toggleExpand = () => (
+    this.props.toggleExpand(this.props.route.context)
+  )
+
+  updateSettings = settings => (
+    this.props.updateSettings(this.props.route.context, settings)
+  )
+
   render() {
-    const { app, panel, route, width, x, zIndex, ...rest } = this.props;
+    const { panel, route, store, Type, width, x, zIndex } = this.props;
 
-    const finalWidth = route.isVisible ? width : 0;
-
-    let children;
+    let ret = null;
     if (route.isVisible) {
-      const Type = app.types[panel.type];
+      const style = {
+        height: '100%',
+        opacity: x,
+        overflowY: 'hidden',
+        transform: `translateX(${-Math.abs(100 - x * 100)}%)`,
+        width,
+        zIndex
+      };
 
-      if (app.store) {
-        children = (
-          <Provider store={app.store}>
-            <Type {...panel.props} panel={rest} width={width} />
-          </Provider>
-        );
-      } else {
-        children = <Type {...panel.props} panel={rest} width={width} />;
-      }
+      ret = store ? (
+        <Provider store={store}>
+          <Type {...panel.props} style={style} />
+        </Provider>
+      ) : <Type {...panel.props} style={style} />;
     }
-
-    return (
-      <div
-        style={{
-          height: '100%',
-          opacity: x,
-          overflowY: 'hidden',
-          transform: `translateX(${-Math.abs(100 - x * 100)}%)`,
-          width: finalWidth,
-          zIndex
-        }}
-      >
-        { children }
-      </div>
-    );
+    return ret;
   }
 }
+
 const routeShape = PropTypes.shape({
   app: PropTypes.string.isRequired,
   context: PropTypes.string.isRequired,
@@ -66,8 +73,15 @@ const routeShape = PropTypes.shape({
   width: PropTypes.number.isRequired
 });
 
-Panel.childContextTypes = {
-  isActive: PropTypes.func.isRequired,
+Route.propTypes = {
+  store: PropTypes.oneOfType([
+    PropTypes.bool,
+    PropTypes.shape({
+      dispatch: PropTypes.func.isRequired,
+      getState: PropTypes.func.isRequired,
+      subscribe: PropTypes.func.isRequired
+    })
+  ]).isRequired,
   navigate: PropTypes.func.isRequired,
   panel: PropTypes.object.isRequired,
   route: routeShape.isRequired,
@@ -79,23 +93,29 @@ Panel.childContextTypes = {
     }),
     uri: PropTypes.string.isRequired
   }),
+  Type: PropTypes.func.isRequired,
   toggleExpand: PropTypes.func.isRequired,
-  updateSettings: PropTypes.func.isRequired
+  updateSettings: PropTypes.func.isRequired,
+  width: PropTypes.number.isRequired,
+  x: PropTypes.number.isRequired,
+  zIndex: PropTypes.number.isRequired
 };
 
-function mapStateToProps(state, props) {
-  const app = state.apps.byName[props.route.app];
-  const panel = state.panels.byId[props.route.panelId];
-
-  return {
-    app,
-    panel,
-    routeAfter: state.router.routes.items[props.routeIndex + 1] || false,
-    // routeIndex: routeIndex,
-    router: state.router,
-    uri: state.router.uri,
-    width: props.width
-  };
-}
-
-export default connect(mapStateToProps)(Panel);
+Route.childContextTypes = {
+  panels: PropTypes.shape({
+    isActive: PropTypes.func.isRequired,
+    navigate: PropTypes.func.isRequired,
+    panel: PropTypes.object.isRequired,
+    route: routeShape.isRequired,
+    routeIndex: PropTypes.number.isRequired,
+    router: PropTypes.shape({
+      routes: PropTypes.shape({
+        byContext: PropTypes.objectOf(routeShape),
+        items: PropTypes.arrayOf(PropTypes.string)
+      }),
+      uri: PropTypes.string.isRequired
+    }),
+    toggleExpand: PropTypes.func.isRequired,
+    updateSettings: PropTypes.func.isRequired
+  }).isRequired
+};

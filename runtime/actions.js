@@ -1,4 +1,5 @@
 import getIndexOfPanelToShow from './get-index-of-panel-to-show';
+import getNextPosition from './get-next-position';
 
 export const MOVE_LEFT = 'panels/runtime/MOVE_LEFT';
 export function moveLeft() {
@@ -22,80 +23,31 @@ export function moveLeft() {
 export const MOBILE_THRESHOLD = 720;
 
 export const SET_VIEWPORT_WIDTH = 'panels/runtime/SET_VIEWPORT_WIDTH';
-export function setViewportWidth(nextViewportWidth) {
+export function setViewportWidth(viewportWidth) {
   return function setViewportWidthThunk(dispatch, getState) {
     const { panels, router, runtime } = getState();
 
-    const nextShouldGoMobile = nextViewportWidth <= MOBILE_THRESHOLD;
-    const nextSnapPoint = nextShouldGoMobile ? 0 : runtime.preferredSnapPoint;
+    const shouldGoMobile = viewportWidth <= MOBILE_THRESHOLD;
+    const snapPoint = shouldGoMobile ? 0 : runtime.preferredSnapPoint;
+    const maxFullPanelWidth = shouldGoMobile ? viewportWidth : viewportWidth - snapPoint;
 
-    console.time('runtime');
-    const maxFullPanelWidth = nextShouldGoMobile ?
-      nextViewportWidth :
-      nextViewportWidth - nextSnapPoint;
-
-    const nextRoutes = {
-      byContext: router.routes.byContext,
-      items: router.routes.items
-    };
-    const widths = router.routes.items.map(context => {
-      const route = router.routes.byContext[context];
-      const panel = panels.byId[route.panelId];
-
-      let width;
-      if (nextShouldGoMobile) {
-        width = nextViewportWidth;
-      } else {
-        width = panel.isExpanded ? panel.maxWidth : panel.width;
-
-        const percentageMatch = typeof width === 'string' && width.match(/([0-9]+)%/);
-        if (percentageMatch) {
-          width = maxFullPanelWidth * parseInt(percentageMatch, 10) / 100;
-        }
-      }
-
-      if (width !== route.width) {
-        nextRoutes.byContext[context] = {
-          ...route,
-          width
-        };
-      }
-
-      return width;
+    const nextPosition = getNextPosition({
+      context: router.context,
+      focus: router.focus,
+      maxFullPanelWidth,
+      routes: router.routes,
+      panels,
+      shouldGoMobile
     });
-
-    // get how large our focus panel is
-    const focusWidth = widths[router.focus]; // >> 500
-    // get the focus panel's x real position in our runtime if it were flat
-    let x = widths.slice(0, router.focus).reduce((a, b) => a + b, 0); // >> 860
-    // get how much space we have left for context panels
-    let leftForContext = maxFullPanelWidth - focusWidth; // >> 1089
-    // assess how many context panels we should try to show
-    let contextsLeft = router.focus - router.context - 1;
-
-    // try to fit those context panels within that space that's left
-    while (contextsLeft >= 0 && leftForContext >= widths[contextsLeft]) {
-      // get the context's width
-      const contextWidth = widths[contextsLeft];
-      // remove it from the space left for context
-      leftForContext -= contextWidth;
-      // shift x to include that panel
-      x -= contextWidth;
-      // decrease the amount of contexts left
-      contextsLeft--;
-    }
-    console.timeEnd('runtime');
 
     dispatch({
       type: SET_VIEWPORT_WIDTH,
       payload: {
-        routes: nextRoutes,
-        shouldGoMobile: nextShouldGoMobile,
-        snapPoint: nextSnapPoint,
-        viewportWidth: nextViewportWidth,
-        width: maxFullPanelWidth + widths.reduce((a, b) => a + b, 0),
-        widths,
-        x
+        maxFullPanelWidth,
+        shouldGoMobile,
+        snapPoint,
+        viewportWidth,
+        ...nextPosition
       }
     });
   }

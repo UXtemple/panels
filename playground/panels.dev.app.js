@@ -42,7 +42,7 @@ class Lightgreen extends Component {
     const { props } = this;
 
     return (
-      <Panel style={{backgroundColor: 'lightgreen', height: '100%', width: props.width}}>
+      <Panel style={{backgroundColor: 'lightgreen', height: '100%', ...props.style}}>
         <div style={style.innerWrapper} ref={ $e => this.$scroller = $e }>
           <button onClick={() => this.update()}>update</button>
           <Teleport to='a/'
@@ -61,7 +61,7 @@ class Lightgreen extends Component {
             styleHover={{backgroundColor: 'lightgreen', color: 'white'}}>{'/a'}</Teleport>
           <Teleport to='..'>..</Teleport>
         </div>
-        <Expand {...props.panel.panel} />
+        <Expand />
       </Panel>
     );
   }
