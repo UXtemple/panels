@@ -7,8 +7,12 @@ module.exports = {
   plugins: [
     require('rollup-plugin-babel')({
       exclude: 'node_modules/**',
-      plugins: [require('babel-plugin-external-helpers')],
-      presets: [require('babel-preset-es-uxtemple')]
+      plugins: [
+        require('babel-plugin-external-helpers')
+      ],
+      presets: [
+        require('babel-preset-es-uxtemple')
+      ]
     })
   ]
-}
+};

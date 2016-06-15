@@ -143,7 +143,7 @@ How.contextTypes = {
 export const types = {
   'Lightgreen': Lightgreen,
   'Lightyellow': props => (
-    <Panel style={{backgroundColor: 'lightyellow', padding: 20, height: '100%', width: props.width}}>
+    <Panel style={{backgroundColor: 'lightyellow', padding: 20, height: '100%', ...props.style}}>
       <Teleport context={0} to='b/'>{'/a/b'}</Teleport>
       <Teleport to='http://panels.dev/'>{'teleport /'}</Teleport>
       <Teleport to='..'>..</Teleport>
@@ -151,38 +151,38 @@ export const types = {
     </Panel>
   ),
   'Lightblue': props => (
-    <Panel style={{backgroundColor: 'lightblue', padding: 20, height: '100%', width: props.width}}>
+    <Panel style={{backgroundColor: 'lightblue', padding: 20, height: '100%', ...props.style}}>
       <Teleport to='c/'>{'/a/b/c'}</Teleport>
       <Teleport to='..'>..</Teleport>
       <Content />
     </Panel>
   ),
   'Lightpink': props => (
-    <Panel style={{backgroundColor: 'lightpink', height: '100%', width: props.width}}>
+    <Panel style={{backgroundColor: 'lightpink', height: '100%', ...props.style}}>
       <div style={style.innerWrapper}>
         <Teleport to='d/'>{'/a/b/c/d'}</Teleport>
         <Teleport to='..'>..</Teleport>
         <Content />
       </div>
-      <Expand {...props.panel.panel} />
+      <Expand />
     </Panel>
   ),
   'Fuchsia': props => (
-    <Panel style={{backgroundColor: 'fuchsia', padding: 20, height: '100%', width: props.width}}>
+    <Panel style={{backgroundColor: 'fuchsia', padding: 20, height: '100%', ...props.style}}>
       <Teleport to='e/'>{'/a/b/c/d/e'}</Teleport>
       <Teleport to='..'>..</Teleport>
       <Content />
     </Panel>
   ),
   'Red': props => (
-    <Panel style={{backgroundColor: 'red', height: '100%', width: props.width}}>
+    <Panel style={{backgroundColor: 'red', height: '100%', ...props.style}}>
       <Teleport to='f/'>{'/a/b/c/d/e/f'}</Teleport>
       <Teleport to='..'>..</Teleport>
       <Content />
     </Panel>
   ),
   'Blue': props => (
-    <Panel style={{backgroundColor: 'blue', height: '100%', width: props.width}}>
+    <Panel style={{backgroundColor: 'blue', height: '100%', ...props.style}}>
       <Teleport to='..'>..</Teleport>
       <Content />
     </Panel>

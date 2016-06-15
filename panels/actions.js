@@ -1,24 +1,28 @@
 import getNextPosition from '../runtime/get-next-position';
 
 export const TOGGLE_EXPAND = 'panels/panels/TOGGLE_EXPAND';
-export function toggleExpand(route) {
+export function toggleExpand(routeContext) {
   return function toggleExpandThunk(dispatch, getState) {
     const { panels, router, runtime } = getState();
 
     const routes = router.routes;
+    const route = routes.byContext[routeContext];
+    const routeIndex = routes.items.indexOf(routeContext);
 
-    routes.byContext[route.context] = {
+    routes.byContext[routeContext] = {
       ...route,
       isExpanded: !route.isExpanded
     };
 
     const nextPosition = getNextPosition({
-      context: router.context,
-      focus: router.focus,
+      // snap at the expanded position!
+      context: routeIndex - runtime.snappedAt,
+      focus: routeIndex,
       maxFullPanelWidth: runtime.maxFullPanelWidth,
       routes,
       panels,
-      shouldGoMobile: runtime.shouldGoMobile
+      shouldGoMobile: runtime.shouldGoMobile,
+      viewportWidth: runtime.viewportWidth
     });
 
     dispatch({
@@ -29,7 +33,7 @@ export function toggleExpand(route) {
 }
 
 export const UPDATE_SETTINGS = 'panels/panels/UPDATE_SETTINGS';
-export function updateSettings(route, { maxWidth, title, styleBackground, width }) {
+export function updateSettings(routeContext, { maxWidth, title, styleBackground, width }) {
   const settings = {};
   if (maxWidth) {
     settings.maxWidth = maxWidth;
@@ -43,6 +47,8 @@ export function updateSettings(route, { maxWidth, title, styleBackground, width 
   if (width) {
     settings.width = width;
   }
+
+  const route = routes.byContext[routeContext];
 
   return {
     type: UPDATE_SETTINGS,

@@ -12,11 +12,7 @@ async function loadModule(app) {
       module = data.module;
     }
 
-    const resources = [loadResource(data.logic)];
-    if (data.style) {
-      resources.push(loadResource(data.style));
-    }
-    await Promise.all(resources);
+    await loadResource(data.logic);
   } catch(err) {
     if (err instanceof SyntaxError) {
       throw new Error(`We can't load ${app}.

@@ -29,7 +29,7 @@ export function setViewportWidth(viewportWidth) {
 
     const shouldGoMobile = viewportWidth <= MOBILE_THRESHOLD;
     const snapPoint = shouldGoMobile ? 0 : runtime.preferredSnapPoint;
-    const maxFullPanelWidth = shouldGoMobile ? viewportWidth : viewportWidth - snapPoint;
+    const maxFullPanelWidth = viewportWidth - snapPoint;
 
     const nextPosition = getNextPosition({
       context: router.context,
@@ -37,7 +37,8 @@ export function setViewportWidth(viewportWidth) {
       maxFullPanelWidth,
       routes: router.routes,
       panels,
-      shouldGoMobile
+      shouldGoMobile,
+      viewportWidth
     });
 
     dispatch({
@@ -56,17 +57,26 @@ export function setViewportWidth(viewportWidth) {
 export const SET_X = 'panels/runtime/SET_X';
 export function setX(fromX) {
   return function setXThunk(dispatch, getState) {
-    const { runtime } = getState();
+    const { router, runtime } = getState();
+    const snappedAt = getIndexOfPanelToShow(fromX, runtime.regions);
+    const x = runtime.widths.slice(0, snappedAt).reduce((a, b) => a + b, 0);
 
-    if (runtime.x !== fromX) {
-      const nextSnappedAt = getIndexOfPanelToShow(fromX, runtime.regions);
-      const nextX = runtime.widths.slice(0, nextSnappedAt).reduce((a, b) => a + b, 0);
+    if (x !== fromX) {
+      // TODO fix this horrible hack :) we're using it to snap at the edges
+      // we should ideally only be dispatching the second one not x: fromX
+      dispatch({
+        type: SET_X,
+        payload: {
+          snappedAt,
+          x: fromX
+        }
+      });
 
       dispatch({
         type: SET_X,
         payload: {
-          snappedAt: nextSnappedAt,
-          x: nextX
+          snappedAt,
+          x
         }
       });
     }

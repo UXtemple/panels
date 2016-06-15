@@ -8,12 +8,15 @@ import getViewportWidth from './get-viewport-width';
 import MoveLeft from './move-left';
 import React, { Component, PropTypes } from 'react';
 import Route from '../panels/component';
+import supportsPassiveEvents from './supports-passive-events';
 import Waiting from 'waiting';
 
-const DEBOUNCE = 150;
+const DEBOUNCE = 250;
 const LOADING_SIZE = 100;
 const LOADING_OFFSET = LOADING_SIZE / -2;
 const REBOUND = 500;
+
+const scrollEventOptions = supportsPassiveEvents ? { passive: true } : false;
 
 export class Runtime extends Component {
   state = {
@@ -22,8 +25,19 @@ export class Runtime extends Component {
     presenter: null
   };
 
+  getChildContext() {
+    return {
+      present: (presenter = null) => {
+        this.setState({
+          opacity: presenter ? 0 : 1,
+          presenter
+        });
+      }
+    };
+  }
+
   componentDidMount() {
-    this.$runtime.addEventListener('scroll', this.setX, false);
+    this.$runtime.addEventListener('scroll', this.setX, scrollEventOptions);
     window.addEventListener('resize', this.setViewportWidth, false);
     window.addEventListener('orientationchange', this.setViewportWidth, false);
     document.addEventListener('visibilitychange', this.onVisibilityChange);
@@ -58,10 +72,6 @@ export class Runtime extends Component {
     if (props.focusPanel) {
       window.document.title = props.focusPanel.title || props.focusPanel.type;
     }
-
-    if (prevProps.runtime.x !== props.runtime.x) {
-      this.$runtime.scrollLeft = props.runtime.x;
-    }
   }
 
   componentWillUnmount() {
@@ -77,21 +87,10 @@ export class Runtime extends Component {
       window.removeEventListener('orientationchange', this.setViewportWidth);
     } else {
       setTimeout(() => {
-        this.$runtime.addEventListener('scroll', this.setX, false);
+        this.$runtime.addEventListener('scroll', this.setX, scrollEventOptions);
         window.addEventListener('resize', this.setViewportWidth, false);
         window.addEventListener('orientationchange', this.setViewportWidth, false);
       }, REBOUND);
-    }
-  }
-
-  getChildContext() {
-    return {
-      present: (presenter = null) => {
-        this.setState({
-          opacity: presenter ? 0 : 1,
-          presenter
-        });
-      }
     }
   }
 
@@ -124,8 +123,8 @@ export class Runtime extends Component {
   }
 
   render() {
-    const { canMoveLeft, focusPanel, moveLeft, runtime } = this.props;
     const { autoScroll, presenter } = this.state;
+    const { canMoveLeft, focusPanel, moveLeft, runtime } = this.props;
 
     const runtimeStyle = focusPanel ? {
       ...style,
@@ -137,7 +136,7 @@ export class Runtime extends Component {
         { canMoveLeft && <MoveLeft onClick={moveLeft} snapPoint={runtime.snapPoint} /> }
 
         <Motion
-          onRest={() => this.setState({ autoScroll: null }) }
+          onRest={() => this.setState({ autoScroll: null })}
           style={{ x: spring(autoScroll ? autoScroll.gap : 0, { stiffness: 210 }) }}
         >
           {this.scrollRuntime}
@@ -157,7 +156,7 @@ export class Runtime extends Component {
   }
 
   renderPanels = (interpolatedStyles) => {
-    const { navigate, router: { isLoading, routes }, runtime, toggleExpand, updateSettings } = this.props;
+    const { navigate, router, runtime, toggleExpand, updateSettings } = this.props;
     const { opacity } = this.state;
 
     return (
@@ -174,23 +173,25 @@ export class Runtime extends Component {
         }}
       >
         { interpolatedStyles.map(({ data, key, style }) => (
-          <Route
-            {...data}
-            navigate={navigate}
-            key={key}
-            router={router} PASS THIS IN SOMEHOW, EITHER WITH CONTEXT OR AS A PROP
-            toggleExpand={toggleExpand}
-            updateSettings={updateSettings}
-            x={style.x}
-            width={style.width}
-          />
+          data.route.isVisible ? (
+            <Route
+              {...data}
+              navigate={navigate}
+              key={key}
+              router={router}
+              toggleExpand={toggleExpand}
+              updateSettings={updateSettings}
+              x={style.x}
+              width={style.width}
+            />
+          ) : null
         )) }
 
-        { isLoading ? (
+        { router.isLoading ? (
           <div
             style={{
               justifyContent: 'center',
-              left: routes.items.length ? LOADING_OFFSET : LOADING_OFFSET - runtime.snapPoint,
+              left: router.routes.items.length ? LOADING_OFFSET : LOADING_OFFSET - runtime.snapPoint,
               marginTop: LOADING_OFFSET
             }}
           >
@@ -219,9 +220,9 @@ export class Runtime extends Component {
       this.setState({
         autoScroll: null
       });
-    } else {
-      this.props.setX(this.$runtime.scrollLeft);
     }
+
+    this.props.setX(this.$runtime.scrollLeft);
   }, DEBOUNCE)
 
   toggleOpacityIfPresenting = event => {
@@ -234,14 +235,14 @@ export class Runtime extends Component {
     }
   };
 
-  willEnter = ({ style }) => ({
+  willEnter = ({ style }) =>  ({
     x: 0,
-    width: style.width
+    width: style.width.val
   })
 
-  willLeave = () => ({
+  willLeave = ({ style, ...rest }) => ({
     x: spring(0, { stiffness: 210 }),
-    width: style.width
+    width: style.width.val || style.width
   })
 }
 Runtime.childContextTypes = {

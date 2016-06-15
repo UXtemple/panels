@@ -1,4 +1,3 @@
-import { Provider } from 'react-redux';
 import React, { Component, PropTypes } from 'react';
 
 export default class Route extends Component {
@@ -20,9 +19,8 @@ export default class Route extends Component {
     };
   }
 
-  // tell if a path is active
   isActive = path => {
-    const { route, router, routeIndex } = this;
+    const { route, router, routeIndex } = this.props;
 
     const routeAfterContext = router.routes.items[routeIndex + 1];
     return routeAfterContext && `${route.context}${path}` === routeAfterContext;
@@ -43,24 +41,19 @@ export default class Route extends Component {
   render() {
     const { panel, route, store, Type, width, x, zIndex } = this.props;
 
-    let ret = null;
-    if (route.isVisible) {
-      const style = {
-        height: '100%',
-        opacity: x,
-        overflowY: 'hidden',
-        transform: `translateX(${-Math.abs(100 - x * 100)}%)`,
-        width,
-        zIndex
-      };
-
-      ret = store ? (
-        <Provider store={store}>
-          <Type {...panel.props} style={style} />
-        </Provider>
-      ) : <Type {...panel.props} style={style} />;
-    }
-    return ret;
+    return (
+      <Type
+        {...panel.props}
+        store={store}
+        style={{
+          height: '100%',
+          opacity: x,
+          transform: `translateX(${-Math.abs(100 - x * 100)}%)`,
+          width,
+          zIndex
+        }}
+      />
+    );
   }
 }
 
