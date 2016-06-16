@@ -92,6 +92,8 @@ export function navigate(rawUri, nextFocus = 1, nextContext) {
               state = app.store && app.store.getState();
             }
             panel = panel(state, props);
+          } else {
+            panel.props = props;
           }
 
           // ensure that the panel has a valid shape and defaults

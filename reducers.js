@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 import { MOVE_LEFT, SET_X, SET_VIEWPORT_WIDTH } from './runtime/actions';
 import { NAVIGATE } from './actions';
-import { TOGGLE_EXPAND } from './panels/actions';
+import { TOGGLE_EXPAND, UPDATE_SETTINGS } from './panels/actions';
 import getViewportWidth from './runtime/get-viewport-width';
 
 function apps(state = { byName: {}, items: [] }, action) {
@@ -37,6 +37,11 @@ function panels(state = { byId: {}, items: [] }, action) {
         ...action.payload.panels.items
       ]
     };
+  } else if (action.type === UPDATE_SETTINGS) {
+    return {
+      ...state,
+      byId: action.payload.nextPanelsById
+    };
   } else {
     return state;
   }
@@ -69,6 +74,20 @@ function router(state = { isLoading: true, routes: { byContext: {}, items: [] } 
           byContext: action.payload.routesByContext
         }
       };
+      break;
+
+    case UPDATE_SETTINGS:
+      if (action.payload.nextPosition) {
+        return {
+          ...state,
+          routes: {
+            items: state.routes.items,
+            byContext: action.payload.nextPosition.routesByContext
+          }
+        };
+      } else {
+        return state;
+      }
       break;
 
     default: return state;
@@ -141,6 +160,19 @@ function runtime(state = RUNTIME_DEFAULT_STATE, action) {
         widths: action.payload.widths,
         x: action.payload.x
       };
+      break;
+
+    case UPDATE_SETTINGS:
+      if (action.payload.nextPosition) {
+        return {
+          ...state,
+          width: action.payload.nextPosition.width,
+          widths: action.payload.nextPosition.widths,
+          x: action.payload.nextPosition.x
+        };
+      } else {
+        return state;
+      }
       break;
 
     default: return state;

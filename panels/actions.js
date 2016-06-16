@@ -9,9 +9,12 @@ export function toggleExpand(routeContext) {
     const route = routes.byContext[routeContext];
     const routeIndex = routes.items.indexOf(routeContext);
 
-    routes.byContext[routeContext] = {
-      ...route,
-      isExpanded: !route.isExpanded
+    routes.byContext = {
+      ...routes.byContext,
+      [routeContext]: {
+        ...route,
+        isExpanded: !route.isExpanded
+      }
     };
 
     const nextPosition = getNextPosition({
@@ -29,32 +32,63 @@ export function toggleExpand(routeContext) {
       type: TOGGLE_EXPAND,
       payload: nextPosition
     });
-  }
+  };
 }
 
 export const UPDATE_SETTINGS = 'panels/panels/UPDATE_SETTINGS';
 export function updateSettings(routeContext, { maxWidth, title, styleBackground, width }) {
-  const settings = {};
-  if (maxWidth) {
-    settings.maxWidth = maxWidth;
-  }
-  if (title) {
-    settings.title = title;
-  }
-  if (styleBackground) {
-    settings.styleBackground = styleBackground;
-  }
-  if (width) {
-    settings.width = width;
-  }
+  return function updateSettingsThunk(dispatch, getState) {
+    const { panels, router, runtime } = getState();
 
-  const route = routes.byContext[routeContext];
+    const nextPanels = {
+      byId: panels.byId,
+      items: panels.items
+    };
 
-  return {
-    type: UPDATE_SETTINGS,
-    payload: {
-      id: route.panelId,
-      settings
+    const route = router.routes.byContext[routeContext];
+    const routeIndex = router.routes.items.indexOf(routeContext);
+    const panel = {
+      ...nextPanels.byId[route.panelId]
+    };
+
+    if (maxWidth) {
+      panel.maxWidth = maxWidth;
     }
+    if (title) {
+      panel.title = title;
+    }
+    if (styleBackground) {
+      panel.styleBackground = styleBackground;
+    }
+    if (width) {
+      panel.width = width;
+    }
+
+    nextPanels.byId = {
+      ...nextPanels.byId,
+      [route.panelId]: panel
+    };
+
+    let nextPosition;
+    if (maxWidth || width) {
+      nextPosition = getNextPosition({
+        // snap at the expanded position!
+        context: routeIndex - runtime.snappedAt,
+        focus: routeIndex,
+        maxFullPanelWidth: runtime.maxFullPanelWidth,
+        routes: router.routes,
+        panels: nextPanels,
+        shouldGoMobile: runtime.shouldGoMobile,
+        viewportWidth: runtime.viewportWidth
+      });
+    }
+
+    dispatch({
+      type: UPDATE_SETTINGS,
+      payload: {
+        nextPanelsById: nextPanels.byId,
+        nextPosition
+      }
+    });
   };
 }

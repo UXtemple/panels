@@ -22,10 +22,10 @@ const style = {
 
 class Lightgreen extends Component {
   update() {
-    this.context.updateSettings({
+    this.context.panels.updateSettings({
       maxWidth: 400,
       width: 200
-    })
+    });
   }
 
   scrollTo = (y) => {
@@ -67,7 +67,9 @@ class Lightgreen extends Component {
   }
 }
 Lightgreen.contextTypes = {
-  updateSettings: PropTypes.func
+  panels: PropTypes.shape({
+    updateSettings: PropTypes.func
+  })
 }
 Lightgreen.childContextTypes = {
   scrollTo: PropTypes.func
@@ -82,7 +84,7 @@ class How extends Component {
 
   componentDidMount() {
     if (this.props.panel.isFocus) {
-      this.context.present(this.renderPresenter());
+      this.context.panels.present(this.renderPresenter());
     }
   }
 
@@ -90,15 +92,15 @@ class How extends Component {
     const { context, props } = this;
     if (props.panel.isFocus !== prevProps.panel.isFocus) {
       if (props.panel.isFocus) {
-        context.present();
+        context.panels.present();
       } else {
-        context.present(this.renderPresenter());
+        context.panels.present(this.renderPresenter());
       }
     }
   }
 
   componentWillUnmount() {
-    this.context.present();
+    this.context.panels.present();
   }
 
   renderPresenter() {
@@ -137,7 +139,9 @@ class How extends Component {
   }
 }
 How.contextTypes = {
-  present: PropTypes.func.isRequired
+  PropTypes: PropTypes.shape({
+    present: PropTypes.func.isRequired
+  })
 };
 
 export const types = {

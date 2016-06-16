@@ -222,7 +222,10 @@ export class Runtime extends Component {
       });
     }
 
-    this.props.setX(this.$runtime.scrollLeft);
+    const nextX = this.$runtime.scrollLeft;
+    if (Math.abs(this.props.runtime.x - nextX) > 5) {
+      this.props.setX(nextX);
+    }
   }, DEBOUNCE)
 
   toggleOpacityIfPresenting = event => {
