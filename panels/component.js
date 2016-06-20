@@ -1,24 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 
 export default class Route extends Component {
-  getChildContext() {
-    const { isActive, navigate, toggleExpand, updateSettings } = this;
-    const { panel, route, routeIndex, router } = this.props;
-
-    return {
-      panels: {
-        isActive,
-        navigate,
-        panel,
-        route,
-        routeIndex,
-        router,
-        toggleExpand,
-        updateSettings
-      }
-    };
-  }
-
   isActive = path => {
     const { route, router, routeIndex } = this.props;
 
@@ -39,19 +21,25 @@ export default class Route extends Component {
   )
 
   render() {
-    const { panel, route, store, Type, width, x, zIndex } = this.props;
+    const { isActive, navigate, toggleExpand, updateSettings } = this;
+    const { Type, width, x, zIndex, ...props } = this.props;
+    const style = {
+      height: '100%',
+      opacity: x,
+      overflowY: 'auto',
+      transform: `translateX(${-Math.abs(100 - x * 100)}%)`,
+      width,
+      zIndex
+    };
 
     return (
       <Type
-        {...panel.props}
-        store={store}
-        style={{
-          height: '100%',
-          opacity: x,
-          transform: `translateX(${-Math.abs(100 - x * 100)}%)`,
-          width,
-          zIndex
-        }}
+        {...props}
+        isActive={isActive}
+        navigate={navigate}
+        style={style}
+        toggleExpand={toggleExpand}
+        updateSettings={updateSettings}
       />
     );
   }
@@ -77,6 +65,7 @@ Route.propTypes = {
   ]).isRequired,
   navigate: PropTypes.func.isRequired,
   panel: PropTypes.object.isRequired,
+  present: PropTypes.func.isRequired,
   route: routeShape.isRequired,
   routeIndex: PropTypes.number.isRequired,
   router: PropTypes.shape({
@@ -92,23 +81,4 @@ Route.propTypes = {
   width: PropTypes.number.isRequired,
   x: PropTypes.number.isRequired,
   zIndex: PropTypes.number.isRequired
-};
-
-Route.childContextTypes = {
-  panels: PropTypes.shape({
-    isActive: PropTypes.func.isRequired,
-    navigate: PropTypes.func.isRequired,
-    panel: PropTypes.object.isRequired,
-    route: routeShape.isRequired,
-    routeIndex: PropTypes.number.isRequired,
-    router: PropTypes.shape({
-      routes: PropTypes.shape({
-        byContext: PropTypes.objectOf(routeShape),
-        items: PropTypes.arrayOf(PropTypes.string)
-      }),
-      uri: PropTypes.string.isRequired
-    }),
-    toggleExpand: PropTypes.func.isRequired,
-    updateSettings: PropTypes.func.isRequired
-  }).isRequired
 };

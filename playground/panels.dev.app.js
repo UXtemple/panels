@@ -22,7 +22,7 @@ const style = {
 
 class Lightgreen extends Component {
   update() {
-    this.context.panels.updateSettings({
+    this.props.updateSettings({
       maxWidth: 400,
       width: 200
     });
@@ -42,7 +42,7 @@ class Lightgreen extends Component {
     const { props } = this;
 
     return (
-      <Panel style={{backgroundColor: 'lightgreen', height: '100%', ...props.style}}>
+      <Panel {...props} style={{backgroundColor: 'lightgreen', height: '100%', ...props.style}}>
         <div style={style.innerWrapper} ref={ $e => this.$scroller = $e }>
           <button onClick={() => this.update()}>update</button>
           <Teleport to='a/'
@@ -66,41 +66,26 @@ class Lightgreen extends Component {
     );
   }
 }
-Lightgreen.contextTypes = {
-  panels: PropTypes.shape({
-    updateSettings: PropTypes.func
-  })
-}
 Lightgreen.childContextTypes = {
   scrollTo: PropTypes.func
-}
+};
 
 class How extends Component {
-  state = {
-    presenter: {
-      isPlaying: true
-    }
-  };
-
   componentDidMount() {
-    if (this.props.panel.isFocus) {
-      this.context.panels.present(this.renderPresenter());
+    if (this.props.isFocus) {
+      this.props.present(this.renderPresenter());
     }
   }
 
   componentDidUpdate(prevProps) {
     const { context, props } = this;
-    if (props.panel.isFocus !== prevProps.panel.isFocus) {
-      if (props.panel.isFocus) {
-        context.panels.present();
-      } else {
-        context.panels.present(this.renderPresenter());
-      }
+    if (props.isFocus !== prevProps.isFocus) {
+      props.present(props.isFocus && this.renderPresenter());
     }
   }
 
   componentWillUnmount() {
-    this.context.panels.present();
+    this.props.present();
   }
 
   renderPresenter() {
@@ -116,10 +101,10 @@ class How extends Component {
   }
 
   render() {
-    const { width } = this.props;
+    const { props } = this;
 
     return (
-      <Panel style={{ backgroundColor: '#fafafa', width }}>
+      <Panel {...props} style={{ backgroundColor: '#fafafa', ...props.style }}>
         <div onClick={this.pausePresenter}>pause</div>
       </Panel>
     );
@@ -131,23 +116,13 @@ class How extends Component {
     } else {
       this.$presenter.pause();
     }
-    // this.setState({
-    //   presenter: {
-    //     isPlaying: true
-    //   }
-    // });
   }
 }
-How.contextTypes = {
-  PropTypes: PropTypes.shape({
-    present: PropTypes.func.isRequired
-  })
-};
 
 export const types = {
   'Lightgreen': Lightgreen,
   'Lightyellow': props => (
-    <Panel style={{backgroundColor: 'lightyellow', padding: 20, height: '100%', ...props.style}}>
+    <Panel {...props} style={{backgroundColor: 'lightyellow', padding: 20, height: '100%', ...props.style}}>
       <Teleport context={0} to='b/'>{'/a/b'}</Teleport>
       <Teleport to='http://panels.dev/'>{'teleport /'}</Teleport>
       <Teleport to='..'>..</Teleport>
@@ -155,14 +130,14 @@ export const types = {
     </Panel>
   ),
   'Lightblue': props => (
-    <Panel style={{backgroundColor: 'lightblue', padding: 20, height: '100%', ...props.style}}>
+    <Panel {...props} style={{backgroundColor: 'lightblue', padding: 20, height: '100%', ...props.style}}>
       <Teleport to='c/'>{'/a/b/c'}</Teleport>
       <Teleport to='..'>..</Teleport>
       <Content />
     </Panel>
   ),
   'Lightpink': props => (
-    <Panel style={{backgroundColor: 'lightpink', height: '100%', ...props.style}}>
+    <Panel {...props} style={{backgroundColor: 'lightpink', height: '100%', ...props.style}}>
       <div style={style.innerWrapper}>
         <Teleport to='d/'>{'/a/b/c/d'}</Teleport>
         <Teleport to='..'>..</Teleport>
@@ -172,27 +147,27 @@ export const types = {
     </Panel>
   ),
   'Fuchsia': props => (
-    <Panel style={{backgroundColor: 'fuchsia', padding: 20, height: '100%', ...props.style}}>
+    <Panel {...props} style={{backgroundColor: 'fuchsia', padding: 20, height: '100%', ...props.style}}>
       <Teleport to='e/'>{'/a/b/c/d/e'}</Teleport>
       <Teleport to='..'>..</Teleport>
       <Content />
     </Panel>
   ),
   'Red': props => (
-    <Panel style={{backgroundColor: 'red', height: '100%', ...props.style}}>
+    <Panel {...props} style={{backgroundColor: 'red', height: '100%', ...props.style}}>
       <Teleport to='f/'>{'/a/b/c/d/e/f'}</Teleport>
       <Teleport to='..'>..</Teleport>
       <Content />
     </Panel>
   ),
   'Blue': props => (
-    <Panel style={{backgroundColor: 'blue', height: '100%', ...props.style}}>
+    <Panel {...props} style={{backgroundColor: 'blue', height: '100%', ...props.style}}>
       <Teleport to='..'>..</Teleport>
       <Content />
     </Panel>
   ),
   'Random': props => (
-    <Panel style={{border: '1px solid black'}}>random { props.id }</Panel>
+    <Panel {...props} style={{border: '1px solid black'}}>random { props.id }</Panel>
   ),
   How
 };
@@ -205,12 +180,12 @@ export const panels = {
   '/a/b/c/d': {type: 'Fuchsia'},
   '/a/b/c/d/e': {type: 'Red'},
   '/a/b/c/d/e/f': {type: 'Blue'},
-  '/random:id': (state, props) => ({
+  '/random:id': ({ id }) => ({
     context: 0,
-    title: props.id,
+    title: id,
     props,
     type: 'Random',
-    width: 360 * parseFloat(props.id, 10)
+    width: 360 * parseFloat(id, 10)
   }),
   '/how': { type: 'How' }
 };

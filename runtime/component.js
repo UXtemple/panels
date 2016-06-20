@@ -25,17 +25,6 @@ export class Runtime extends Component {
     presenter: null
   };
 
-  getChildContext() {
-    return {
-      present: (presenter = null) => {
-        this.setState({
-          opacity: presenter ? 0 : 1,
-          presenter
-        });
-      }
-    };
-  }
-
   componentDidMount() {
     this.$runtime.addEventListener('scroll', this.setX, scrollEventOptions);
     window.addEventListener('resize', this.setViewportWidth, false);
@@ -122,6 +111,13 @@ export class Runtime extends Component {
     });
   }
 
+  present = (presenter = null) => {
+    this.setState({
+      opacity: presenter ? 0 : 1,
+      presenter
+    });
+  }
+
   render() {
     const { autoScroll, presenter } = this.state;
     const { canMoveLeft, focusPanel, moveLeft, runtime } = this.props;
@@ -158,6 +154,7 @@ export class Runtime extends Component {
   renderPanels = (interpolatedStyles) => {
     const { navigate, router, runtime, toggleExpand, updateSettings } = this.props;
     const { opacity } = this.state;
+    const { present } = this;
 
     return (
       <div
@@ -178,6 +175,7 @@ export class Runtime extends Component {
               {...data}
               navigate={navigate}
               key={key}
+              present={present}
               router={router}
               toggleExpand={toggleExpand}
               updateSettings={updateSettings}
@@ -248,9 +246,6 @@ export class Runtime extends Component {
     width: style.width.val || style.width
   })
 }
-Runtime.childContextTypes = {
-  present: PropTypes.func
-};
 
 const style = {
   height: '100%',

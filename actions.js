@@ -10,6 +10,8 @@ function ensurePanelShape(panel) {
   }
 }
 
+const __DEV__ = process.env.NODE_ENV === 'development';
+
 export const NAVIGATE = 'panels/NAVIGATE';
 export function navigate(rawUri, nextFocus = 1, nextContext) {
   return async function navigateThunk(dispatch, getState) {
@@ -20,11 +22,11 @@ export function navigate(rawUri, nextFocus = 1, nextContext) {
       return;
     }
 
-    console.time('parse');
+    __DEV__ && console.time('parse');
     const parsed = parseUri(uri);
-    console.timeEnd('parse');
+    __DEV__ && console.timeEnd('parse');
 
-    console.time('apps');
+    __DEV__ && console.time('apps');
     const appContext = {
       navigate(uri, focus, context) {
         dispatch(navigate(uri, focus, context))
@@ -58,9 +60,9 @@ export function navigate(rawUri, nextFocus = 1, nextContext) {
         console.error(`Can't load app ${name}`, error);
       }
     }));
-    console.timeEnd('apps');
+    __DEV__ && console.timeEnd('apps');
 
-    console.time('panels');
+    __DEV__ && console.time('panels');
     const nextPanels = {
       byId: {},
       items: []
@@ -72,8 +74,6 @@ export function navigate(rawUri, nextFocus = 1, nextContext) {
       const panelsToLoad = parsed.apps.byName[name].panels;
       // get the app
       const app = nextApps.byName[name] || apps.byName[name];
-      // placeholder for the state should we need it
-      let state;
 
       panelsToLoad.forEach(path => {
         const panelId = `${name}${path}`;
@@ -87,11 +87,7 @@ export function navigate(rawUri, nextFocus = 1, nextContext) {
           let { panel, props } = app.findPanel(path);
 
           if (typeof panel === 'function') {
-            // get the state if any and memoize it for future operations
-            if (typeof state === 'undefined') {
-              state = app.store && app.store.getState();
-            }
-            panel = panel(state, props);
+            panel = panel(props, app.store);
           } else {
             panel.props = props;
           }
@@ -107,9 +103,9 @@ export function navigate(rawUri, nextFocus = 1, nextContext) {
         }
       });
     });
-    console.timeEnd('panels');
+    __DEV__ && console.timeEnd('panels');
 
-    console.time('runtime');
+    __DEV__ && console.time('runtime');
     const maxFullPanelWidth = runtime.viewportWidth - runtime.snapPoint;
     // determine the context and focus panel
     const { context, focus } = getContextAndFocus(
@@ -171,7 +167,7 @@ export function navigate(rawUri, nextFocus = 1, nextContext) {
       // decrease the amount of contexts left
       contextsLeft--;
     }
-    console.timeEnd('runtime');
+    __DEV__ && console.timeEnd('runtime');
 
     dispatch({
       type: NAVIGATE,
