@@ -166,7 +166,8 @@ export class Runtime extends Component {
           overflowY: 'hidden',
           paddingLeft: runtime.snapPoint,
           transition: 'opacity 0.5s ease-in',
-          width: runtime.width
+          width: runtime.width,
+          willChange: 'scroll-position, opacity'
         }}
       >
         { interpolatedStyles.map(({ data, key, style }) => (
