@@ -61,7 +61,17 @@ export function setX(fromX) {
     const snappedAt = getIndexOfPanelToShow(fromX, runtime.regions);
     const x = runtime.widths.slice(0, snappedAt).reduce((a, b) => a + b, 0);
 
-    if (x !== fromX) {
+    if (x === fromX) {
+      if (runtime.x !== x) {
+        dispatch({
+          type: SET_X,
+          payload: {
+            snappedAt,
+            x
+          }
+        });
+      }
+    } else {
       // TODO fix this horrible hack :) we're using it to snap at the edges
       // we should ideally only be dispatching the second one not x: fromX
       dispatch({

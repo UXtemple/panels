@@ -13,7 +13,7 @@ export default function runtimeRender(configureStore, preferredSnapPoint = 90) {
 
   render(
     <Provider store={store}>
-      <Runtime preferredSnapPoint={preferredSnapPoint} />
+      <Runtime />
     </Provider>,
     document.getElementById('root')
   );

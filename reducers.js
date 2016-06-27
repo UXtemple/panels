@@ -96,7 +96,8 @@ function router(state = { isLoading: true, routes: { byContext: {}, items: [] } 
 
 export const MOBILE_THRESHOLD = 720;
 
-const preferredSnapPoint = 90;
+// TODO REVERT!
+const preferredSnapPoint = typeof window.panelsSnapPoint === 'number' ? window.panelsSnapPoint : 90;
 const viewportWidth = getViewportWidth();
 const shouldGoMobile = viewportWidth < MOBILE_THRESHOLD;
 const snapPoint = shouldGoMobile ? 0 : preferredSnapPoint;

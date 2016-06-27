@@ -20,9 +20,58 @@ export default class Route extends Component {
     this.props.updateSettings(this.props.route.context, settings)
   )
 
-  render() {
+  componentDidMount() {
     const { isActive, navigate, toggleExpand, updateSettings } = this;
-    const { Type, width, x, zIndex, ...props } = this.props;
+    const { isContext, isFocus, panel, present, route, routeIndex, router, store, Type } = this.props;
+
+    const props = {
+      isActive,
+      isContext,
+      isFocus,
+      navigate,
+      panel,
+      present,
+      route,
+      routeIndex,
+      router,
+      store,
+      toggleExpand,
+      updateSettings
+    };
+
+    this.onDestroy = Type(this.$el, props, this.subscribe);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (typeof this.onChange === 'function') {
+      const { panel, route, routeIndex, router } = this.props;
+
+      if (
+        prevProps.panel !== panel ||
+        prevProps.route !== route ||
+        prevProps.routeIndex !== routeIndex ||
+        prevProps.router !== router
+      ) {
+        this.onChange({
+          panel,
+          route,
+          routeIndex,
+          router
+        });
+      }
+    }
+  }
+
+  componentWillUnmount() {
+    if (typeof this.onDestroy === 'function') {
+      this.onDestroy();
+    }
+  }
+
+  subscribe = onChange => this.onChange = onChange
+
+  render() {
+    const { x, width, zIndex } = this.props;
     const style = {
       height: '100%',
       opacity: x,
@@ -32,16 +81,7 @@ export default class Route extends Component {
       zIndex
     };
 
-    return (
-      <Type
-        {...props}
-        isActive={isActive}
-        navigate={navigate}
-        style={style}
-        toggleExpand={toggleExpand}
-        updateSettings={updateSettings}
-      />
-    );
+    return <div ref={$el => this.$el = $el } style={style} />;
   }
 }
 
@@ -55,14 +95,8 @@ const routeShape = PropTypes.shape({
 });
 
 Route.propTypes = {
-  store: PropTypes.oneOfType([
-    PropTypes.bool,
-    PropTypes.shape({
-      dispatch: PropTypes.func.isRequired,
-      getState: PropTypes.func.isRequired,
-      subscribe: PropTypes.func.isRequired
-    })
-  ]).isRequired,
+  isContext: PropTypes.bool.isRequired,
+  isFocus: PropTypes.bool.isRequired,
   navigate: PropTypes.func.isRequired,
   panel: PropTypes.object.isRequired,
   present: PropTypes.func.isRequired,
@@ -75,6 +109,14 @@ Route.propTypes = {
     }),
     uri: PropTypes.string.isRequired
   }),
+  store: PropTypes.oneOfType([
+    PropTypes.bool,
+    PropTypes.shape({
+      dispatch: PropTypes.func.isRequired,
+      getState: PropTypes.func.isRequired,
+      subscribe: PropTypes.func.isRequired
+    })
+  ]).isRequired,
   Type: PropTypes.func.isRequired,
   toggleExpand: PropTypes.func.isRequired,
   updateSettings: PropTypes.func.isRequired,

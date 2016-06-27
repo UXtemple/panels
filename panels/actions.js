@@ -19,8 +19,8 @@ export function toggleExpand(routeContext) {
 
     const nextPosition = getNextPosition({
       // snap at the expanded position!
-      context: routeIndex - runtime.snappedAt,
-      focus: routeIndex,
+      context: router.context, // routeIndex - runtime.snappedAt,
+      focus: router.focus, // routeIndex,
       maxFullPanelWidth: runtime.maxFullPanelWidth,
       routes,
       panels,

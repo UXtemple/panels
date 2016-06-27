@@ -1,5 +1,6 @@
 import getApp from './apps/get';
-import getContextAndFocus from './router/navigate';
+import getContextAndFocus from './router/get-context-and-focus';
+import getIndexOfPanelToShow from './runtime/get-index-of-panel-to-show';
 import getRegions from './runtime/get-regions';
 import normaliseUri from 'panels-normalise-uri';
 import parseUri from './router/parse';
@@ -107,10 +108,18 @@ export function navigate(rawUri, nextFocus = 1, nextContext) {
 
     __DEV__ && console.time('runtime');
     const maxFullPanelWidth = runtime.viewportWidth - runtime.snapPoint;
+    const isFirstLoad = typeof router.focus === 'undefined';
+    const last = parsed.routes.items.length - 1;
     // determine the context and focus panel
-    const { context, focus } = getContextAndFocus(
-      uri, parsed.routes.items, router.focus, router.context, nextFocus, nextContext
-    );
+    const { context, focus } = getContextAndFocus({
+      currentFocus: isFirstLoad ? last : router.focus,
+      next: {
+        context: isFirstLoad ? nextPanels.byId[nextPanels.items[last]].context : nextContext,
+        focus: isFirstLoad ? 0 : nextFocus
+      },
+      uri,
+      last
+    });
 
     const routes = {
       byContext: router.routes.byContext,
@@ -154,19 +163,29 @@ export function navigate(rawUri, nextFocus = 1, nextContext) {
     // get how much space we have left for context panels
     let leftForContext = maxFullPanelWidth - focusWidth; // >> 1089
     // assess how many context panels we should try to show
-    let contextsLeft = focus - context - 1;
+    let contextsLeft = focus - context;
 
     // try to fit those context panels within that space that's left
-    while (contextsLeft >= 0 && leftForContext >= widths[contextsLeft]) {
+    while (contextsLeft > 0) {
+      // decrease the amount of contexts left
+      contextsLeft--;
+
       // get the context's width
       const contextWidth = widths[contextsLeft];
-      // remove it from the space left for context
+
+      // check if we have space left for this panel to be a visible context panel
+      if (leftForContext < contextWidth) {
+        break;
+      }
+
+      // if we do, remove it from the space left for context
       leftForContext -= contextWidth;
       // shift x to include that panel
       x -= contextWidth;
-      // decrease the amount of contexts left
-      contextsLeft--;
     }
+
+    const regions = getRegions(widths);
+    const snappedAt = getIndexOfPanelToShow(x, regions);
     __DEV__ && console.timeEnd('runtime');
 
     dispatch({
@@ -185,8 +204,8 @@ export function navigate(rawUri, nextFocus = 1, nextContext) {
         },
         runtime: {
           maxFullPanelWidth,
-          regions: getRegions(widths),
-          snappedAt: focus - contextsLeft,
+          regions,
+          snappedAt,
           width: maxFullPanelWidth + widths.reduce((a, b) => a + b, 0),
           widths,
           x

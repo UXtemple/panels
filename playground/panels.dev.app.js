@@ -1,4 +1,4 @@
-import { Expand, Teleport, Panel } from 'panels-ui';
+import { Expand, Teleport, Panel, wrap } from 'panels-ui';
 import React, { Component, PropTypes } from 'react';
 
 const Content = (props, context) => (
@@ -22,7 +22,7 @@ const style = {
 
 class Lightgreen extends Component {
   update() {
-    this.props.updateSettings({
+    this.props.panels.updateSettings({
       maxWidth: 400,
       width: 200
     });
@@ -39,16 +39,16 @@ class Lightgreen extends Component {
   }
 
   render() {
-    const { props } = this;
-
     return (
-      <Panel {...props} style={{backgroundColor: 'lightgreen', height: '100%', ...props.style}}>
+      <Panel style={{ backgroundColor: 'lightgreen' }}>
         <div style={style.innerWrapper} ref={ $e => this.$scroller = $e }>
+          width: { this.props.panels.route.width }
           <button onClick={() => this.update()}>update</button>
           <Teleport to='a/'
+            context={1}
             style={{paddingBottom: 10, paddingTop: 10, textDecoration: 'none'}}
-            styleActive={{backgroundColor: 'white', color: 'lightgreen'}}
-            styleHover={{backgroundColor: 'lightgreen', color: 'white'}}>{'/a'}</Teleport>
+            styleActive={{ backgroundColor: 'white', color: 'lightgreen'}}
+            styleHover={{ backgroundColor: 'lightgreen', color: 'white'}}>{'/a'}</Teleport>
           <Teleport to='..'>..</Teleport>
 
           <Teleport context={0} to='how'>how!</Teleport>
@@ -57,8 +57,8 @@ class Lightgreen extends Component {
           <div onClick={() => this.scrollTo(100) }>scroll</div>
           <Teleport to='a/'
             style={{paddingBottom: 10, paddingTop: 10, textDecoration: 'none'}}
-            styleActive={{backgroundColor: 'white', color: 'lightgreen'}}
-            styleHover={{backgroundColor: 'lightgreen', color: 'white'}}>{'/a'}</Teleport>
+            styleActive={{ backgroundColor: 'white', color: 'lightgreen'}}
+            styleHover={{ backgroundColor: 'lightgreen', color: 'white'}}>{'/a'}</Teleport>
           <Teleport to='..'>..</Teleport>
         </div>
         <Expand />
@@ -104,7 +104,7 @@ class How extends Component {
     const { props } = this;
 
     return (
-      <Panel {...props} style={{ backgroundColor: '#fafafa', ...props.style }}>
+      <Panel style={{ backgroundColor: '#fafafa' }}>
         <div onClick={this.pausePresenter}>pause</div>
       </Panel>
     );
@@ -120,24 +120,24 @@ class How extends Component {
 }
 
 export const types = {
-  'Lightgreen': Lightgreen,
-  'Lightyellow': props => (
-    <Panel {...props} style={{backgroundColor: 'lightyellow', padding: 20, height: '100%', ...props.style}}>
+  'Lightgreen': wrap(Lightgreen),
+  'Lightyellow': wrap(props => (
+    <Panel style={{ backgroundColor: 'lightyellow', padding: 20 }}>
       <Teleport context={0} to='b/'>{'/a/b'}</Teleport>
       <Teleport to='http://panels.dev/'>{'teleport /'}</Teleport>
       <Teleport to='..'>..</Teleport>
       <Content />
     </Panel>
-  ),
-  'Lightblue': props => (
-    <Panel {...props} style={{backgroundColor: 'lightblue', padding: 20, height: '100%', ...props.style}}>
+  )),
+  'Lightblue': wrap(props => (
+    <Panel style={{ backgroundColor: 'lightblue', padding: 20 }}>
       <Teleport to='c/'>{'/a/b/c'}</Teleport>
       <Teleport to='..'>..</Teleport>
       <Content />
     </Panel>
-  ),
-  'Lightpink': props => (
-    <Panel {...props} style={{backgroundColor: 'lightpink', height: '100%', ...props.style}}>
+  )),
+  'Lightpink': wrap(props => (
+    <Panel style={{ backgroundColor: 'lightpink', height: '100%' }}>
       <div style={style.innerWrapper}>
         <Teleport to='d/'>{'/a/b/c/d'}</Teleport>
         <Teleport to='..'>..</Teleport>
@@ -145,37 +145,39 @@ export const types = {
       </div>
       <Expand />
     </Panel>
-  ),
-  'Fuchsia': props => (
-    <Panel {...props} style={{backgroundColor: 'fuchsia', padding: 20, height: '100%', ...props.style}}>
+  )),
+  'Fuchsia': wrap(props => (
+    <Panel style={{ backgroundColor: 'fuchsia', padding: 20 }}>
       <Teleport to='e/'>{'/a/b/c/d/e'}</Teleport>
       <Teleport to='..'>..</Teleport>
       <Content />
     </Panel>
-  ),
-  'Red': props => (
-    <Panel {...props} style={{backgroundColor: 'red', height: '100%', ...props.style}}>
+  )),
+  'Red': wrap(props => (
+    <Panel style={{ backgroundColor: 'red' }}>
       <Teleport to='f/'>{'/a/b/c/d/e/f'}</Teleport>
       <Teleport to='..'>..</Teleport>
       <Content />
     </Panel>
-  ),
-  'Blue': props => (
-    <Panel {...props} style={{backgroundColor: 'blue', height: '100%', ...props.style}}>
+  )),
+  'Blue': wrap(props => (
+    <Panel style={{ backgroundColor: 'blue' }}>
       <Teleport to='..'>..</Teleport>
       <Content />
     </Panel>
-  ),
-  'Random': props => (
-    <Panel {...props} style={{border: '1px solid black'}}>random { props.id }</Panel>
-  ),
-  How
+  )),
+  'Random': wrap(props => (
+    <Panel style={{ border: '1px solid black' }}>
+      random { props.id }
+    </Panel>
+  )),
+  How: wrap(How)
 };
 
 export const panels = {
   '/': {type: 'Lightgreen', maxWidth: 720, styleBackground: {backgroundColor: '#f2f2f2'}, title: 'main'},
-  '/a': {type: 'Lightyellow', width: '50%' },
-  '/a/b': {type: 'Lightblue', width: 720},
+  '/a': {type: 'Lightyellow', width: '20%' },
+  '/a/b': {context: 0, type: 'Lightblue', width: 720},
   '/a/b/c': {type: 'Lightpink', maxWidth: 560},
   '/a/b/c/d': {type: 'Fuchsia'},
   '/a/b/c/d/e': {type: 'Red'},

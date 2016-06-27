@@ -222,6 +222,7 @@ export class Runtime extends Component {
     }
 
     const nextX = this.$runtime.scrollLeft;
+    console.log('nextX', nextX, 'currentX', this.props.runtime.x);
     if (Math.abs(this.props.runtime.x - nextX) > 5) {
       this.props.setX(nextX);
     }
