@@ -72,9 +72,8 @@ export function updateSettings(routeContext, { maxWidth, title, styleBackground,
     let nextPosition;
     if (maxWidth || width) {
       nextPosition = getNextPosition({
-        // snap at the expanded position!
-        context: routeIndex - runtime.snappedAt,
-        focus: routeIndex,
+        context: router.context,
+        focus: router.focus,
         maxFullPanelWidth: runtime.maxFullPanelWidth,
         routes: router.routes,
         panels: nextPanels,
