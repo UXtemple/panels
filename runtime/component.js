@@ -55,7 +55,7 @@ export class Runtime extends Component {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate() {
     const { props } = this;
 
     if (props.focusPanel) {
@@ -102,7 +102,7 @@ export class Runtime extends Component {
           Type: app.types[panel.type],
           zIndex: router.routes.items.length - i
         },
-        key: context,
+        key: i,
         style: {
           x: spring(1, { stiffness: 210 }),
           width: spring(route.width, { stiffness: 210 })
@@ -222,7 +222,6 @@ export class Runtime extends Component {
     }
 
     const nextX = this.$runtime.scrollLeft;
-    console.log('nextX', nextX, 'currentX', this.props.runtime.x);
     if (Math.abs(this.props.runtime.x - nextX) > 5) {
       this.props.setX(nextX);
     }

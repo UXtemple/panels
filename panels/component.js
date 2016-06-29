@@ -43,22 +43,25 @@ export default class Route extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (typeof this.onChange === 'function') {
-      const { panel, route, routeIndex, router } = this.props;
+    const { panel, route, routeIndex, router, Type } = this.props;
 
-      if (
+    if (prevProps.Type !== Type) {
+      this.componentWillUnmount();
+      this.componentDidMount();
+    } else if (
+      typeof this.onChange === 'function' && (
         prevProps.panel !== panel ||
-        prevProps.route !== route ||
-        prevProps.routeIndex !== routeIndex ||
-        prevProps.router !== router
-      ) {
-        this.onChange({
-          panel,
-          route,
-          routeIndex,
-          router
-        });
-      }
+          prevProps.route !== route ||
+          prevProps.routeIndex !== routeIndex ||
+          prevProps.router !== router
+      )
+    ) {
+      this.onChange({
+        panel,
+        route,
+        routeIndex,
+        router
+      });
     }
   }
 

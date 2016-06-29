@@ -49,7 +49,9 @@ export default function parse(uri) {
         const hasSliceEndMarker = !hasSliceEndMarkerForRoot && lastBit.indexOf(SLICE_END) > -1;
         const hasSliceStartMarker = lastBit.indexOf(SLICE_START) > -1;
 
-        isVisible = hasSliceEndMarker || hasSliceStartMarker ? false : isVisible;
+        if (hasSliceEndMarker || hasSliceStartMarker) {
+          isVisible = false;
+        }
 
         const panelPath = path.replace(SLICE_MARKERS, '') || '/';
 
