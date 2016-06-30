@@ -46,6 +46,9 @@ export function updateSettings(routeContext, { maxWidth, title, styleBackground,
     };
 
     const route = router.routes.byContext[routeContext];
+
+    if (!route.isVisible) return;
+
     const routeIndex = router.routes.items.indexOf(routeContext);
     const panel = {
       ...nextPanels.byId[route.panelId]

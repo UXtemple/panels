@@ -3,6 +3,9 @@
 BIN=node_modules/.bin
 
 NODE_ENV=development $BIN/watchify --debug --verbose \
+  --transform [ rollupify --config ./rollup.config.worker.js ] \
+  --outfile playground/panels-worker.js ./worker/worker.js & \
+NODE_ENV=development $BIN/watchify --debug --verbose \
   --external array-find-index \
   --external houkou \
   --external lite-url \
@@ -10,6 +13,7 @@ NODE_ENV=development $BIN/watchify --debug --verbose \
   --external mini-unique-id \
   --external panels-normalise-uri \
   --external panels-ui \
+  --external promise-worker \
   --external react \
   --external react-dom \
   --external react-motion \
@@ -32,6 +36,7 @@ NODE_ENV=development $BIN/watchify --debug --verbose \
   --require mini-unique-id \
   --require panels-normalise-uri \
   --require panels-ui \
+  --require promise-worker \
   --require react \
   --require react-dom \
   --require react-motion \

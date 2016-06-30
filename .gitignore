@@ -5,3 +5,4 @@ node_modules
 bundle
 playground/panels.js
 playground/panels.dev.js
+playground/panels-worker.js

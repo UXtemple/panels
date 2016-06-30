@@ -7,15 +7,19 @@ export default function getNextPosition({ context, focus, maxFullPanelWidth, rou
     const panel = panels.byId[route.panelId];
 
     let width;
-    if (shouldGoMobile) {
-      width = viewportWidth;
-    } else {
-      width = route.isExpanded ? panel.maxWidth : panel.width;
+    if (route.isVisible) {
+      if (shouldGoMobile) {
+        width = viewportWidth;
+      } else {
+        width = route.isExpanded ? panel.maxWidth : panel.width;
 
-      const percentageMatch = typeof width === 'string' && width.match(/([0-9]+)%/);
-      if (percentageMatch) {
-        width = maxFullPanelWidth * parseInt(percentageMatch, 10) / 100;
+        const percentageMatch = typeof width === 'string' && width.match(/([0-9]+)%/);
+        if (percentageMatch) {
+          width = maxFullPanelWidth * parseInt(percentageMatch, 10) / 100;
+        }
       }
+    } else {
+      width = 0;
     }
 
     if (width !== route.width) {

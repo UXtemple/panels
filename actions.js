@@ -2,8 +2,9 @@ import getApp from './apps/get';
 import getContextAndFocus from './router/get-context-and-focus';
 import getIndexOfPanelToShow from './runtime/get-index-of-panel-to-show';
 import getRegions from './runtime/get-regions';
-import normaliseUri from 'panels-normalise-uri';
-import parseUri from './router/parse';
+// import normaliseUri from 'panels-normalise-uri';
+// import parseUri from './router/parse';
+import worker from './worker/bridge';
 
 function ensurePanelShape(panel) {
   if (typeof panel.width === 'undefined') {
@@ -18,13 +19,20 @@ export function navigate(rawUri, nextFocus = 1, nextContext) {
   return async function navigateThunk(dispatch, getState) {
     const { apps, panels, router, runtime } = getState();
 
-    const uri = normaliseUri(rawUri);
+    const uri = await worker.postMessage({
+      type: 'normalise',
+      uri: rawUri
+    });
     if (uri === router.uri) {
       return;
     }
 
     __DEV__ && console.time('parse');
-    const parsed = parseUri(uri);
+    const parsed = await worker.postMessage({
+      type: 'parse',
+      uri
+    });
+    console.log('parsed', parsed);
     __DEV__ && console.timeEnd('parse');
 
     __DEV__ && console.time('apps');
@@ -122,16 +130,16 @@ export function navigate(rawUri, nextFocus = 1, nextContext) {
     });
 
     const routes = {
-      byContext: router.routes.byContext,
+      byContext: parsed.routes.byContext, // router.routes.byContext,
       items: parsed.routes.items
     };
 
     const widths = routes.items.map(routeContext => {
-      if (routes.byContext[routeContext]) {
-        return routes.byContext[routeContext].width;
-      }
+      // if (routes.byContext[routeContext]) {
+      //   return routes.byContext[routeContext].width;
+      // }
 
-      const route = parsed.routes.byContext[routeContext];
+      const route = routes.byContext[routeContext];
       const panel = panels.byId[route.panelId] || nextPanels.byId[route.panelId];
 
       let width;
@@ -139,7 +147,8 @@ export function navigate(rawUri, nextFocus = 1, nextContext) {
         if (runtime.shouldGoMobile) {
           width = runtime.viewportWidth;
         } else {
-          width = route.isExpanded ? panel.maxWidth : panel.width;
+          const prevRoute = router.routes.byContext[routeContext];
+          width = route.isExpanded ? panel.maxWidth : ((prevRoute && prevRoute.width) || panel.width);
 
           const percentageMatch = typeof width === 'string' && width.match(/([0-9]+)%/);
           if (percentageMatch) {
@@ -151,8 +160,6 @@ export function navigate(rawUri, nextFocus = 1, nextContext) {
       }
 
       route.width = width;
-
-      routes.byContext[routeContext] = route;
       return width;
     });
 

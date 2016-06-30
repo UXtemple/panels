@@ -51,6 +51,7 @@ class Lightgreen extends Component {
             styleHover={{ backgroundColor: 'lightgreen', color: 'white'}}>{'/a'}</Teleport>
           <Teleport to='..'>..</Teleport>
 
+          <Teleport to=')a'>sliced a</Teleport>
           <Teleport context={0} to='how'>how!</Teleport>
 
           <Content />
