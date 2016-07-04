@@ -127,7 +127,7 @@ export class Runtime extends Component {
                 Type={app.types[panel.type]}
                 zIndex={router.routes.items.length - i}
                 navigate={navigate}
-                key={context}
+                key={context.replace(/[()]/g, '')}
                 present={present}
                 router={router}
                 toggleExpand={toggleExpand}
