@@ -33,6 +33,10 @@ NODE_ENV=development $BIN/browserify --verbose --debug \
   index.dev.js | \
   $BIN/exorcist $PANELS.js.map > $PANELS.js
 
+NODE_ENV=production $BIN/browserify --debug --verbose \
+  --transform [ rollupify --config ./rollup.config.worker.js ] \
+  ./worker/worker.js > $BUNDLE/panels-worker.js
+
 NODE_ENV=production $BIN/browserify --verbose --debug \
   --require array-find-index \
   --require houkou \
