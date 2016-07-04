@@ -16,7 +16,6 @@ NODE_ENV=development $BIN/watchify --debug --verbose \
   --external promise-worker \
   --external react \
   --external react-dom \
-  --external react-motion \
   --external react-redux \
   --external redux \
   --external redux-logger \
@@ -39,7 +38,6 @@ NODE_ENV=development $BIN/watchify --debug --verbose \
   --require promise-worker \
   --require react \
   --require react-dom \
-  --require react-motion \
   --require react-redux \
   --require redux \
   --require redux-logger \

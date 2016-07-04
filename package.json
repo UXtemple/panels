@@ -40,12 +40,11 @@
     "promise-worker": "^1.0.0",
     "react": "^15.1.0",
     "react-dom": "^15.1.0",
-    "react-motion": "^0.4.4",
+    "react-flip-move": "^2.4.0",
     "react-redux": "^4.4.5",
     "redux": "^3.5.2",
     "redux-thunk": "^2.1.0",
     "style-to-css": "^1.0.1",
-    "systemjs": "^0.19.31",
     "waiting": "^1.0.0"
   },
   "devDependencies": {

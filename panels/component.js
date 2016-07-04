@@ -77,9 +77,9 @@ export default class Route extends Component {
     const { x, width, zIndex } = this.props;
     const style = {
       height: '100%',
-      opacity: x,
+      // opacity: x,
       overflowY: 'auto',
-      transform: `translateX(${-Math.abs(100 - x * 100)}%)`,
+      // transform: `translateX(${-Math.abs(100 - x * 100)}%)`,
       width,
       zIndex
     };

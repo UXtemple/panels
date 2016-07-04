@@ -119,15 +119,25 @@ export function navigate(rawUri, nextFocus = 1, nextContext) {
     const isFirstLoad = typeof router.focus === 'undefined';
     const last = parsed.routes.items.length - 1;
     // determine the context and focus panel
-    const { context, focus } = getContextAndFocus({
-      currentFocus: isFirstLoad ? last : router.focus,
+    const opts = {
+      currentFocus: router.focus,
       next: {
-        context: isFirstLoad ? nextPanels.byId[nextPanels.items[last]].context : nextContext,
-        focus: isFirstLoad ? 0 : nextFocus
+        context: nextContext,
+        focus: nextFocus
       },
       uri,
       last
-    });
+    };
+    if (isFirstLoad) {
+      const focusRoute = parsed.routes.byContext[parsed.routes.items[last]];
+      const focusPanel = nextPanels.byId[focusRoute.panelId];
+      opts.currentFocus = last;
+      opts.next.focus = 0;
+      if (context in focusPanel) {
+        opts.next.context = focusPanel.context;
+      }
+    }
+    const { context, focus } = getContextAndFocus(opts);
 
     const routes = {
       byContext: parsed.routes.byContext, // router.routes.byContext,

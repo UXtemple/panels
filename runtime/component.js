@@ -1,9 +1,10 @@
 import { connect } from 'react-redux';
 import { moveLeft, setViewportWidth, setX } from './actions';
-import { Motion, spring, TransitionMotion } from 'react-motion';
 import { navigate } from '../actions';
 import { toggleExpand, updateSettings } from '../panels/actions';
+import { snapX } from 'panels-ui';
 import debounce from 'lodash.debounce';
+import FlipMove from 'react-flip-move';
 import getViewportWidth from './get-viewport-width';
 import MoveLeft from './move-left';
 import React, { Component, PropTypes } from 'react';
@@ -38,28 +39,17 @@ export class Runtime extends Component {
     if (props.focusPanel !== nextProps.focusPanel || props.runtime.x !== nextProps.runtime.x) {
       this.toggleOpacityIfPresenting();
     }
-
-    if (nextProps.runtime.x !== props.runtime.x) {
-      const direction = nextProps.runtime.x >= props.runtime.x ? 1 : -1;
-      const from = this.$runtime.scrollLeft;
-      const to = nextProps.runtime.x;
-
-      this.setState({
-        autoScroll: {
-          direction,
-          from,
-          gap: Math.abs(from - to) * direction,
-          to
-        }
-      });
-    }
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     const { props } = this;
 
     if (props.focusPanel) {
       window.document.title = props.focusPanel.title || props.focusPanel.type;
+    }
+
+    if (prevProps.runtime.x !== props.runtime.x) {
+      snapX(this.$runtime, props.runtime.x);
     }
   }
 
@@ -83,34 +73,6 @@ export class Runtime extends Component {
     }
   }
 
-  mapRoutesToMotionStyles() {
-    const { apps, panels, router } = this.props;
-
-    return router.routes.items.map((context, i) => {
-      const route = router.routes.byContext[context];
-      const app = apps[route.app];
-      const panel = panels[route.panelId];
-
-      return {
-        data: {
-          isContext: i >= router.context,
-          isFocus: i === router.focus,
-          panel,
-          route,
-          routeIndex: i,
-          store: app.store,
-          Type: app.types[panel.type],
-          zIndex: router.routes.items.length - i
-        },
-        key: i,
-        style: {
-          x: spring(1, { stiffness: 210 }),
-          width: spring(route.width, { stiffness: 210 })
-        }
-      }
-    });
-  }
-
   present = (presenter = null) => {
     this.setState({
       opacity: presenter ? 0 : 1,
@@ -119,8 +81,9 @@ export class Runtime extends Component {
   }
 
   render() {
-    const { autoScroll, presenter } = this.state;
-    const { canMoveLeft, focusPanel, moveLeft, runtime } = this.props;
+    const { opacity, presenter } = this.state;
+    const { apps, canMoveLeft, focusPanel, moveLeft, navigate, panels, router, runtime, toggleExpand, updateSettings } = this.props;
+    const { present } = this;
 
     const runtimeStyle = focusPanel ? {
       ...style,
@@ -128,65 +91,54 @@ export class Runtime extends Component {
     } : style;
 
     return (
-      <div ref={ $e => this.$runtime = $e } style={runtimeStyle}>
-        { canMoveLeft && <MoveLeft onClick={moveLeft} snapPoint={runtime.snapPoint} /> }
+      <div ref={$e => this.$runtime = $e} style={runtimeStyle}>
+        {canMoveLeft && <MoveLeft onClick={moveLeft} snapPoint={runtime.snapPoint} />}
 
-        <Motion
-          onRest={() => this.setState({ autoScroll: null })}
-          style={{ x: spring(autoScroll ? autoScroll.gap : 0, { stiffness: 210 }) }}
+        {presenter}
+
+        <FlipMove
+          enterAnimation='fade'
+          leaveAnimation='fade'
+          onClick={this.toggleOpacityIfPresenting}
+          style={{
+            flexDirection: 'row',
+            height: '100%',
+            opacity,
+            overflowY: 'hidden',
+            paddingLeft: runtime.snapPoint,
+            transition: 'opacity 0.5s ease-in',
+            width: runtime.width,
+            willChange: 'scroll-position, opacity'
+          }}
         >
-          {this.scrollRuntime}
-        </Motion>
+          {router.routes.items.map((context, i) => {
+            const route = router.routes.byContext[context];
+            const app = apps[route.app];
+            const panel = panels[route.panelId];
 
-        { presenter }
+            return !route.isVisible ? null : (
+              <Route
+                isContext={i >= router.context}
+                isFocus={i === router.focus}
+                panel={panel}
+                route={route}
+                routeIndex={i}
+                store={app.store}
+                Type={app.types[panel.type]}
+                zIndex={router.routes.items.length - i}
+                navigate={navigate}
+                key={context}
+                present={present}
+                router={router}
+                toggleExpand={toggleExpand}
+                updateSettings={updateSettings}
+                width={route.width}
+              />
+            );
+          })}
+        </FlipMove>
 
-        <TransitionMotion
-          styles={this.mapRoutesToMotionStyles()}
-          willEnter={this.willEnter}
-          willLeave={this.willLeave}
-        >
-          {this.renderPanels}
-        </TransitionMotion>
-      </div>
-    );
-  }
-
-  renderPanels = (interpolatedStyles) => {
-    const { navigate, router, runtime, toggleExpand, updateSettings } = this.props;
-    const { opacity } = this.state;
-    const { present } = this;
-
-    return (
-      <div
-        onClick={this.toggleOpacityIfPresenting}
-        style={{
-          flexDirection: 'row',
-          height: '100%',
-          opacity,
-          overflowY: 'hidden',
-          paddingLeft: runtime.snapPoint,
-          transition: 'opacity 0.5s ease-in',
-          width: runtime.width,
-          willChange: 'scroll-position, opacity'
-        }}
-      >
-        { interpolatedStyles.map(({ data, key, style }) => (
-          data.route.isVisible ? (
-            <Route
-              {...data}
-              navigate={navigate}
-              key={key}
-              present={present}
-              router={router}
-              toggleExpand={toggleExpand}
-              updateSettings={updateSettings}
-              x={style.x}
-              width={style.width}
-            />
-          ) : null
-        )) }
-
-        { router.isLoading ? (
+        {router.isLoading ? (
           <div
             style={{
               justifyContent: 'center',
@@ -196,7 +148,7 @@ export class Runtime extends Component {
           >
             <Waiting size={LOADING_SIZE} />
           </div>
-          ) : null }
+          ) : null}
       </div>
     );
   }
@@ -236,16 +188,6 @@ export class Runtime extends Component {
       })
     }
   };
-
-  willEnter = ({ style }) =>  ({
-    x: 0,
-    width: style.width.val
-  })
-
-  willLeave = ({ style, ...rest }) => ({
-    x: spring(0, { stiffness: 210 }),
-    width: style.width.val || style.width
-  })
 }
 
 const style = {
