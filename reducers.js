@@ -1,7 +1,6 @@
 import { combineReducers } from 'redux';
 import { MOVE_LEFT, SET_X, SET_VIEWPORT_WIDTH } from './runtime/actions';
-import { NAVIGATE } from './actions';
-import { TOGGLE_EXPAND, UPDATE_SETTINGS } from './panels/actions';
+import { NAVIGATE, TOGGLE_EXPAND, UPDATE_SETTINGS } from './actions';
 import getViewportWidth from './runtime/get-viewport-width';
 
 function apps(state = { byName: {}, items: [] }, action) {
@@ -97,7 +96,7 @@ function router(state = { isLoading: true, routes: { byContext: {}, items: [] } 
 export const MOBILE_THRESHOLD = 720;
 
 // TODO REVERT!
-const preferredSnapPoint = typeof window.panelsSnapPoint === 'number' ? window.panelsSnapPoint : 90;
+const preferredSnapPoint = window.panels && typeof window.panels.preferredSnapPoint === 'number' ? window.panels.preferredSnapPoint : 90;
 const viewportWidth = getViewportWidth();
 const shouldGoMobile = viewportWidth < MOBILE_THRESHOLD;
 const snapPoint = shouldGoMobile ? 0 : preferredSnapPoint;

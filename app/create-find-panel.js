@@ -3,8 +3,8 @@ import Route from 'houkou';
 // sorting mechanism for matched candidates
 const FORWARD_SLASHES_REGEX = /\//g;
 const complexity = pattern => pattern.match(FORWARD_SLASHES_REGEX).length;
-function compare({pattern: patternA}, {pattern: patternB}) {
-  return complexity(patternB) - complexity(patternA);
+function compare(a, b) {
+  return complexity(b.pattern) - complexity(a.pattern);
 }
 
 export default function createFindPanel(panels, lookup=[]) {

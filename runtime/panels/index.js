@@ -1,15 +1,14 @@
 import { connect } from 'react-redux';
-import { moveLeft, setViewportWidth, setX } from './actions';
-import { navigate } from '../actions';
-import { toggleExpand, updateSettings } from '../panels/actions';
+import { moveLeft, setViewportWidth, setX } from '../actions';
+import { navigate, toggleExpand, updateSettings } from '../../actions';
 import { snapX } from 'panels-ui';
 import debounce from 'lodash.debounce';
 import FlipMove from 'react-flip-move';
-import getViewportWidth from './get-viewport-width';
+import getViewportWidth from '../get-viewport-width';
 import MoveLeft from './move-left';
 import React, { Component, PropTypes } from 'react';
-import Route from '../panels/component';
-import supportsPassiveEvents from './supports-passive-events';
+import Route from '../../route';
+import supportsPassiveEvents from '../../utils/supports-passive-events';
 import Waiting from 'waiting';
 
 const DEBOUNCE = 250;
@@ -120,19 +119,19 @@ export class Runtime extends Component {
               <Route
                 isContext={i >= router.context}
                 isFocus={i === router.focus}
+                key={context.replace(/[()]/g, '')}
+                navigate={navigate}
                 panel={panel}
+                present={present}
                 route={route}
                 routeIndex={i}
-                store={app.store}
-                Type={app.types[panel.type]}
-                zIndex={router.routes.items.length - i}
-                navigate={navigate}
-                key={context.replace(/[()]/g, '')}
-                present={present}
                 router={router}
+                store={app.store}
+                type={app.types[panel.type]}
                 toggleExpand={toggleExpand}
                 updateSettings={updateSettings}
                 width={route.width}
+                zIndex={router.routes.items.length - i}
               />
             );
           })}

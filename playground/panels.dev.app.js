@@ -41,7 +41,7 @@ class Lightgreen extends Component {
   render() {
     return (
       <Panel style={{ backgroundColor: 'lightgreen' }}>
-        <div style={style.innerWrapper} ref={ $e => this.$scroller = $e }>
+        <div style={style.innerWrapper} ref={$e => { this.$scroller = $e }}>
           width: { this.props.panels.route.width }
           <button onClick={() => this.update()}>update</button>
           <Teleport to='a/'
@@ -102,8 +102,6 @@ class How extends Component {
   }
 
   render() {
-    const { props } = this;
-
     return (
       <Panel style={{ backgroundColor: '#fafafa' }}>
         <div onClick={this.pausePresenter}>pause</div>
@@ -177,7 +175,7 @@ export const types = {
 
 export const panels = {
   '/': {type: 'Lightgreen', maxWidth: 720, styleBackground: {backgroundColor: '#f2f2f2'}, title: 'main'},
-  '/a': {type: 'Lightyellow', width: '20%' },
+  '/a': {type: 'Lightyellow', width: '100%' },
   '/a/b': {context: 0, type: 'Lightblue', width: 720},
   '/a/b/c': {type: 'Lightpink', maxWidth: 560},
   '/a/b/c/d': {type: 'Fuchsia'},

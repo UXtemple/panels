@@ -1,6 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 
 export default class Route extends Component {
+  state = {};
+
   isActive = path => {
     const { route, router, routeIndex } = this.props;
 
@@ -22,7 +24,7 @@ export default class Route extends Component {
 
   componentDidMount() {
     const { isActive, navigate, toggleExpand, updateSettings } = this;
-    const { isContext, isFocus, panel, present, route, routeIndex, router, store, Type } = this.props;
+    const { isContext, isFocus, panel, present, route, routeIndex, router, store, type } = this.props;
 
     const props = {
       isActive,
@@ -39,21 +41,32 @@ export default class Route extends Component {
       updateSettings
     };
 
-    this.onDestroy = Type(this.$el, props, this.subscribe);
+    try {
+      this.onDestroy = type(this.$el, props, this.subscribe);
+
+      if (this.state.error) {
+        this.setState({ error: false });
+      }
+    } catch(error) {
+      console.error('panels:route', error);
+
+      this.setState({ error });
+    }
   }
 
   componentDidUpdate(prevProps) {
-    const { panel, route, routeIndex, router, Type } = this.props;
+    const { error } = this.state;
+    const { panel, route, routeIndex, router, type } = this.props;
 
-    if (prevProps.Type !== Type) {
+    if (prevProps.type !== type) {
       this.componentWillUnmount();
       this.componentDidMount();
     } else if (
       typeof this.onChange === 'function' && (
         prevProps.panel !== panel ||
-          prevProps.route !== route ||
-          prevProps.routeIndex !== routeIndex ||
-          prevProps.router !== router
+        prevProps.route !== route ||
+        prevProps.routeIndex !== routeIndex ||
+        prevProps.router !== router
       )
     ) {
       this.onChange({
@@ -74,17 +87,28 @@ export default class Route extends Component {
   subscribe = onChange => this.onChange = onChange
 
   render() {
-    const { x, width, zIndex } = this.props;
-    const style = {
-      height: '100%',
-      // opacity: x,
-      overflowY: 'auto',
-      // transform: `translateX(${-Math.abs(100 - x * 100)}%)`,
-      width,
-      zIndex
-    };
+    const { props, state } = this;
 
-    return <div ref={$el => this.$el = $el } style={style} />;
+    return (
+      <div
+        ref={$el => { this.$el = $el }}
+        style={{
+          backgroundColor: state.error && '#ff5959',
+          height: '100%',
+          overflowY: 'auto',
+          transition: 'transform 0.25s linear',
+          transform: `translateX(${ -props.x }px)`,
+          width: props.width,
+          zIndex: props.zIndex
+        }}
+      >
+        {state.error && (
+          <pre style={{ color: '#ffffff', overflowX: 'scroll', padding: 10 }}>
+            {state.error.stack}
+          </pre>
+        )}
+      </div>
+    );
   }
 }
 
@@ -102,7 +126,7 @@ Route.propTypes = {
   isFocus: PropTypes.bool.isRequired,
   navigate: PropTypes.func.isRequired,
   panel: PropTypes.object.isRequired,
-  present: PropTypes.func.isRequired,
+  present: PropTypes.func,
   route: routeShape.isRequired,
   routeIndex: PropTypes.number.isRequired,
   router: PropTypes.shape({
@@ -120,7 +144,7 @@ Route.propTypes = {
       subscribe: PropTypes.func.isRequired
     })
   ]).isRequired,
-  Type: PropTypes.func.isRequired,
+  type: PropTypes.func.isRequired,
   toggleExpand: PropTypes.func.isRequired,
   updateSettings: PropTypes.func.isRequired,
   width: PropTypes.number.isRequired,

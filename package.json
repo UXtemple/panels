@@ -4,6 +4,7 @@
   "main": "index.js",
   "scripts": {
     "bundle": ".bin/bundle `node -e \"console.log(require('./package.json').version)\"`",
+    "bundle:dev": ".bin/bundle-dev `node -e \"console.log(require('./package.json').version)\"`",
     "deploy": "scp bundle/* cdn:~/public",
     "start": ".bin/start",
     "postpublish": "npm run deploy && rm -rf bundle && git checkout package.json && git push && git push --tags",
@@ -60,7 +61,6 @@
     "eslint-plugin-jsx-a11y": "^1.2.0",
     "eslint-plugin-react": "^5.1.1",
     "exorcist": "^0.4.0",
-    "kneden": "^1.0.2",
     "koa": "^1.1.2",
     "koa-sendfile": "^1.1.1",
     "koa-static": "^1.5.2",
@@ -69,11 +69,10 @@
     "redux-logger": "^2.6.1",
     "rollup-plugin-babel": "^2.4.0",
     "rollup-plugin-replace": "^1.1.1",
-    "rollupify": "^0.3.2",
+    "rollupify": "nolanlawson/rollupify#cache",
     "sinon": "^1.16.1",
     "tape": "^4.2.0",
     "uglify-js": "^2.4.24",
     "watchify": "^3.4.0"
-  },
-  "version": "8.0.4"
+  }
 }

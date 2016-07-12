@@ -1,5 +1,5 @@
 import createFindPanel from './create-find-panel';
-import isRequireable from '../utils/is-requireable';
+import isRequireable from './is-requireable';
 import loadResource from './load-resource';
 
 async function loadModule(app) {

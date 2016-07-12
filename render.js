@@ -1,15 +1,17 @@
-import { navigate } from '../actions';
+import { navigate } from './actions';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
-import history from '../router/history';
+import * as runtimes from './runtime/index';
+import history from './router/history';
 import React from 'react';
-import Runtime from './component';
 
-export default function runtimeRender(configureStore, preferredSnapPoint = 90) {
+export default function runtimeRender(configureStore, { runtime='Panels', preferredSnapPoint=90 }) {
   const store = configureStore();
   store.dispatch(navigate(location.href));
 
   history(store);
+
+  const Runtime = runtimes[runtime];
 
   render(
     <Provider store={store}>
