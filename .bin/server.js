@@ -1,18 +1,30 @@
-import koa from 'koa';
-import sendfile from 'koa-sendfile';
-import serve from 'koa-static';
+import { existsSync } from 'fs';
+import http from 'http';
+import send from 'send';
 
-const app = koa();
-app.use(serve('./playground'));
-app.use(catchAll);
-app.listen(80, '0.0.0.0');
+const base = `${process.cwd()}/playground`;
+const common = [
+  '/fetch.min.js',
+  '/panels.js',
+  '/panels-worker.js'
+];
 
-function *catchAll(next) {
-  yield* sendfile.call(this, './playground/index.html');
+http.createServer((req, res) => {
+  let file;
 
-  if (!this.status) {
-    this.throw(404);
+  if (common.includes(req.url)) {
+    file = `${base}/${req.url}`;
+  } else {
+    file = `${base}/${req.headers.host}/${req.url}`;
+
+    if (!existsSync(file)) {
+      file = `${base}/${req.headers.host}/index.html`;
+    }
   }
-}
 
-console.log('panels catch-all dev server is ready at http://panels.dev');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  send(req, file).pipe(res);
+}).listen(80, '0.0.0.0');
+
+console.log(`Panels dev server is up!\nPanels runtime: http://panels.dev\nTopbar runtime: http://topbar.panels.dev`);

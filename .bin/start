@@ -25,8 +25,30 @@ NODE_ENV=development $BIN/watchify --debug --verbose \
   --external waiting \
   --transform [rollupify --config rollup.config.js] \
   --transform loose-envify \
-  --require ./playground/panels.dev.app.js:panels.dev \
-  --outfile playground/panels.dev.js & \
+  --require ./playground/panels.dev/src.js:panels.dev \
+  --outfile playground/panels.dev/app.js & \
+NODE_ENV=development $BIN/watchify --debug --verbose \
+  --external array-find-index \
+  --external houkou \
+  --external lite-url \
+  --external lodash.debounce \
+  --external mini-unique-id \
+  --external panels-normalise-uri \
+  --external panels-ui \
+  --external promise-worker \
+  --external react \
+  --external react-dom \
+  --external react-redux \
+  --external redux \
+  --external redux-logger \
+  --external ./utils/redux-promise:redux-promise \
+  --external redux-thunk \
+  --external style-to-css \
+  --external waiting \
+  --transform [rollupify --config rollup.config.js] \
+  --transform loose-envify \
+  --require ./playground/topbar.panels.dev/src.js:topbar.panels.dev \
+  --outfile playground/topbar.panels.dev/app.js & \
 NODE_ENV=development $BIN/watchify --debug --verbose \
   --require array-find-index \
   --require houkou \
