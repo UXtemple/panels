@@ -20,6 +20,27 @@ export function moveLeft() {
   }
 }
 
+export const MOVE_TO = 'panels/runtime/MOVE_TO';
+export function moveTo(to) {
+  return function moveToThunk(dispatch, getState) {
+    const { router, runtime } = getState();
+
+    // check that we're not already snapped there and that the panel we're trying to snap to exists
+    if (runtime.snappedAt !== to && to >= 0 && to < router.routes.items.length) {
+      const x = runtime.widths.slice(0, to).reduce((a, b) => a + b, 0);
+
+      dispatch({
+        type: MOVE_TO,
+        payload: {
+          snappedAt: to,
+          x // : runtime.x - runtime.widths[to]
+        }
+      });
+    }
+  }
+}
+
+
 export const MOBILE_THRESHOLD = 720;
 
 export const SET_VIEWPORT_WIDTH = 'panels/runtime/SET_VIEWPORT_WIDTH';

@@ -99,8 +99,10 @@ export default class Route extends Component {
           transition: 'transform 0.25s linear',
           transform: `translateX(${ -props.x }px)`,
           width: props.width,
-          zIndex: props.zIndex
+          zIndex: props.zIndex,
+          ...props.style
         }}
+        onClick={props.onClick}
       >
         {state.error && (
           <pre style={{ color: '#ffffff', overflowX: 'scroll', padding: 10 }}>

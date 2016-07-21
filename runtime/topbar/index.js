@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { moveLeft, setViewportWidth, setX } from '../actions';
+import { moveTo, setViewportWidth, setX } from '../actions';
 import { navigate, toggleExpand, updateSettings } from '../../actions';
 import { snapX } from 'panels-ui';
 import debounce from 'lodash.debounce';
@@ -50,7 +50,7 @@ export class Runtime extends Component {
   }
 
   render() {
-    const { apps, canMoveLeft, focusPanel, moveLeft, navigate, panels, router, runtime, toggleExpand, updateSettings } = this.props;
+    const { apps, canMoveLeft, focusApp, focusPanel, focusRoute, moveTo, navigate, panels, router, runtime, toggleExpand, updateSettings } = this.props;
 
     const runtimeStyle = focusPanel ? {
       ...style,
@@ -63,13 +63,59 @@ export class Runtime extends Component {
       <div ref={$e => this.$runtime = $e} style={runtimeStyle}>
         <div
           style={{
+            flexDirection: 'row',
             height: topBarHeight,
             width: '100%'
           }}
         >
-          <div onClick={moveLeft}>left</div>
-          topbar
+          {router.routes.items.map((context, i) => {
+            const route = router.routes.byContext[context];
+            const app = apps[route.app];
+            const panel = panels[route.panelId];
+
+            if (!panel.back) {
+              return null;
+            }
+            return (
+              <Route
+                isContext={i >= router.context}
+                isFocus={i === router.focus}
+                key={context.replace(/[()]/g, '')}
+                navigate={navigate}
+                onClick={() => moveTo(i)}
+                panel={panel}
+                route={route}
+                routeIndex={i}
+                router={router}
+                store={app.store}
+                type={app.types[panel.back]}
+                updateSettings={updateSettings}
+                x={0}
+                width={'auto'}
+              />
+            );
+          })}
+
+          {focusPanel && focusPanel.next && (
+            <Route
+              key={`next-${focusRoute.context}`}
+              navigate={navigate}
+              panel={focusPanel}
+              route={focusRoute}
+              router={router}
+              store={focusApp.store}
+              style={{
+                alignItems: 'flex-end',
+                flex: 1
+              }}
+              type={focusApp.types[focusPanel.next]}
+              updateSettings={updateSettings}
+              x={0}
+              width={'auto'}
+            />
+          )}
         </div>
+
         <div
           style={{
             flexDirection: 'row',
@@ -127,18 +173,19 @@ const style = {
   width: '100%'
 };
 
-const getFocusPanel = ({ panels, router }) => {
-  const focusRoute = router.routes.byContext[router.routes.items[router.focus]];
-  return focusRoute && panels.byId[focusRoute.panelId];
-};
-
 const getCanMoveLeft = ({ runtime }) => !runtime.shouldGoMobile && runtime.x > 0;
 
 function mapStateToProps(state, props) {
+  const focusRoute = state.router.routes.byContext[
+    state.router.routes.items[state.router.focus]
+  ];
+
   return {
     apps: state.apps.byName,
     canMoveLeft: getCanMoveLeft(state),
-    focusPanel: getFocusPanel(state),
+    focusApp: focusRoute && state.apps.byName[focusRoute.app],
+    focusPanel: focusRoute && state.panels.byId[focusRoute.panelId],
+    focusRoute,
     panels: state.panels.byId,
     router: state.router,
     runtime: state.runtime
@@ -146,7 +193,7 @@ function mapStateToProps(state, props) {
 }
 
 const mapDispatchToProps = {
-  moveLeft,
+  moveTo,
   navigate,
   setViewportWidth,
   setX,

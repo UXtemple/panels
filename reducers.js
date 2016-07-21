@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import { MOVE_LEFT, SET_X, SET_VIEWPORT_WIDTH } from './runtime/actions';
+import { MOVE_LEFT, MOVE_TO, SET_X, SET_VIEWPORT_WIDTH } from './runtime/actions';
 import { NAVIGATE, TOGGLE_EXPAND, UPDATE_SETTINGS } from './actions';
 import getViewportWidth from './runtime/get-viewport-width';
 
@@ -115,7 +115,9 @@ const RUNTIME_DEFAULT_STATE = {
 
 function runtime(state = RUNTIME_DEFAULT_STATE, action) {
   switch (action.type) {
+    // TODO normalise
     case MOVE_LEFT:
+    case MOVE_TO:
     case SET_X:
       return {
         ...state,
