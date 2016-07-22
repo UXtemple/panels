@@ -27,4 +27,10 @@ http.createServer((req, res) => {
   send(req, file).pipe(res);
 }).listen(80, '0.0.0.0');
 
-console.log(`Panels dev server is up!\nPanels runtime: http://panels.dev\nTopbar runtime: http://topbar.panels.dev`);
+console.log(
+  `Panels dev server is up!
+  Runtimes:
+    - Panels: http://panels.dev
+    - Topbar: http://topbar.panels.dev
+    - Launchpad: http://launchpad.panels.dev`
+);

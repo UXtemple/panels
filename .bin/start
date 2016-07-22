@@ -50,6 +50,94 @@ NODE_ENV=development $BIN/watchify --debug --verbose \
   --require ./playground/topbar.panels.dev/src.js:topbar.panels.dev \
   --outfile playground/topbar.panels.dev/app.js & \
 NODE_ENV=development $BIN/watchify --debug --verbose \
+  --external array-find-index \
+  --external houkou \
+  --external lite-url \
+  --external lodash.debounce \
+  --external mini-unique-id \
+  --external panels-normalise-uri \
+  --external panels-ui \
+  --external promise-worker \
+  --external react \
+  --external react-dom \
+  --external react-redux \
+  --external redux \
+  --external redux-logger \
+  --external ./utils/redux-promise:redux-promise \
+  --external redux-thunk \
+  --external style-to-css \
+  --external waiting \
+  --transform [rollupify --config rollup.config.js] \
+  --transform loose-envify \
+  --require ./playground/launchpad.panels.dev/src.js:launchpad.panels.dev \
+  --outfile playground/launchpad.panels.dev/app.js & \
+NODE_ENV=development $BIN/watchify --debug --verbose \
+  --external array-find-index \
+  --external houkou \
+  --external lite-url \
+  --external lodash.debounce \
+  --external mini-unique-id \
+  --external panels-normalise-uri \
+  --external panels-ui \
+  --external promise-worker \
+  --external react \
+  --external react-dom \
+  --external react-redux \
+  --external redux \
+  --external redux-logger \
+  --external ./utils/redux-promise:redux-promise \
+  --external redux-thunk \
+  --external style-to-css \
+  --external waiting \
+  --transform [rollupify --config rollup.config.js] \
+  --transform loose-envify \
+  --require ./playground/launchpad-floating.panels.dev/src.js:launchpad-floating.panels.dev \
+  --outfile playground/launchpad-floating.panels.dev/app.js & \
+NODE_ENV=development $BIN/watchify --debug --verbose \
+  --external array-find-index \
+  --external houkou \
+  --external lite-url \
+  --external lodash.debounce \
+  --external mini-unique-id \
+  --external panels-normalise-uri \
+  --external panels-ui \
+  --external promise-worker \
+  --external react \
+  --external react-dom \
+  --external react-redux \
+  --external redux \
+  --external redux-logger \
+  --external ./utils/redux-promise:redux-promise \
+  --external redux-thunk \
+  --external style-to-css \
+  --external waiting \
+  --transform [rollupify --config rollup.config.js] \
+  --transform loose-envify \
+  --require ./playground/toc.dev/src.js:toc.dev \
+  --outfile playground/toc.dev/app.js & \
+NODE_ENV=development $BIN/watchify --debug --verbose \
+  --external array-find-index \
+  --external houkou \
+  --external lite-url \
+  --external lodash.debounce \
+  --external mini-unique-id \
+  --external panels-normalise-uri \
+  --external panels-ui \
+  --external promise-worker \
+  --external react \
+  --external react-dom \
+  --external react-redux \
+  --external redux \
+  --external redux-logger \
+  --external ./utils/redux-promise:redux-promise \
+  --external redux-thunk \
+  --external style-to-css \
+  --external waiting \
+  --transform [rollupify --config rollup.config.js] \
+  --transform loose-envify \
+  --require ./playground/notes.dev/src.js:notes.dev \
+  --outfile playground/notes.dev/app.js & \
+NODE_ENV=development $BIN/watchify --debug --verbose \
   --require array-find-index \
   --require houkou \
   --require lite-url \

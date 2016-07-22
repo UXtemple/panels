@@ -1,3 +1,4 @@
+import normaliseUri from 'panels-normalise-uri';
 import React, { Component, PropTypes } from 'react';
 
 export default class Route extends Component {
@@ -7,7 +8,7 @@ export default class Route extends Component {
     const { route, router, routeIndex } = this.props;
 
     const routeAfterContext = router.routes.items[routeIndex + 1];
-    return routeAfterContext && `${route.context}${path}` === routeAfterContext;
+    return routeAfterContext && normaliseUri(`${route.context}${path}`) === routeAfterContext;
   }
 
   navigate = (toUri, focus, context, raw = false) => (
@@ -102,7 +103,6 @@ export default class Route extends Component {
           zIndex: props.zIndex,
           ...props.style
         }}
-        onClick={props.onClick}
       >
         {state.error && (
           <pre style={{ color: '#ffffff', overflowX: 'scroll', padding: 10 }}>

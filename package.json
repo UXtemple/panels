@@ -71,6 +71,7 @@
     "sinon": "^1.16.1",
     "tape": "^4.2.0",
     "uglify-js": "^2.4.24",
+    "usepages-blocks": "^3.3.1",
     "watchify": "^3.4.0"
   }
 }
