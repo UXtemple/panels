@@ -66,7 +66,7 @@ export const types = {
 
 export const panels = {
   '/': {
-    default: () => 'cover',
+    default 'cover',
     style: {
       overflowY: 'none',
       position: 'absolute',

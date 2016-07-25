@@ -14,6 +14,7 @@ async function loadModule(app) {
 
     await loadResource(data.logic);
   } catch (err) {
+    console.error(err);
     if (err instanceof SyntaxError) {
       throw new Error(`We can't load ${app}.
         We can't find your app's logic source.

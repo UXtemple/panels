@@ -97,7 +97,7 @@ export const types = {
 
 export const panels = {
   '/': {
-    default: () => 'cover',
+    default: 'cover',
     height: LAUNCHPAD_HEIGHT,
     type: 'Launchpad'
   },

@@ -1,7 +1,7 @@
 const replace = require('rollup-plugin-replace');
 
 const workerUrl = process.env.NODE_ENV === 'development' ?
-  `http://panels.dev/panels-worker.js` :
+  '${location.origin}/panels-worker.js' :
   'https://cdn.uxtemple.com/panels-worker.js';
 
 module.exports = {
