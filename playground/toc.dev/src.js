@@ -1,14 +1,14 @@
-import { Teleport, Panel, wrap } from 'panels-ui';
-import { Horizontal } from 'usepages-blocks';
+import { Panel, wrap } from 'panels-ui';
+import { Horizontal, Text } from 'usepages-blocks';
 import normaliseUri from 'panels-normalise-uri';
 import React, { Component, PropTypes } from 'react';
 
 const getTeleportTo = ({ path, route, routeIndex, router }) => {
   const prevRouteContext = router.routes.items[routeIndex - 1];
-  const prevRoute = router.routes.byContext[prevRouteContext];
 
   const currentPathToRemainInContext = route.context.replace(prevRouteContext, '');
-  const dotsToGoBack = currentPathToRemainInContext.split('/').map((s, i) => i > 0 ? '../' : '').join('');
+  const dotsToGoBack = currentPathToRemainInContext.split('/')
+    .map((s, i) => (i > 0 ? '../' : '')).join('');
 
   return `${dotsToGoBack}${path}/${currentPathToRemainInContext}`;
 };
@@ -41,14 +41,14 @@ class Toc extends Component {
       >
         Toc
 
-        {list.map(({ path, title }) => (
+        {list.map(({ path, title }, i) => (
           <Horizontal
             style={styleAction}
             styleActive={styleActionActive}
             styleHover={styleActionActive}
             teleportTo={getTeleportTo({ path, routeIndex, route, router })}
           >
-            { title }
+            <Text key={i} text={title} />
           </Horizontal>
         ))}
       </Panel>
