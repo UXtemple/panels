@@ -21,6 +21,7 @@ NODE_ENV=development $BIN/browserify --verbose --debug \
   --require promise-worker \
   --require react \
   --require react-dom \
+  --require react-flip-move \
   --require react-redux \
   --require redux \
   --require redux-logger \
@@ -48,6 +49,7 @@ NODE_ENV=production $BIN/browserify --verbose --debug \
   --require promise-worker \
   --require react \
   --require react-dom \
+  --require react-flip-move \
   --require react-redux \
   --require redux \
   --require ./utils/redux-promise:redux-promise \
