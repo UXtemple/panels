@@ -5,7 +5,7 @@ import * as runtimes from './runtime/index';
 import history from './router/history';
 import React from 'react';
 
-export default function runtimeRender(configureStore, { runtime='Panels', preferredSnapPoint=90 }) {
+export default function runtimeRender(configureStore, { runtime = 'Trails', preferredSnapPoint = 90 }) {
   const store = configureStore();
   store.dispatch(navigate(location.href));
 

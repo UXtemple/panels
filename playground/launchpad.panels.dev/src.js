@@ -1,4 +1,4 @@
-import { Teleport, Panel, wrap } from 'panels-ui';
+import { Panel, wrap } from 'panels-ui';
 import { Horizontal } from 'usepages-blocks';
 import normaliseUri from 'panels-normalise-uri';
 import React, { Component, PropTypes } from 'react';

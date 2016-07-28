@@ -175,7 +175,7 @@ export const types = {
 
 export const panels = {
   '/': {type: 'Lightgreen', maxWidth: 720, styleBackground: {backgroundColor: '#f2f2f2'}, title: 'main'},
-  '/a': {type: 'Lightyellow', width: '100%' },
+  '/a': {type: 'Lightyellow', width: 720 },
   '/a/b': {context: 0, type: 'Lightblue', width: 720},
   '/a/b/c': {type: 'Lightpink', maxWidth: 560},
   '/a/b/c/d': {type: 'Fuchsia'},

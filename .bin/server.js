@@ -30,7 +30,6 @@ http.createServer((req, res) => {
 console.log(
   `Panels dev server is up!
   Runtimes:
-    - Panels: http://panels.dev
-    - Topbar: http://topbar.panels.dev
+    - Trails: http://trails.panels.dev
     - Launchpad: http://launchpad.panels.dev`
 );

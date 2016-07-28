@@ -1,5 +1,4 @@
 export default function getNextPosition({ context, focus, maxFullPanelWidth, routes, panels, shouldGoMobile, viewportWidth }) {
-  console.time('getNextPosition');
   let nextRoutesByContext = routes.byContext;
 
   const widths = routes.items.map(routeContext => {
@@ -55,7 +54,6 @@ export default function getNextPosition({ context, focus, maxFullPanelWidth, rou
     // decrease the amount of contexts left
     contextsLeft--;
   }
-  console.timeEnd('getNextPosition');
 
   return {
     routesByContext: nextRoutesByContext,

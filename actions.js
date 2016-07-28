@@ -11,8 +11,6 @@ function ensurePanelShape(panel) {
   }
 }
 
-const __DEV__ = process.env.NODE_ENV === 'development';
-
 export const NAVIGATE = 'panels/NAVIGATE';
 export function navigate(rawUri, nextFocus = 1, nextContext) {
   return async function navigateThunk(dispatch, getState) {
@@ -26,14 +24,11 @@ export function navigate(rawUri, nextFocus = 1, nextContext) {
       return;
     }
 
-    __DEV__ && console.time('parse');
     const parsed = await worker.postMessage({
       type: 'parse',
       uri
     });
-    __DEV__ && console.timeEnd('parse');
 
-    __DEV__ && console.time('apps');
     const appContext = {
       navigate(uri, focus, context) {
         dispatch(navigate(uri, focus, context))
@@ -67,9 +62,7 @@ export function navigate(rawUri, nextFocus = 1, nextContext) {
         console.error(`Can't load app ${name}`, error);
       }
     }));
-    __DEV__ && console.timeEnd('apps');
 
-    __DEV__ && console.time('panels');
     const nextPanels = {
       byId: {},
       items: []
@@ -113,9 +106,7 @@ export function navigate(rawUri, nextFocus = 1, nextContext) {
         }
       });
     });
-    __DEV__ && console.timeEnd('panels');
 
-    __DEV__ && console.time('runtime');
     const maxFullPanelWidth = runtime.viewportWidth - runtime.snapPoint;
     const isFirstLoad = typeof router.focus === 'undefined';
     const last = parsed.routes.items.length - 1;
@@ -204,7 +195,6 @@ export function navigate(rawUri, nextFocus = 1, nextContext) {
 
     const regions = getRegions(widths);
     const snappedAt = getIndexOfPanelToShow(x, regions);
-    __DEV__ && console.timeEnd('runtime');
 
     dispatch({
       type: NAVIGATE,

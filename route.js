@@ -97,8 +97,6 @@ export default class Route extends Component {
           backgroundColor: state.error && '#ff5959',
           height: '100%',
           overflowY: 'auto',
-          transition: 'transform 0.25s linear',
-          transform: `translateX(${ -props.x }px)`,
           width: props.width,
           zIndex: props.zIndex,
           ...props.style
@@ -124,8 +122,8 @@ const routeShape = PropTypes.shape({
 });
 
 Route.propTypes = {
-  isContext: PropTypes.bool.isRequired,
-  isFocus: PropTypes.bool.isRequired,
+  isContext: PropTypes.bool,
+  isFocus: PropTypes.bool,
   navigate: PropTypes.func.isRequired,
   panel: PropTypes.object.isRequired,
   present: PropTypes.func,
@@ -147,9 +145,11 @@ Route.propTypes = {
     })
   ]).isRequired,
   type: PropTypes.func.isRequired,
-  toggleExpand: PropTypes.func.isRequired,
+  toggleExpand: PropTypes.func,
   updateSettings: PropTypes.func.isRequired,
-  width: PropTypes.number.isRequired,
-  x: PropTypes.number.isRequired,
-  zIndex: PropTypes.number.isRequired
+  width: PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.string
+  ]),
+  zIndex: PropTypes.number
 };

@@ -1,7 +1,6 @@
 import { connect } from 'react-redux';
 import { setViewportWidth } from '../actions';
 import { navigate, updateSettings } from '../../actions';
-import { snapX } from 'panels-ui';
 import debounce from 'lodash.debounce';
 import FlipMove from 'react-flip-move';
 import getViewportWidth from '../get-viewport-width';
@@ -28,10 +27,6 @@ export class LaunchpadRuntime extends Component {
 
     if (props.focusPanel) {
       window.document.title = props.focusPanel.title || props.focusPanel.type;
-    }
-
-    if (prevProps.runtime.x !== props.runtime.x) {
-      snapX(this.$runtime, props.runtime.x);
     }
 
     this.ensureDefault();
@@ -81,12 +76,8 @@ export class LaunchpadRuntime extends Component {
         routeIndex={dockedRouteIndex}
         router={router}
         store={dockedApp.store}
-        style={{
-          transform: 'none'
-        }}
         type={dockedApp.types[dockedPanel.type]}
         updateSettings={updateSettings}
-        x={dockedPanel.dockLeft ? 0 : dockedRoute.width}
         width={dockedRoute.width}
       />
     );
@@ -118,12 +109,12 @@ export class LaunchpadRuntime extends Component {
             }}
             type={launchpadApp.types[launchpadPanel.type]}
             updateSettings={updateSettings}
-            x={0}
             width={'auto'}
           />
         )}
 
         <FlipMove
+          duration={200}
           enterAnimation={'fade'}
           leaveAnimation={'fade'}
           style={{
@@ -144,9 +135,6 @@ export class LaunchpadRuntime extends Component {
               routeIndex={1}
               router={router}
               store={mainApp.store}
-              style={{
-                transform: 'none'
-              }}
               type={mainApp.types[mainPanel.type]}
               updateSettings={updateSettings}
               width={mainWidth}
@@ -228,15 +216,3 @@ const mapDispatchToProps = {
   updateSettings
 };
 export default connect(mapStateToProps, mapDispatchToProps)(LaunchpadRuntime);
-
-              // x={
-              //   dockedPanel ?
-              //     (dockedPanel.dockLeft ?
-              //       // position the main panel after the panel docked to the left
-              //       runtime.viewportWidth - dockedRoute.width :
-              //       dockedRoute.width
-              //       // position the main panel before the panel docked to the left
-              //     ) :
-              //   0
-              // }
-
