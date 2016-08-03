@@ -35,7 +35,9 @@ async function loadModule(app) {
   return module;
 }
 
-export default async function get(app, context) {
+const DENY = () => false;
+
+export default async function get(app, createContext) {
   let name = app;
   let props = {};
 
@@ -50,9 +52,13 @@ export default async function get(app, context) {
     }
   }
 
-  const { lookup, panels, setup, types } = require(name);
+  /* eslint-disable global-require */
+  const { access = DENY, lookup, panels, setup, types } = require(name);
+
+  const context = createContext(app, name);
 
   return {
+    access,
     findPanel: createFindPanel(panels, lookup),
     name,
     store: typeof setup === 'function' && await setup(app, props, context),

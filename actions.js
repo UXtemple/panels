@@ -29,10 +29,31 @@ export function navigate(rawUri, nextFocus = 1, nextContext) {
       uri
     });
 
-    const appContext = {
-      navigate(uri, focus, context) {
-        dispatch(navigate(uri, focus, context))
-      }
+    const routes = {
+      byContext: parsed.routes.byContext, // router.routes.byContext,
+      items: parsed.routes.items
+    };
+
+    const createAppContext = (appName, appModule) => {
+      const access = async name => {
+        const app = getState().apps.byName[name];
+
+        if (app) {
+          if (app.access(appName, appModule)) {
+            return app.store;
+          } else {
+            throw Error(`Access to ${name} denied.`);
+          }
+        } else {
+          throw Error(`App ${name} doesn't exist or it doesn't have a store.`);
+        }
+      };
+
+      return {
+        access,
+        navigate: (...args) => dispatch(navigate(...args)),
+        routes
+      };
     };
 
     // get the next apps
@@ -56,7 +77,7 @@ export function navigate(rawUri, nextFocus = 1, nextContext) {
     await Promise.all(nextApps.items.map(async name => {
       try {
         // otherwise fetch it! :)
-        nextApps.byName[name] = await getApp(name, appContext);
+        nextApps.byName[name] = await getApp(name, createAppContext);
       } catch (error) {
         // TODO
         console.error(`Can't load app ${name}`, error);
@@ -130,11 +151,6 @@ export function navigate(rawUri, nextFocus = 1, nextContext) {
       }
     }
     const { context, focus } = getContextAndFocus(opts);
-
-    const routes = {
-      byContext: parsed.routes.byContext, // router.routes.byContext,
-      items: parsed.routes.items
-    };
 
     const widths = routes.items.map(routeContext => {
       // if (routes.byContext[routeContext]) {
