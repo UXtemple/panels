@@ -1,20 +1,21 @@
-import createFindPanel from './create-find-panel';
-import isRequireable from './is-requireable';
-import loadResource from './load-resource';
+import createFindPanel from './create-find-panel'
+import isRequireable from './is-requireable'
+import loadResource from './load-resource'
 
 async function loadModule(app) {
-  let module = {};
+  let module = {}
 
   try {
-    const response = await fetch(`//${app}/panels.json`);
-    const data = await response.json();
+    const response = await fetch(`//${app}/panels.json`)
+    const data = await response.json()
+
     if (data.module) {
-      module = data.module;
+      module = data.module
     }
 
-    await loadResource(data.logic);
+    await loadResource(data.logic)
   } catch (err) {
-    console.error(err);
+    console.error(err)
     if (err instanceof SyntaxError) {
       throw new Error(`We can't load ${app}.
         We can't find your app's logic source.
@@ -28,34 +29,46 @@ async function loadModule(app) {
 
         {
           "logic": "https://panels.com/my-application-logic.js"
-        }`);
+        }`)
     }
   }
 
-  return module;
+  return module
 }
 
-const DENY = () => false;
+const DENY = () => false
 
 export default async function get(app, createContext) {
-  let name = app;
-  let props = {};
+  let data
+  let name = app
+  let props = {}
 
   if (!isRequireable(name)) {
-    const data = await loadModule(app);
+    const inline = window.panelsJson && window.panelsJson[location.hostname]
+    if (inline) {
+      data = inline.module
+
+      if (!isRequireable(data.name)) {
+        console.error(`You should embed your app's panels bundle script tag`)
+      }
+    }
+
+    if (!data) {
+      data = await loadModule(app)
+    }
 
     if (data.name) {
-      name = data.name;
+      name = data.name
     }
     if (data.props) {
-      props = data.props;
+      props = data.props
     }
   }
 
   /* eslint-disable global-require */
-  const { access = DENY, lookup, panels, setup, types } = require(name);
+  const { access = DENY, lookup, panels, setup, types } = require(name)
 
-  const context = createContext(app, name);
+  const context = createContext(app, name)
 
   return {
     access,
@@ -63,5 +76,5 @@ export default async function get(app, createContext) {
     name,
     store: typeof setup === 'function' && await setup(app, props, context),
     types
-  };
+  }
 }
