@@ -44,7 +44,7 @@ export default async function get(app, createContext) {
   let props = {}
 
   if (!isRequireable(name)) {
-    const inline = window.panelsJson && window.panelsJson[location.hostname]
+    const inline = window.panelsJson && window.panelsJson[name]
     if (inline) {
       data = inline.module
 
