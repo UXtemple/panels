@@ -1,3 +1,4 @@
+import 'native-promise-only';
 import normalise from 'panels-normalise-uri';
 import parse from '../router/parse';
 import register from 'promise-worker/register';

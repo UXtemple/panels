@@ -36,6 +36,7 @@
     "lite-url": "^1.0.4",
     "lodash.debounce": "^4.0.5",
     "mini-unique-id": "^1.0.1",
+    "native-promise-only": "^0.8.1",
     "panels-normalise-uri": "^1.0.3",
     "panels-ui": "^2.5.0",
     "promise-worker": "^1.0.0",

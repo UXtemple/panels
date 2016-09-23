@@ -5,6 +5,7 @@ import send from 'send';
 const base = `${process.cwd()}/playground`;
 const common = [
   '/fetch.min.js',
+  '/promise.min.js',
   '/panels.js',
   '/panels-worker.js'
 ];
