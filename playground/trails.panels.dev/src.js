@@ -192,3 +192,7 @@ export const panels = {
 };
 
 export const lookup = ['/random:id'];
+
+export const notify = action => {
+  console.info('notified', action)
+}

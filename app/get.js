@@ -66,7 +66,7 @@ export default async function get(app, createContext) {
   }
 
   /* eslint-disable global-require */
-  const { access = DENY, lookup, panels, setup, types } = require(name)
+  const { access = DENY, notify, lookup, panels, setup, types } = require(name)
 
   const context = createContext(app, name)
 
@@ -74,6 +74,7 @@ export default async function get(app, createContext) {
     access,
     findPanel: createFindPanel(panels, lookup),
     name,
+    notify,
     store: typeof setup === 'function' && await setup(app, props, context),
     types
   }
