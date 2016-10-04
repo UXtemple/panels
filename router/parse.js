@@ -1,4 +1,3 @@
-import Url from 'lite-url';
 import withTrailingSlash from './with-trailing-slash';
 
 const PANELS_REGEX = /^https?:\/\/([a-zA-Z0-9\-\_\.]+)()(\/.*)/;
@@ -51,8 +50,6 @@ export default function parse(uri, whitelistRegex=[]) {
     } else {
       path = fullPath;
     }
-
-    console.log('stuff here',app,path,nextUri);
 
     const base = `${protocol}://${app}`;
     const context = routes.items.length > 0 ? routes.items[routes.items.length - 1] : '';

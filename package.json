@@ -33,7 +33,6 @@
   "dependencies": {
     "array-find-index": "^1.0.1",
     "houkou": "^0.2.2",
-    "lite-url": "^1.0.4",
     "lodash.debounce": "^4.0.5",
     "mini-unique-id": "^1.0.1",
     "native-promise-only": "^0.8.1",
