@@ -10,7 +10,8 @@ register(async message => {
     break;
 
   case 'parse':
-    return parse(message.uri);
+    let processedWhitelist = message.whitelist.map(r => new RegExp(r));
+    return parse(message.uri, processedWhitelist);
     break;
 
   default: break;

@@ -5,8 +5,16 @@ import * as runtimes from './runtime/index';
 import history from './router/history';
 import React from 'react';
 
-export default function runtimeRender(configureStore, { runtime = 'Trails', preferredSnapPoint = 90 }) {
-  const store = configureStore();
+export default function runtimeRender(configureStore, { runtime = 'Trails', preferredSnapPoint = 90 ,routerWhitelist=[]}) {
+  const store = configureStore({
+    router: {
+      routes: {
+        byContext: {},
+        items: []
+      },
+      routerWhitelist
+    }
+  });
   store.dispatch(navigate(location.href));
 
   history(store);

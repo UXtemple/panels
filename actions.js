@@ -23,10 +23,10 @@ export function navigate(rawUri, nextFocus = 1, nextContext) {
     if (uri === router.uri) {
       return;
     }
-
     const parsed = await worker.postMessage({
       type: 'parse',
-      uri
+      uri,
+      whitelist: router.routerWhitelist
     });
 
     const routes = {
