@@ -3,6 +3,7 @@ import parse from '../parse';
 import test from 'tape';
 import util from 'util';
 
+const specificRegex = /^https?:\/\/((specificDomain\.com)\/[a-zA-Z0-9\-\_]+)(\/.*)/;
 const cases = [{
   uri: 'https://UXtemple.com/',
   name: 'basic: one panel https://UXtemple.com/'
@@ -40,12 +41,24 @@ const cases = [{
 }, {
   uri: 'https://UXtemple.com/panels/https://usepanels.com/..',
   name: 'teleport: backwards panels https://UXtemple.com/panels/https://usepanels.com/..'
+},{
+  uri: 'https://specificDomain.com/root/',
+  name: 'routerWhitelist: one panel https://specificDomain.com/root/',
+  whitelist: [
+    specificRegex
+  ]
+},{
+  uri: 'https://specificDomain.com/root/panel/',
+  name: 'routerWhitelist: more panels https://specificDomain.com/root/panel/',
+  whitelist: [
+    specificRegex
+  ]
 }]
 
 
 test('#parse', t => {
   cases.forEach(c => {
-    console.log(`${c.name} \n ${util.inspect(parse(c.uri), false, null)}\n`);
+    console.log(`${c.name} \n ${util.inspect(parse(c.uri, c.whitelist), false, null)}\n`);
   });
 
   t.end();
