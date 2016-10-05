@@ -51,8 +51,10 @@
   "devDependencies": {
     "babel-cli": "^6.3.17",
     "babel-eslint": "^6.0.4",
+    "babel-jest": "^16.0.0",
     "babel-plugin-external-helpers": "^6.8.0",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.8.0",
+    "babel-polyfill": "^6.16.0",
     "babel-preset-es-uxtemple": "^1.0.1",
     "browserify": "^13.0.0",
     "eslint": "^2.10.2",
@@ -61,6 +63,7 @@
     "eslint-plugin-jsx-a11y": "^1.2.0",
     "eslint-plugin-react": "^5.1.1",
     "exorcist": "^0.4.0",
+    "jest": "^16.0.1",
     "loose-envify": "^1.1.0",
     "proxyquire": "^1.7.2",
     "redux-logger": "^2.6.1",

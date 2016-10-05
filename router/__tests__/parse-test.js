@@ -1,9 +1,8 @@
-import normaliseUri from 'panels-normalise-uri';
-import parse from '../parse';
-import test from 'tape';
-import util from 'util';
+import parse from '../parse'
 
-const cases = [{
+const whitelist = [/^https?:\/\/((specificDomain\.com)\/[a-zA-Z0-9\-\_]+)(\/.*)/]
+
+const fixtures = [{
   uri: 'https://UXtemple.com/',
   name: 'basic: one panel https://UXtemple.com/'
 },{
@@ -40,13 +39,18 @@ const cases = [{
 }, {
   uri: 'https://UXtemple.com/panels/https://usepanels.com/..',
   name: 'teleport: backwards panels https://UXtemple.com/panels/https://usepanels.com/..'
+}, {
+  uri: 'https://specificDomain.com/root/https://UXtemple.com/',
+  name: 'routerWhitelist: one specific domain and a standard domain https://specificDomain.com/root/https://UXtemple.com/',
+  whitelist
+},{
+  uri: 'https://specificDomain.com/root/panelhttps://UXtemple.com/otherPanel',
+  name: 'routerWhitelist: one specific domain and panel and a standard domain with panel https://specificDomain.com/root/panelhttps://UXtemple.com/otherPanel',
+  whitelist
 }]
 
-
-test('#parse', t => {
-  cases.forEach(c => {
-    console.log(`${c.name} \n ${util.inspect(parse(c.uri), false, null)}\n`);
-  });
-
-  t.end();
-});
+fixtures.forEach(f => {
+  test(f.name, () => {
+    expect(parse(f.uri, f.whitelist)).toMatchSnapshot()
+  })
+})

@@ -1,0 +1,735 @@
+exports[`test basic: backwards panels https://UXtemple.com/panels/../back 1`] = `
+Object {
+  "apps": Object {
+    "byName": Object {
+      "UXtemple.com": Object {
+        "app": "UXtemple.com",
+        "panels": Array [
+          "/",
+          "/panels",
+          "/panels/..",
+          "/panels/../back",
+        ],
+      },
+    },
+    "items": Array [
+      "UXtemple.com",
+    ],
+  },
+  "routes": Object {
+    "byContext": Object {
+      "https://UXtemple.com/": Object {
+        "app": "UXtemple.com",
+        "context": "https://UXtemple.com/",
+        "isVisible": true,
+        "panelId": "UXtemple.com/",
+        "path": "/",
+      },
+      "https://UXtemple.com/panels/": Object {
+        "app": "UXtemple.com",
+        "context": "https://UXtemple.com/panels/",
+        "isVisible": true,
+        "panelId": "UXtemple.com/panels",
+        "path": "/panels",
+      },
+      "https://UXtemple.com/panels/../": Object {
+        "app": "UXtemple.com",
+        "context": "https://UXtemple.com/panels/../",
+        "isVisible": true,
+        "panelId": "UXtemple.com/panels/..",
+        "path": "/panels/..",
+      },
+      "https://UXtemple.com/panels/../back/": Object {
+        "app": "UXtemple.com",
+        "context": "https://UXtemple.com/panels/../back/",
+        "isVisible": true,
+        "panelId": "UXtemple.com/panels/../back",
+        "path": "/panels/../back",
+      },
+    },
+    "items": Array [
+      "https://UXtemple.com/",
+      "https://UXtemple.com/panels/",
+      "https://UXtemple.com/panels/../",
+      "https://UXtemple.com/panels/../back/",
+    ],
+  },
+}
+`;
+
+exports[`test basic: many panels https://UXtemple.com/panels 1`] = `
+Object {
+  "apps": Object {
+    "byName": Object {
+      "UXtemple.com": Object {
+        "app": "UXtemple.com",
+        "panels": Array [
+          "/",
+          "/panels",
+        ],
+      },
+    },
+    "items": Array [
+      "UXtemple.com",
+    ],
+  },
+  "routes": Object {
+    "byContext": Object {
+      "https://UXtemple.com/": Object {
+        "app": "UXtemple.com",
+        "context": "https://UXtemple.com/",
+        "isVisible": true,
+        "panelId": "UXtemple.com/",
+        "path": "/",
+      },
+      "https://UXtemple.com/panels/": Object {
+        "app": "UXtemple.com",
+        "context": "https://UXtemple.com/panels/",
+        "isVisible": true,
+        "panelId": "UXtemple.com/panels",
+        "path": "/panels",
+      },
+    },
+    "items": Array [
+      "https://UXtemple.com/",
+      "https://UXtemple.com/panels/",
+    ],
+  },
+}
+`;
+
+exports[`test basic: one panel https://UXtemple.com/ 1`] = `
+Object {
+  "apps": Object {
+    "byName": Object {
+      "UXtemple.com": Object {
+        "app": "UXtemple.com",
+        "panels": Array [
+          "/",
+        ],
+      },
+    },
+    "items": Array [
+      "UXtemple.com",
+    ],
+  },
+  "routes": Object {
+    "byContext": Object {
+      "https://UXtemple.com/": Object {
+        "app": "UXtemple.com",
+        "context": "https://UXtemple.com/",
+        "isVisible": true,
+        "panelId": "UXtemple.com/",
+        "path": "/",
+      },
+    },
+    "items": Array [
+      "https://UXtemple.com/",
+    ],
+  },
+}
+`;
+
+exports[`test routerWhitelist: one specific domain and a standard domain https://specificDomain.com/root/https://UXtemple.com/ 1`] = `
+Object {
+  "apps": Object {
+    "byName": Object {
+      "UXtemple.com": Object {
+        "app": "UXtemple.com",
+        "panels": Array [
+          "/",
+        ],
+      },
+      "specificDomain.com/root": Object {
+        "app": "specificDomain.com/root",
+        "panels": Array [
+          "/",
+        ],
+      },
+    },
+    "items": Array [
+      "specificDomain.com/root",
+      "UXtemple.com",
+    ],
+  },
+  "routes": Object {
+    "byContext": Object {
+      "https://specificDomain.com/root/": Object {
+        "app": "specificDomain.com/root",
+        "context": "https://specificDomain.com/root/",
+        "isVisible": true,
+        "panelId": "specificDomain.com/root/",
+        "path": "/",
+      },
+      "https://specificDomain.com/root/https://UXtemple.com/": Object {
+        "app": "UXtemple.com",
+        "context": "https://specificDomain.com/root/https://UXtemple.com/",
+        "isVisible": true,
+        "panelId": "UXtemple.com/",
+        "path": "/",
+      },
+    },
+    "items": Array [
+      "https://specificDomain.com/root/",
+      "https://specificDomain.com/root/https://UXtemple.com/",
+    ],
+  },
+}
+`;
+
+exports[`test routerWhitelist: one specific domain and panel and a standard domain with panel https://specificDomain.com/root/panelhttps://UXtemple.com/otherPanel 1`] = `
+Object {
+  "apps": Object {
+    "byName": Object {
+      "UXtemple.com": Object {
+        "app": "UXtemple.com",
+        "panels": Array [
+          "/",
+          "/otherPanel",
+        ],
+      },
+      "specificDomain.com/root": Object {
+        "app": "specificDomain.com/root",
+        "panels": Array [
+          "/",
+        ],
+      },
+    },
+    "items": Array [
+      "specificDomain.com/root",
+      "UXtemple.com",
+    ],
+  },
+  "routes": Object {
+    "byContext": Object {
+      "https://specificDomain.com/root/": Object {
+        "app": "specificDomain.com/root",
+        "context": "https://specificDomain.com/root/",
+        "isVisible": true,
+        "panelId": "specificDomain.com/root/",
+        "path": "/",
+      },
+      "https://specificDomain.com/root/https://UXtemple.com/": Object {
+        "app": "UXtemple.com",
+        "context": "https://specificDomain.com/root/https://UXtemple.com/",
+        "isVisible": true,
+        "panelId": "UXtemple.com/",
+        "path": "/",
+      },
+      "https://specificDomain.com/root/https://UXtemple.com/otherPanel/": Object {
+        "app": "UXtemple.com",
+        "context": "https://specificDomain.com/root/https://UXtemple.com/otherPanel/",
+        "isVisible": true,
+        "panelId": "UXtemple.com/otherPanel",
+        "path": "/otherPanel",
+      },
+    },
+    "items": Array [
+      "https://specificDomain.com/root/",
+      "https://specificDomain.com/root/https://UXtemple.com/",
+      "https://specificDomain.com/root/https://UXtemple.com/otherPanel/",
+    ],
+  },
+}
+`;
+
+exports[`test teleport: backwards panels https://UXtemple.com/panels/https://usepanels.com/.. 1`] = `
+Object {
+  "apps": Object {
+    "byName": Object {
+      "UXtemple.com": Object {
+        "app": "UXtemple.com",
+        "panels": Array [
+          "/",
+          "/panels",
+        ],
+      },
+      "usepanels.com": Object {
+        "app": "usepanels.com",
+        "panels": Array [
+          "/",
+          "/..",
+        ],
+      },
+    },
+    "items": Array [
+      "UXtemple.com",
+      "usepanels.com",
+    ],
+  },
+  "routes": Object {
+    "byContext": Object {
+      "https://UXtemple.com/": Object {
+        "app": "UXtemple.com",
+        "context": "https://UXtemple.com/",
+        "isVisible": true,
+        "panelId": "UXtemple.com/",
+        "path": "/",
+      },
+      "https://UXtemple.com/panels/": Object {
+        "app": "UXtemple.com",
+        "context": "https://UXtemple.com/panels/",
+        "isVisible": true,
+        "panelId": "UXtemple.com/panels",
+        "path": "/panels",
+      },
+      "https://UXtemple.com/panels/https://usepanels.com/": Object {
+        "app": "usepanels.com",
+        "context": "https://UXtemple.com/panels/https://usepanels.com/",
+        "isVisible": true,
+        "panelId": "usepanels.com/",
+        "path": "/",
+      },
+      "https://UXtemple.com/panels/https://usepanels.com/../": Object {
+        "app": "usepanels.com",
+        "context": "https://UXtemple.com/panels/https://usepanels.com/../",
+        "isVisible": true,
+        "panelId": "usepanels.com/..",
+        "path": "/..",
+      },
+    },
+    "items": Array [
+      "https://UXtemple.com/",
+      "https://UXtemple.com/panels/",
+      "https://UXtemple.com/panels/https://usepanels.com/",
+      "https://UXtemple.com/panels/https://usepanels.com/../",
+    ],
+  },
+}
+`;
+
+exports[`test teleport: basic https://UXtemple.com/https://usepanels.com/ 1`] = `
+Object {
+  "apps": Object {
+    "byName": Object {
+      "UXtemple.com": Object {
+        "app": "UXtemple.com",
+        "panels": Array [
+          "/",
+        ],
+      },
+      "usepanels.com": Object {
+        "app": "usepanels.com",
+        "panels": Array [
+          "/",
+        ],
+      },
+    },
+    "items": Array [
+      "UXtemple.com",
+      "usepanels.com",
+    ],
+  },
+  "routes": Object {
+    "byContext": Object {
+      "https://UXtemple.com/": Object {
+        "app": "UXtemple.com",
+        "context": "https://UXtemple.com/",
+        "isVisible": true,
+        "panelId": "UXtemple.com/",
+        "path": "/",
+      },
+      "https://UXtemple.com/https://usepanels.com/": Object {
+        "app": "usepanels.com",
+        "context": "https://UXtemple.com/https://usepanels.com/",
+        "isVisible": true,
+        "panelId": "usepanels.com/",
+        "path": "/",
+      },
+    },
+    "items": Array [
+      "https://UXtemple.com/",
+      "https://UXtemple.com/https://usepanels.com/",
+    ],
+  },
+}
+`;
+
+exports[`test teleport: slice all panels https://UXtemple.com/(panels) i.e., hidden gems :)? 1`] = `
+Object {
+  "apps": Object {
+    "byName": Object {
+      "UXtemple.com": Object {
+        "app": "UXtemple.com",
+        "panels": Array [
+          "/",
+          "/panels",
+        ],
+      },
+    },
+    "items": Array [
+      "UXtemple.com",
+    ],
+  },
+  "routes": Object {
+    "byContext": Object {
+      "https://UXtemple.com/": Object {
+        "app": "UXtemple.com",
+        "context": "https://UXtemple.com/",
+        "isVisible": true,
+        "panelId": "UXtemple.com/",
+        "path": "/",
+      },
+      "https://UXtemple.com/(panels)/": Object {
+        "app": "UXtemple.com",
+        "context": "https://UXtemple.com/(panels)/",
+        "isVisible": false,
+        "panelId": "UXtemple.com/panels",
+        "path": "/panels",
+      },
+    },
+    "items": Array [
+      "https://UXtemple.com/",
+      "https://UXtemple.com/(panels)/",
+    ],
+  },
+}
+`;
+
+exports[`test teleport: slice in between https://UXtemple.com/(panels)/use 1`] = `
+Object {
+  "apps": Object {
+    "byName": Object {
+      "UXtemple.com": Object {
+        "app": "UXtemple.com",
+        "panels": Array [
+          "/",
+          "/panels",
+          "/panels/use",
+        ],
+      },
+    },
+    "items": Array [
+      "UXtemple.com",
+    ],
+  },
+  "routes": Object {
+    "byContext": Object {
+      "https://UXtemple.com/": Object {
+        "app": "UXtemple.com",
+        "context": "https://UXtemple.com/",
+        "isVisible": true,
+        "panelId": "UXtemple.com/",
+        "path": "/",
+      },
+      "https://UXtemple.com/(panels)/": Object {
+        "app": "UXtemple.com",
+        "context": "https://UXtemple.com/(panels)/",
+        "isVisible": false,
+        "panelId": "UXtemple.com/panels",
+        "path": "/panels",
+      },
+      "https://UXtemple.com/(panels)/use/": Object {
+        "app": "UXtemple.com",
+        "context": "https://UXtemple.com/(panels)/use/",
+        "isVisible": true,
+        "panelId": "UXtemple.com/panels/use",
+        "path": "/panels/use",
+      },
+    },
+    "items": Array [
+      "https://UXtemple.com/",
+      "https://UXtemple.com/(panels)/",
+      "https://UXtemple.com/(panels)/use/",
+    ],
+  },
+}
+`;
+
+exports[`test teleport: slice many apps https://UXtemple.com/panels)/use/https://usepanels.com/)UXtemple 1`] = `
+Object {
+  "apps": Object {
+    "byName": Object {
+      "UXtemple.com": Object {
+        "app": "UXtemple.com",
+        "panels": Array [
+          "/",
+          "/panels",
+          "/panels/use",
+        ],
+      },
+      "usepanels.com": Object {
+        "app": "usepanels.com",
+        "panels": Array [
+          "/",
+          "/UXtemple",
+        ],
+      },
+    },
+    "items": Array [
+      "UXtemple.com",
+      "usepanels.com",
+    ],
+  },
+  "routes": Object {
+    "byContext": Object {
+      "https://UXtemple.com/": Object {
+        "app": "UXtemple.com",
+        "context": "https://UXtemple.com/",
+        "isVisible": false,
+        "panelId": "UXtemple.com/",
+        "path": "/",
+      },
+      "https://UXtemple.com/panels)/": Object {
+        "app": "UXtemple.com",
+        "context": "https://UXtemple.com/panels)/",
+        "isVisible": false,
+        "panelId": "UXtemple.com/panels",
+        "path": "/panels",
+      },
+      "https://UXtemple.com/panels)/use/": Object {
+        "app": "UXtemple.com",
+        "context": "https://UXtemple.com/panels)/use/",
+        "isVisible": true,
+        "panelId": "UXtemple.com/panels/use",
+        "path": "/panels/use",
+      },
+      "https://UXtemple.com/panels)/use/https://usepanels.com/": Object {
+        "app": "usepanels.com",
+        "context": "https://UXtemple.com/panels)/use/https://usepanels.com/",
+        "isVisible": false,
+        "panelId": "usepanels.com/",
+        "path": "/",
+      },
+      "https://UXtemple.com/panels)/use/https://usepanels.com/)UXtemple/": Object {
+        "app": "usepanels.com",
+        "context": "https://UXtemple.com/panels)/use/https://usepanels.com/)UXtemple/",
+        "isVisible": true,
+        "panelId": "usepanels.com/UXtemple",
+        "path": "/UXtemple",
+      },
+    },
+    "items": Array [
+      "https://UXtemple.com/",
+      "https://UXtemple.com/panels)/",
+      "https://UXtemple.com/panels)/use/",
+      "https://UXtemple.com/panels)/use/https://usepanels.com/",
+      "https://UXtemple.com/panels)/use/https://usepanels.com/)UXtemple/",
+    ],
+  },
+}
+`;
+
+exports[`test teleport: slice multiple panels https://UXtemple.com/(panels/use) 1`] = `
+Object {
+  "apps": Object {
+    "byName": Object {
+      "UXtemple.com": Object {
+        "app": "UXtemple.com",
+        "panels": Array [
+          "/",
+          "/panels",
+          "/panels/use",
+        ],
+      },
+    },
+    "items": Array [
+      "UXtemple.com",
+    ],
+  },
+  "routes": Object {
+    "byContext": Object {
+      "https://UXtemple.com/": Object {
+        "app": "UXtemple.com",
+        "context": "https://UXtemple.com/",
+        "isVisible": true,
+        "panelId": "UXtemple.com/",
+        "path": "/",
+      },
+      "https://UXtemple.com/(panels/": Object {
+        "app": "UXtemple.com",
+        "context": "https://UXtemple.com/(panels/",
+        "isVisible": false,
+        "panelId": "UXtemple.com/panels",
+        "path": "/panels",
+      },
+      "https://UXtemple.com/(panels/use)/": Object {
+        "app": "UXtemple.com",
+        "context": "https://UXtemple.com/(panels/use)/",
+        "isVisible": false,
+        "panelId": "UXtemple.com/panels/use",
+        "path": "/panels/use",
+      },
+    },
+    "items": Array [
+      "https://UXtemple.com/",
+      "https://UXtemple.com/(panels/",
+      "https://UXtemple.com/(panels/use)/",
+    ],
+  },
+}
+`;
+
+exports[`test teleport: slice one app only https://UXtemple.com/panels)/use/https://usepanels.com/UXtemple 1`] = `
+Object {
+  "apps": Object {
+    "byName": Object {
+      "UXtemple.com": Object {
+        "app": "UXtemple.com",
+        "panels": Array [
+          "/",
+          "/panels",
+          "/panels/use",
+        ],
+      },
+      "usepanels.com": Object {
+        "app": "usepanels.com",
+        "panels": Array [
+          "/",
+          "/UXtemple",
+        ],
+      },
+    },
+    "items": Array [
+      "UXtemple.com",
+      "usepanels.com",
+    ],
+  },
+  "routes": Object {
+    "byContext": Object {
+      "https://UXtemple.com/": Object {
+        "app": "UXtemple.com",
+        "context": "https://UXtemple.com/",
+        "isVisible": false,
+        "panelId": "UXtemple.com/",
+        "path": "/",
+      },
+      "https://UXtemple.com/panels)/": Object {
+        "app": "UXtemple.com",
+        "context": "https://UXtemple.com/panels)/",
+        "isVisible": false,
+        "panelId": "UXtemple.com/panels",
+        "path": "/panels",
+      },
+      "https://UXtemple.com/panels)/use/": Object {
+        "app": "UXtemple.com",
+        "context": "https://UXtemple.com/panels)/use/",
+        "isVisible": true,
+        "panelId": "UXtemple.com/panels/use",
+        "path": "/panels/use",
+      },
+      "https://UXtemple.com/panels)/use/https://usepanels.com/": Object {
+        "app": "usepanels.com",
+        "context": "https://UXtemple.com/panels)/use/https://usepanels.com/",
+        "isVisible": true,
+        "panelId": "usepanels.com/",
+        "path": "/",
+      },
+      "https://UXtemple.com/panels)/use/https://usepanels.com/UXtemple/": Object {
+        "app": "usepanels.com",
+        "context": "https://UXtemple.com/panels)/use/https://usepanels.com/UXtemple/",
+        "isVisible": true,
+        "panelId": "usepanels.com/UXtemple",
+        "path": "/UXtemple",
+      },
+    },
+    "items": Array [
+      "https://UXtemple.com/",
+      "https://UXtemple.com/panels)/",
+      "https://UXtemple.com/panels)/use/",
+      "https://UXtemple.com/panels)/use/https://usepanels.com/",
+      "https://UXtemple.com/panels)/use/https://usepanels.com/UXtemple/",
+    ],
+  },
+}
+`;
+
+exports[`test teleport: slice some parts https://UXtemple.com/(panels)/use/(new) 1`] = `
+Object {
+  "apps": Object {
+    "byName": Object {
+      "UXtemple.com": Object {
+        "app": "UXtemple.com",
+        "panels": Array [
+          "/",
+          "/panels",
+          "/panels/use",
+          "/panels/use/new",
+        ],
+      },
+    },
+    "items": Array [
+      "UXtemple.com",
+    ],
+  },
+  "routes": Object {
+    "byContext": Object {
+      "https://UXtemple.com/": Object {
+        "app": "UXtemple.com",
+        "context": "https://UXtemple.com/",
+        "isVisible": true,
+        "panelId": "UXtemple.com/",
+        "path": "/",
+      },
+      "https://UXtemple.com/(panels)/": Object {
+        "app": "UXtemple.com",
+        "context": "https://UXtemple.com/(panels)/",
+        "isVisible": false,
+        "panelId": "UXtemple.com/panels",
+        "path": "/panels",
+      },
+      "https://UXtemple.com/(panels)/use/": Object {
+        "app": "UXtemple.com",
+        "context": "https://UXtemple.com/(panels)/use/",
+        "isVisible": true,
+        "panelId": "UXtemple.com/panels/use",
+        "path": "/panels/use",
+      },
+      "https://UXtemple.com/(panels)/use/(new)/": Object {
+        "app": "UXtemple.com",
+        "context": "https://UXtemple.com/(panels)/use/(new)/",
+        "isVisible": false,
+        "panelId": "UXtemple.com/panels/use/new",
+        "path": "/panels/use/new",
+      },
+    },
+    "items": Array [
+      "https://UXtemple.com/",
+      "https://UXtemple.com/(panels)/",
+      "https://UXtemple.com/(panels)/use/",
+      "https://UXtemple.com/(panels)/use/(new)/",
+    ],
+  },
+}
+`;
+
+exports[`test teleport: slice the root https://UXtemple.com/)panels 1`] = `
+Object {
+  "apps": Object {
+    "byName": Object {
+      "UXtemple.com": Object {
+        "app": "UXtemple.com",
+        "panels": Array [
+          "/",
+          "/panels",
+        ],
+      },
+    },
+    "items": Array [
+      "UXtemple.com",
+    ],
+  },
+  "routes": Object {
+    "byContext": Object {
+      "https://UXtemple.com/": Object {
+        "app": "UXtemple.com",
+        "context": "https://UXtemple.com/",
+        "isVisible": false,
+        "panelId": "UXtemple.com/",
+        "path": "/",
+      },
+      "https://UXtemple.com/)panels/": Object {
+        "app": "UXtemple.com",
+        "context": "https://UXtemple.com/)panels/",
+        "isVisible": true,
+        "panelId": "UXtemple.com/panels",
+        "path": "/panels",
+      },
+    },
+    "items": Array [
+      "https://UXtemple.com/",
+      "https://UXtemple.com/)panels/",
+    ],
+  },
+}
+`;
