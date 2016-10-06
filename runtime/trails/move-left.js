@@ -1,7 +1,7 @@
-import { ArrowLeft } from 'panels-ui';
-import React from 'react';
+import { ArrowLeft } from 'panels-ui'
+import React from 'react'
 
-const DIAMETER = 40;
+const DIAMETER = 40
 
 const MoveLeft = ({ onClick, snapPoint }) => (
   <div
@@ -22,5 +22,5 @@ const MoveLeft = ({ onClick, snapPoint }) => (
   >
     <ArrowLeft />
   </div>
-);
-export default MoveLeft;
+)
+export default MoveLeft

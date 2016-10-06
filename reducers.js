@@ -1,7 +1,7 @@
-import { combineReducers } from 'redux';
-import { MOVE_LEFT, MOVE_TO, SET_X, SET_VIEWPORT_WIDTH } from './runtime/actions';
-import { NAVIGATE, TOGGLE_EXPAND, UPDATE_SETTINGS } from './actions';
-import getViewportWidth from './runtime/get-viewport-width';
+import { combineReducers } from 'redux'
+import { MOVE_LEFT, MOVE_TO, SET_X, SET_VIEWPORT_WIDTH } from './runtime/actions'
+import { NAVIGATE, TOGGLE_EXPAND, UPDATE_SETTINGS } from './actions'
+import getViewportWidth from './runtime/get-viewport-width'
 
 function apps(state = { byName: {}, items: [] }, action) {
   if (action.type === NAVIGATE &&
@@ -16,9 +16,9 @@ function apps(state = { byName: {}, items: [] }, action) {
         ...state.items,
         ...action.payload.apps.items
       ]
-    };
+    }
   } else {
-    return state;
+    return state
   }
 }
 
@@ -35,14 +35,14 @@ function panels(state = { byId: {}, items: [] }, action) {
         ...state.items,
         ...action.payload.panels.items
       ]
-    };
+    }
   } else if (action.type === UPDATE_SETTINGS) {
     return {
       ...state,
       byId: action.payload.nextPanelsById
-    };
+    }
   } else {
-    return state;
+    return state
   }
 }
 
@@ -54,15 +54,15 @@ function router(state = { isLoading: true, routes: { byContext: {}, items: [] } 
           ...state,
           isLoading: true,
           uri: action.meta.uri
-        };
+        }
       } else if (action.sequence.type === 'next') {
         return {
           ...state,
           ...action.payload.router,
           isLoading: false
-        };
+        }
       }
-      break;
+      break
 
     case SET_VIEWPORT_WIDTH:
     case TOGGLE_EXPAND:
@@ -72,8 +72,8 @@ function router(state = { isLoading: true, routes: { byContext: {}, items: [] } 
           items: state.routes.items,
           byContext: action.payload.routesByContext
         }
-      };
-      break;
+      }
+      break
 
     case UPDATE_SETTINGS:
       if (action.payload.nextPosition) {
@@ -83,23 +83,23 @@ function router(state = { isLoading: true, routes: { byContext: {}, items: [] } 
             items: state.routes.items,
             byContext: action.payload.nextPosition.routesByContext
           }
-        };
+        }
       } else {
-        return state;
+        return state
       }
-      break;
+      break
 
-    default: return state;
+    default: return state
   }
 }
 
-export const MOBILE_THRESHOLD = 720;
+export const MOBILE_THRESHOLD = 720
 
 // TODO REVERT!
-const preferredSnapPoint = window.panels && typeof window.panels.preferredSnapPoint === 'number' ? window.panels.preferredSnapPoint : 90;
-const viewportWidth = getViewportWidth();
-const shouldGoMobile = viewportWidth < MOBILE_THRESHOLD;
-const snapPoint = shouldGoMobile ? 0 : preferredSnapPoint;
+const preferredSnapPoint = window.panels && typeof window.panels.preferredSnapPoint === 'number' ? window.panels.preferredSnapPoint : 90
+const viewportWidth = getViewportWidth()
+const shouldGoMobile = viewportWidth < MOBILE_THRESHOLD
+const snapPoint = shouldGoMobile ? 0 : preferredSnapPoint
 
 const RUNTIME_DEFAULT_STATE = {
   maxFullPanelWidth: viewportWidth - snapPoint,
@@ -111,7 +111,7 @@ const RUNTIME_DEFAULT_STATE = {
   viewportWidth,
   width: viewportWidth,
   widths: []
-};
+}
 
 function runtime(state = RUNTIME_DEFAULT_STATE, action) {
   switch (action.type) {
@@ -123,8 +123,8 @@ function runtime(state = RUNTIME_DEFAULT_STATE, action) {
         ...state,
         snappedAt: action.payload.snappedAt,
         x: action.payload.x
-      };
-      break;
+      }
+      break
 
     case NAVIGATE:
       if (action.sequence.type === 'next') {
@@ -136,11 +136,11 @@ function runtime(state = RUNTIME_DEFAULT_STATE, action) {
           width: action.payload.runtime.width,
           widths: action.payload.runtime.widths,
           x: action.payload.runtime.x
-        };
+        }
       } else {
-        return state;
+        return state
       }
-      break;
+      break
 
     case SET_VIEWPORT_WIDTH:
       return {
@@ -152,8 +152,8 @@ function runtime(state = RUNTIME_DEFAULT_STATE, action) {
         width: action.payload.width,
         widths: action.payload.widths,
         x: action.payload.x
-      };
-      break;
+      }
+      break
 
     case TOGGLE_EXPAND:
       return {
@@ -161,8 +161,8 @@ function runtime(state = RUNTIME_DEFAULT_STATE, action) {
         width: action.payload.width,
         widths: action.payload.widths,
         x: action.payload.x
-      };
-      break;
+      }
+      break
 
     case UPDATE_SETTINGS:
       if (action.payload.nextPosition) {
@@ -171,13 +171,13 @@ function runtime(state = RUNTIME_DEFAULT_STATE, action) {
           width: action.payload.nextPosition.width,
           widths: action.payload.nextPosition.widths,
           x: action.payload.nextPosition.x
-        };
+        }
       } else {
-        return state;
+        return state
       }
-      break;
+      break
 
-    default: return state;
+    default: return state
   }
 }
 
@@ -186,4 +186,4 @@ export default combineReducers({
   panels,
   router,
   runtime
-});
+})

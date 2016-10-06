@@ -1,12 +1,12 @@
 export default function getHalves(widths) {
-  const halves = [];
+  const halves = []
 
   widths.forEach(width => {
-    const half = width / 2;
+    const half = width / 2
 
-    halves.push(half);
-    halves.push(half);
-  });
+    halves.push(half)
+    halves.push(half)
+  })
 
-  return halves;
+  return halves
 }

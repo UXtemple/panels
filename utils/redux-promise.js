@@ -2,16 +2,16 @@
 // of lodash's version
 //
 // https://github.com/acdlite/redux-promise/blob/sequence/src/index.js
-import uniqueId from 'mini-unique-id';
+import uniqueId from 'mini-unique-id'
 
 function isPromise(val) {
-  return val && typeof val.then === 'function';
+  return val && typeof val.then === 'function'
 }
 
 export default function promiseMiddleware({ dispatch }) {
   return next => action => {
     if (isPromise(action.payload)) {
-      const sequenceId = uniqueId();
+      const sequenceId = uniqueId()
 
       dispatch({
         ...action,
@@ -20,7 +20,7 @@ export default function promiseMiddleware({ dispatch }) {
           type: 'start',
           id: sequenceId
         }
-      });
+      })
 
       return action.payload.then(
         result => dispatch({
@@ -40,9 +40,9 @@ export default function promiseMiddleware({ dispatch }) {
             id: sequenceId
           }
         })
-      );
+      )
     }
 
-    return next(action);
-  };
+    return next(action)
+  }
 }

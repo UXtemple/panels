@@ -11,14 +11,10 @@ mkdir -p $BUNDLE
 
 echo "[bundle] v${VERSION}..."
 NODE_ENV=development $BIN/browserify --verbose --debug \
-  --require array-find-index \
-  --require houkou \
-  --require lite-url \
   --require lodash.debounce \
   --require mini-unique-id \
   --require panels-normalise-uri \
   --require panels-ui \
-  --require promise-worker \
   --require react \
   --require react-dom \
   --require react-redux \
@@ -31,10 +27,6 @@ NODE_ENV=development $BIN/browserify --verbose --debug \
   --transform [rollupify --config rollup.config.js] \
   --transform loose-envify \
   index.dev.js > $PANELS.js
-
-NODE_ENV=development $BIN/browserify --debug --verbose \
-  --transform [ rollupify --config ./rollup.config.worker.js ] \
-  ./worker/worker.js > $BUNDLE/panels-worker.js
 
 ls -lha $PANELS.*
 echo "[bundle] done"

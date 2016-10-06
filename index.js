@@ -1,4 +1,4 @@
-import configureStore from './configure-store';
-import render from './render';
+import configureStore from './configure-store'
+import render from './render'
 
-window.addEventListener('load', () => render(configureStore, window.panels || {}));
+window.addEventListener('load', () => render(configureStore, window.panels || {}))

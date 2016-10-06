@@ -10,7 +10,7 @@
     "postpublish": "npm run deploy && rm -rf bundle && git checkout package.json && git push && git push --tags",
     "prepublish": "npm run bundle",
     "push": "git tag $(npm version $VERSION) && npm publish",
-    "test": ".bin/test"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -31,15 +31,11 @@
   },
   "homepage": "https://github.com/UXtemple/panels#readme",
   "dependencies": {
-    "array-find-index": "^1.0.1",
     "houkou": "^0.2.2",
-    "lite-url": "^1.0.4",
     "lodash.debounce": "^4.0.5",
     "mini-unique-id": "^1.0.1",
-    "native-promise-only": "^0.8.1",
     "panels-normalise-uri": "^1.0.3",
     "panels-ui": "^2.5.0",
-    "promise-worker": "^1.0.0",
     "react": "^15.1.0",
     "react-dom": "^15.1.0",
     "react-flip-move": "^2.4.0",
@@ -52,8 +48,10 @@
   "devDependencies": {
     "babel-cli": "^6.3.17",
     "babel-eslint": "^6.0.4",
+    "babel-jest": "^16.0.0",
     "babel-plugin-external-helpers": "^6.8.0",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.8.0",
+    "babel-polyfill": "^6.16.0",
     "babel-preset-es-uxtemple": "^1.0.1",
     "browserify": "^13.0.0",
     "eslint": "^2.10.2",
@@ -62,15 +60,13 @@
     "eslint-plugin-jsx-a11y": "^1.2.0",
     "eslint-plugin-react": "^5.1.1",
     "exorcist": "^0.4.0",
+    "jest": "^16.0.1",
     "loose-envify": "^1.1.0",
-    "proxyquire": "^1.7.2",
     "redux-logger": "^2.6.1",
     "rollup-plugin-babel": "^2.4.0",
     "rollup-plugin-replace": "^1.1.1",
     "rollupify": "0.3.4",
     "send": "^0.14.1",
-    "sinon": "^1.16.1",
-    "tape": "^4.2.0",
     "uglify-js": "^2.4.24",
     "usepages-blocks": "^3.3.1",
     "watchify": "^3.4.0"

@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-
-BIN=./node_modules/.bin
-
-TESTS=${1:-**/__tests__/*-test.js}
-$BIN/babel-node --presets es2015 $BIN/tape "$TESTS"

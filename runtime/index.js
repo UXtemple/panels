@@ -1,2 +1,2 @@
-export Launchpad from './launchpad/index';
-export Trails from './trails/index';
+export Launchpad from './launchpad/index'
+export Trails from './trails/index'

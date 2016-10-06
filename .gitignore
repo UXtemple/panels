@@ -4,5 +4,5 @@
 node_modules
 bundle
 playground/panels.js
-playground/panels-worker.js
 playground/*/app.js
+playground/*/*/app.js

@@ -4,10 +4,7 @@ import send from 'send';
 
 const base = `${process.cwd()}/playground`;
 const common = [
-  '/fetch.min.js',
-  '/promise.min.js',
-  '/panels.js',
-  '/panels-worker.js'
+  '/panels.js'
 ];
 
 http.createServer((req, res) => {
@@ -16,10 +13,19 @@ http.createServer((req, res) => {
   if (common.includes(req.url)) {
     file = `${base}/${req.url}`;
   } else {
-    file = `${base}/${req.headers.host}/${req.url}`;
+    let appBase = `${base}/${req.headers.host}`
+    let path = req.url
+
+    if (req.headers.host === 'custom-parser.panels.dev') {
+      appBase = `${appBase}/app`
+      path = path.replace(/^\/app/, '')
+    }
+    file = `${appBase}${path}`;
+
+    console.log('file', file)
 
     if (!existsSync(file)) {
-      file = `${base}/${req.headers.host}/index.html`;
+      file = `${appBase}/index.html`;
     }
   }
 
@@ -32,5 +38,7 @@ console.log(
   `Panels dev server is up!
   Runtimes:
     - Trails: http://trails.panels.dev
-    - Launchpad: http://launchpad.panels.dev`
-);
+    - Launchpad: http://launchpad.panels.dev
+  Tests:
+  - Custom parser: http://custom-parser.panels.dev/app
+`);

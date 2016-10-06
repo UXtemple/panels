@@ -1,120 +1,56 @@
-import normaliseUri from 'panels-normalise-uri';
-import parse from '../parse';
-import test from 'tape';
+import parse from '../parse'
 
-test('#parse', t => {
-  t.deepEquals(
-    parse('https://UXtemple.com/'), [
-      {app: 'UXtemple.com', path: '/', context: 'https://UXtemple.com/', visible: true}
-    ],
-    'basic: one panel https://UXtemple.com/'
-  );
+const whitelist = [/^https?:\/\/((specificDomain\.com)\/[a-zA-Z0-9\-\_]+)(\/.*)/]
 
-  t.deepEquals(
-    parse('https://UXtemple.com/panels'), [
-      {app: 'UXtemple.com', path: '/', context: 'https://UXtemple.com/', visible: true},
-      {app: 'UXtemple.com', path: '/panels', context: 'https://UXtemple.com/panels/', visible: true}
-    ],
-    'basic: many panels https://UXtemple.com/panels'
-  );
+const fixtures = [{
+  uri: 'https://UXtemple.com/',
+  name: 'basic: one panel https://UXtemple.com/'
+},{
+  uri: 'https://UXtemple.com/panels',
+  name: 'basic: many panels https://UXtemple.com/panels'
+}, {
+  uri: 'https://UXtemple.com/panels/../back',
+  name: 'basic: backwards panels https://UXtemple.com/panels/../back'
+}, {
+  uri: 'https://UXtemple.com/https://usepanels.com/',
+  name: 'teleport: basic https://UXtemple.com/https://usepanels.com/'
+}, {
+  uri: 'https://UXtemple.com/)panels',
+  name: 'teleport: slice the root https://UXtemple.com/)panels'
+}, {
+  uri: 'https://UXtemple.com/(panels)',
+  name: 'teleport: slice all panels https://UXtemple.com/(panels) i.e., hidden gems :)?'
+}, {
+  uri: 'https://UXtemple.com/(panels/use)',
+  name: 'teleport: slice multiple panels https://UXtemple.com/(panels/use)'
+}, {
+  uri: 'https://UXtemple.com/(panels)/use',
+  name: 'teleport: slice in between https://UXtemple.com/(panels)/use'
+}, {
+  uri: 'https://UXtemple.com/(panels)/use/(new)',
+  name: 'teleport: slice some parts https://UXtemple.com/(panels)/use/(new)'
+}, {
+  uri: 'https://UXtemple.com/panels)/use/https://usepanels.com/UXtemple',
+  name: 'teleport: slice one app only https://UXtemple.com/panels)/use/https://usepanels.com/UXtemple'
+},
+{
+  uri: 'https://UXtemple.com/panels)/use/https://usepanels.com/)UXtemple',
+  name: 'teleport: slice many apps https://UXtemple.com/panels)/use/https://usepanels.com/)UXtemple'
+}, {
+  uri: 'https://UXtemple.com/panels/https://usepanels.com/..',
+  name: 'teleport: backwards panels https://UXtemple.com/panels/https://usepanels.com/..'
+}, {
+  uri: 'https://specificDomain.com/root/https://UXtemple.com/',
+  name: 'routerWhitelist: one specific domain and a standard domain https://specificDomain.com/root/https://UXtemple.com/',
+  whitelist
+},{
+  uri: 'https://specificDomain.com/root/panelhttps://UXtemple.com/otherPanel',
+  name: 'routerWhitelist: one specific domain and panel and a standard domain with panel https://specificDomain.com/root/panelhttps://UXtemple.com/otherPanel',
+  whitelist
+}]
 
-  t.deepEquals(
-    parse(normaliseUri('https://UXtemple.com/panels/../back')), [
-      {app: 'UXtemple.com', path: '/', context: 'https://UXtemple.com/', visible: true},
-      {app: 'UXtemple.com', path: '/back', context: 'https://UXtemple.com/back/', visible: true}
-    ],
-    'basic: backwards panels https://UXtemple.com/panels/../back'
-  );
-
-  t.deepEquals(
-    parse('https://UXtemple.com/https://usepanels.com/'), [
-      {app: 'UXtemple.com', path: '/', context: 'https://UXtemple.com/', visible: true},
-      {app: 'usepanels.com', path: '/', context: 'https://UXtemple.com/https://usepanels.com/', visible: true}
-    ],
-    'teleport: basic https://UXtemple.com/https://usepanels.com/'
-  );
-
-  t.deepEquals(
-    parse('https://UXtemple.com/)panels'), [
-      {app: 'UXtemple.com', path: '/', context: 'https://UXtemple.com/', visible: false},
-      {app: 'UXtemple.com', path: '/panels', context: 'https://UXtemple.com/)panels/', visible: true}
-    ],
-    'teleport: slice the root https://UXtemple.com/)panels'
-  );
-
-  t.deepEquals(
-    parse('https://UXtemple.com/panels)'), [
-      {app: 'UXtemple.com', path: '/', context: 'https://UXtemple.com/', visible: false},
-      {app: 'UXtemple.com', path: '/panels', context: 'https://UXtemple.com/panels)/', visible: false}
-    ],
-    'teleport: slice all panels https://UXtemple.com/(panels) i.e., hidden gems :)?'
-  );
-
-  t.deepEquals(
-    parse('https://UXtemple.com/(panels)'), [
-      {app: 'UXtemple.com', path: '/', context: 'https://UXtemple.com/', visible: true},
-      {app: 'UXtemple.com', path: '/panels', context: 'https://UXtemple.com/(panels)/', visible: false}
-    ],
-    'teleport: slice final panel https://UXtemple.com/(panels) i.e., hidden gems :)?'
-  );
-
-  t.deepEquals(
-    parse('https://UXtemple.com/(panels/use)'), [
-      {app: 'UXtemple.com', path: '/', context: 'https://UXtemple.com/', visible: true},
-      {app: 'UXtemple.com', path: '/panels', context: 'https://UXtemple.com/(panels/', visible: false},
-      {app: 'UXtemple.com', path: '/panels/use', context: 'https://UXtemple.com/(panels/use)/', visible: false}
-    ],
-    'teleport: slice multiple panels https://UXtemple.com/(panels/use)'
-  );
-
-  t.deepEquals(
-    parse('https://UXtemple.com/(panels)/use'), [
-      {app: 'UXtemple.com', path: '/', context: 'https://UXtemple.com/', visible: true},
-      {app: 'UXtemple.com', path: '/panels', context: 'https://UXtemple.com/(panels)/', visible: false},
-      {app: 'UXtemple.com', path: '/panels/use', context: 'https://UXtemple.com/(panels)/use/', visible: true}
-    ],
-    'teleport: slice in between https://UXtemple.com/(panels)/use'
-  );
-
-  t.deepEquals(
-    parse('https://UXtemple.com/(panels)/use/(new)'), [
-      {app: 'UXtemple.com', path: '/', context: 'https://UXtemple.com/', visible: true},
-      {app: 'UXtemple.com', path: '/panels', context: 'https://UXtemple.com/(panels)/', visible: false},
-      {app: 'UXtemple.com', path: '/panels/use', context: 'https://UXtemple.com/(panels)/use/', visible: true},
-      {app: 'UXtemple.com', path: '/panels/use/new', context: 'https://UXtemple.com/(panels)/use/(new)/', visible: false}
-    ],
-    'teleport: slice some parts https://UXtemple.com/(panels)/use/(new)'
-  );
-
-  t.deepEquals(
-    parse('https://UXtemple.com/panels)/use/https://usepanels.com/UXtemple'), [
-      {app: 'UXtemple.com', path: '/', context: 'https://UXtemple.com/', visible: false},
-      {app: 'UXtemple.com', path: '/panels', context: 'https://UXtemple.com/panels)/', visible: false},
-      {app: 'UXtemple.com', path: '/panels/use', context: 'https://UXtemple.com/panels)/use/', visible: true},
-      {app: 'usepanels.com', path: '/', context: 'https://UXtemple.com/panels)/use/https://usepanels.com/', visible: true},
-      {app: 'usepanels.com', path: '/UXtemple', context: 'https://UXtemple.com/panels)/use/https://usepanels.com/UXtemple/', visible: true},
-    ],
-    'teleport: slice one app only https://UXtemple.com/panels)/use/https://usepanels.com/UXtemple'
-  );
-
-  t.deepEquals(
-    parse('https://UXtemple.com/panels)/use/https://usepanels.com/)UXtemple'), [
-      {app: 'UXtemple.com', path: '/', context: 'https://UXtemple.com/', visible: false},
-      {app: 'UXtemple.com', path: '/panels', context: 'https://UXtemple.com/panels)/', visible: false},
-      {app: 'UXtemple.com', path: '/panels/use', context: 'https://UXtemple.com/panels)/use/', visible: true},
-      {app: 'usepanels.com', path: '/', context: 'https://UXtemple.com/panels)/use/https://usepanels.com/', visible: false},
-      {app: 'usepanels.com', path: '/UXtemple', context: 'https://UXtemple.com/panels)/use/https://usepanels.com/)UXtemple/', visible: true},
-    ],
-    'teleport: slice many apps https://UXtemple.com/panels)/use/https://usepanels.com/)UXtemple'
-  );
-
-  t.deepEquals(
-    parse(normaliseUri('https://UXtemple.com/panels/https://usepanels.com/..')), [
-      {app: 'UXtemple.com', path: '/', context: 'https://UXtemple.com/', visible: true},
-      {app: 'UXtemple.com', path: '/panels', context: 'https://UXtemple.com/panels/', visible: true}
-    ],
-    'teleport: backwards panels https://UXtemple.com/panels/https://usepanels.com/..'
-  );
-
-  t.end();
-});
+fixtures.forEach(f => {
+  test(f.name, () => {
+    expect(parse(f.uri, f.whitelist)).toMatchSnapshot()
+  })
+})

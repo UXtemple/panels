@@ -1,58 +1,58 @@
-import { connect } from 'react-redux';
-import { setViewportWidth } from '../actions';
-import { navigate, updateSettings } from '../../actions';
-import debounce from 'lodash.debounce';
-import FlipMove from 'react-flip-move';
-import getViewportWidth from '../get-viewport-width';
-import React, { Component, PropTypes } from 'react';
-import Route from '../../route';
-import Waiting from 'waiting';
+import { connect } from 'react-redux'
+import { setViewportWidth } from '../actions'
+import { navigate, updateSettings } from '../../actions'
+import debounce from 'lodash.debounce'
+import FlipMove from 'react-flip-move'
+import getViewportWidth from '../get-viewport-width'
+import React, { Component, PropTypes } from 'react'
+import Route from '../../route'
+import Waiting from 'waiting'
 
-const DEBOUNCE = 250;
-const LOADING_SIZE = 100;
-const LOADING_OFFSET = LOADING_SIZE / -2;
-const REBOUND = 500;
+const DEBOUNCE = 250
+const LOADING_SIZE = 100
+const LOADING_OFFSET = LOADING_SIZE / -2
+const REBOUND = 500
 
 export class LaunchpadRuntime extends Component {
   componentDidMount() {
-    window.addEventListener('resize', this.setViewportWidth, false);
-    window.addEventListener('orientationchange', this.setViewportWidth, false);
-    document.addEventListener('visibilitychange', this.onVisibilityChange);
+    window.addEventListener('resize', this.setViewportWidth, false)
+    window.addEventListener('orientationchange', this.setViewportWidth, false)
+    document.addEventListener('visibilitychange', this.onVisibilityChange)
 
-    this.ensureDefault();
+    this.ensureDefault()
   }
 
   componentDidUpdate(prevProps) {
-    const { props } = this;
+    const { props } = this
 
     if (props.focusPanel) {
-      window.document.title = props.focusPanel.title || props.focusPanel.type;
+      window.document.title = props.focusPanel.title || props.focusPanel.type
     }
 
-    this.ensureDefault();
+    this.ensureDefault()
   }
 
   componentWillUnmount() {
-    window.removeEventListener('resize', this.setViewportWidth);
-    window.removeEventListener('orientationchange', this.setViewportWidth);
+    window.removeEventListener('resize', this.setViewportWidth)
+    window.removeEventListener('orientationchange', this.setViewportWidth)
   }
 
   ensureDefault() {
-    const { props } = this;
+    const { props } = this
     if (props.launchpadPanel && !props.mainPanel) {
-      props.navigate(`${props.launchpadRoute.context}/${props.launchpadPanel.default}`);
+      props.navigate(`${props.launchpadRoute.context}/${props.launchpadPanel.default}`)
     }
   }
 
   onVisibilityChange = () => {
     if (document.visibilityState === 'hidden') {
-      window.removeEventListener('resize', this.setViewportWidth);
-      window.removeEventListener('orientationchange', this.setViewportWidth);
+      window.removeEventListener('resize', this.setViewportWidth)
+      window.removeEventListener('orientationchange', this.setViewportWidth)
     } else {
       setTimeout(() => {
-        window.addEventListener('resize', this.setViewportWidth, false);
-        window.addEventListener('orientationchange', this.setViewportWidth, false);
-      }, REBOUND);
+        window.addEventListener('resize', this.setViewportWidth, false)
+        window.addEventListener('orientationchange', this.setViewportWidth, false)
+      }, REBOUND)
     }
   }
 
@@ -65,7 +65,7 @@ export class LaunchpadRuntime extends Component {
       router,
       runtime,
       updateSettings
-    } = this.props;
+    } = this.props
 
     const docked = dockedPanel && (
       <Route
@@ -80,15 +80,14 @@ export class LaunchpadRuntime extends Component {
         updateSettings={updateSettings}
         width={dockedRoute.width}
       />
-    );
+    )
 
     const translateX = dockedPanel ?
-      (dockedPanel.dockLeft ? dockedRoute.width : -dockedRoute.width):
-      0;
+      (dockedPanel.dockLeft ? dockedRoute.width : -dockedRoute.width) : 0
 
-    const transform = `translateX(${ translateX }px)`;
+    const transform = `translateX(${ translateX }px)`
 
-    const mainWidth = runtime.viewportWidth - (dockedPanel && dockedRoute.width || 0);
+    const mainWidth = runtime.viewportWidth - (dockedPanel && dockedRoute.width || 0)
 
     return (
       <div
@@ -156,7 +155,7 @@ export class LaunchpadRuntime extends Component {
             ) : null}
         </FlipMove>
       </div>
-    );
+    )
   }
 
   setViewportWidth = debounce(() => this.props.setViewportWidth(getViewportWidth()), DEBOUNCE)
@@ -166,28 +165,28 @@ const style = {
   height: '100%',
   overflow: 'hidden',
   width: '100%'
-};
+}
 
-const getCanMoveLeft = ({ runtime }) => !runtime.shouldGoMobile && runtime.x > 0;
+const getCanMoveLeft = ({ runtime }) => !runtime.shouldGoMobile && runtime.x > 0
 
 function mapStateToProps({ apps, panels, runtime, router }, props) {
   const launchpadRoute = router.routes.byContext[
     router.routes.items[0]
-  ];
+  ]
   const mainRoute = router.routes.byContext[
     router.routes.items[1]
-  ];
-  let dockedRoute;
-  let dockedRouteIndex;
+  ]
+  let dockedRoute
+  let dockedRouteIndex
   if (router.routes.items.length > 2) {
-    dockedRouteIndex = router.routes.items.length - 1;
+    dockedRouteIndex = router.routes.items.length - 1
     dockedRoute = router.routes.byContext[
       router.routes.items[dockedRouteIndex]
-    ];
+    ]
   }
 
-  const dockedPanel = dockedRoute && panels.byId[dockedRoute.panelId];
-  const mainPanel = mainRoute && panels.byId[mainRoute.panelId];
+  const dockedPanel = dockedRoute && panels.byId[dockedRoute.panelId]
+  const mainPanel = mainRoute && panels.byId[mainRoute.panelId]
 
   return {
     dockedApp: dockedRoute && apps.byName[dockedRoute.app],
@@ -207,12 +206,12 @@ function mapStateToProps({ apps, panels, runtime, router }, props) {
 
     router: router,
     runtime: runtime
-  };
+  }
 }
 
 const mapDispatchToProps = {
   navigate,
   setViewportWidth,
   updateSettings
-};
-export default connect(mapStateToProps, mapDispatchToProps)(LaunchpadRuntime);
+}
+export default connect(mapStateToProps, mapDispatchToProps)(LaunchpadRuntime)
