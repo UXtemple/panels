@@ -1,5 +1,5 @@
-const TRAILING_SLASH_REGEX = /\/$/;
+const TRAILING_SLASH_REGEX = /\/$/
 
-export default function withTrailingSlash(uri) {
-  return TRAILING_SLASH_REGEX.test(uri) ? uri : `${uri}/`;
-}
+export default uri => (
+  TRAILING_SLASH_REGEX.test(uri) ? uri : `${uri}/`
+)

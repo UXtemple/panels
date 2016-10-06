@@ -1,74 +1,74 @@
-import { connect } from 'react-redux';
-import { moveLeft, setViewportWidth, setX } from '../actions';
-import { navigate, toggleExpand, updateSettings } from '../../actions';
-import { snapX } from 'panels-ui';
-import debounce from 'lodash.debounce';
-import FlipMove from 'react-flip-move';
-import getViewportWidth from '../get-viewport-width';
-import MoveLeft from './move-left';
-import React, { Component, PropTypes } from 'react';
-import Route from '../../route';
-import supportsPassiveEvents from '../../utils/supports-passive-events';
-import Waiting from 'waiting';
+import { connect } from 'react-redux'
+import { moveLeft, setViewportWidth, setX } from '../actions'
+import { navigate, toggleExpand, updateSettings } from '../../actions'
+import { snapX } from 'panels-ui'
+import debounce from 'lodash.debounce'
+import FlipMove from 'react-flip-move'
+import getViewportWidth from '../get-viewport-width'
+import MoveLeft from './move-left'
+import React, { Component, PropTypes } from 'react'
+import Route from '../../route'
+import supportsPassiveEvents from '../../utils/supports-passive-events'
+import Waiting from 'waiting'
 
-const DEBOUNCE = 250;
-const LOADING_SIZE = 100;
-const LOADING_OFFSET = LOADING_SIZE / -2;
-const REBOUND = 500;
+const DEBOUNCE = 250
+const LOADING_SIZE = 100
+const LOADING_OFFSET = LOADING_SIZE / -2
+const REBOUND = 500
 
-const scrollEventOptions = supportsPassiveEvents ? { passive: true } : false;
+const scrollEventOptions = supportsPassiveEvents ? { passive: true } : false
 
 export class Runtime extends Component {
   state = {
     autoScroll: null,
     opacity: 1,
     presenter: null
-  };
+  }
 
   componentDidMount() {
-    this.$runtime.addEventListener('scroll', this.setX, scrollEventOptions);
-    window.addEventListener('resize', this.setViewportWidth, false);
-    window.addEventListener('orientationchange', this.setViewportWidth, false);
-    document.addEventListener('visibilitychange', this.onVisibilityChange);
+    this.$runtime.addEventListener('scroll', this.setX, scrollEventOptions)
+    window.addEventListener('resize', this.setViewportWidth, false)
+    window.addEventListener('orientationchange', this.setViewportWidth, false)
+    document.addEventListener('visibilitychange', this.onVisibilityChange)
   }
 
   componentWillReceiveProps(nextProps) {
-    const { props } = this;
+    const { props } = this
 
     if (props.focusPanel !== nextProps.focusPanel || props.runtime.x !== nextProps.runtime.x) {
-      this.toggleOpacityIfPresenting();
+      this.toggleOpacityIfPresenting()
     }
   }
 
   componentDidUpdate(prevProps) {
-    const { props } = this;
+    const { props } = this
 
     if (props.focusPanel) {
-      window.document.title = props.focusPanel.title || props.focusPanel.type;
+      window.document.title = props.focusPanel.title || props.focusPanel.type
     }
 
     if (prevProps.runtime.x !== props.runtime.x) {
-      snapX(this.$runtime, props.runtime.x);
+      snapX(this.$runtime, props.runtime.x)
     }
   }
 
   componentWillUnmount() {
-    this.$runtime.removeEventListener('scroll', this.setX);
-    window.removeEventListener('resize', this.setViewportWidth);
-    window.removeEventListener('orientationchange', this.setViewportWidth);
+    this.$runtime.removeEventListener('scroll', this.setX)
+    window.removeEventListener('resize', this.setViewportWidth)
+    window.removeEventListener('orientationchange', this.setViewportWidth)
   }
 
   onVisibilityChange = () => {
     if (document.visibilityState === 'hidden') {
-      this.$runtime.removeEventListener('scroll', this.setX);
-      window.removeEventListener('resize', this.setViewportWidth);
-      window.removeEventListener('orientationchange', this.setViewportWidth);
+      this.$runtime.removeEventListener('scroll', this.setX)
+      window.removeEventListener('resize', this.setViewportWidth)
+      window.removeEventListener('orientationchange', this.setViewportWidth)
     } else {
       setTimeout(() => {
-        this.$runtime.addEventListener('scroll', this.setX, scrollEventOptions);
-        window.addEventListener('resize', this.setViewportWidth, false);
-        window.addEventListener('orientationchange', this.setViewportWidth, false);
-      }, REBOUND);
+        this.$runtime.addEventListener('scroll', this.setX, scrollEventOptions)
+        window.addEventListener('resize', this.setViewportWidth, false)
+        window.addEventListener('orientationchange', this.setViewportWidth, false)
+      }, REBOUND)
     }
   }
 
@@ -76,18 +76,18 @@ export class Runtime extends Component {
     this.setState({
       opacity: presenter ? 0 : 1,
       presenter
-    });
+    })
   }
 
   render() {
-    const { opacity, presenter } = this.state;
-    const { apps, canMoveLeft, focusPanel, moveLeft, navigate, panels, router, runtime, toggleExpand, updateSettings } = this.props;
-    const { present } = this;
+    const { opacity, presenter } = this.state
+    const { apps, canMoveLeft, focusPanel, moveLeft, navigate, panels, router, runtime, toggleExpand, updateSettings } = this.props
+    const { present } = this
 
     const runtimeStyle = focusPanel ? {
       ...style,
       ...focusPanel.styleBackground
-    } : style;
+    } : style
 
     return (
       <div ref={$e => this.$runtime = $e} style={runtimeStyle}>
@@ -111,9 +111,9 @@ export class Runtime extends Component {
           }}
         >
           {router.routes.items.map((context, i) => {
-            const route = router.routes.byContext[context];
-            const app = apps[route.app];
-            const panel = panels[route.panelId];
+            const route = router.routes.byContext[context]
+            const app = apps[route.app]
+            const panel = panels[route.panelId]
 
             return !route.isVisible ? null : (
               <Route
@@ -133,7 +133,7 @@ export class Runtime extends Component {
                 width={route.width}
                 zIndex={router.routes.items.length - i}
               />
-            );
+            )
           })}
         </FlipMove>
 
@@ -149,44 +149,44 @@ export class Runtime extends Component {
           </div>
           ) : null}
       </div>
-    );
+    )
   }
 
   scrollRuntime = ({ x }) => {
-    const { autoScroll } = this.state;
+    const { autoScroll } = this.state
 
     if (this.$runtime && autoScroll) {
-      this.$runtime.scrollLeft = autoScroll.from + x;
+      this.$runtime.scrollLeft = autoScroll.from + x
     }
-    return null;
+    return null
   }
 
   setViewportWidth = debounce(() => {
-    this.props.setViewportWidth(getViewportWidth());
+    this.props.setViewportWidth(getViewportWidth())
   }, DEBOUNCE)
 
   setX = debounce(event => {
     if (this.state.autoScroll) {
       this.setState({
         autoScroll: null
-      });
+      })
     }
 
-    const nextX = this.$runtime.scrollLeft;
+    const nextX = this.$runtime.scrollLeft
     if (Math.abs(this.props.runtime.x - nextX) > 5) {
-      this.props.setX(nextX);
+      this.props.setX(nextX)
     }
   }, DEBOUNCE)
 
   toggleOpacityIfPresenting = event => {
-    const { state } = this;
+    const { state } = this
 
     if (state.presenter && state.opacity === 0) {
       this.setState({
         opacity: state.opacity === 1 ? 0 : 1
       })
     }
-  };
+  }
 }
 
 const style = {
@@ -194,14 +194,14 @@ const style = {
   overflowX: 'auto',
   overflowY: 'hidden',
   width: '100vw'
-};
+}
 
 const getFocusPanel = ({ panels, router }) => {
-  const focusRoute = router.routes.byContext[router.routes.items[router.focus]];
-  return focusRoute && panels.byId[focusRoute.panelId];
-};
+  const focusRoute = router.routes.byContext[router.routes.items[router.focus]]
+  return focusRoute && panels.byId[focusRoute.panelId]
+}
 
-const getCanMoveLeft = ({ runtime }) => !runtime.shouldGoMobile && runtime.x > 0;
+const getCanMoveLeft = ({ runtime }) => !runtime.shouldGoMobile && runtime.x > 0
 
 function mapStateToProps(state, props) {
   return {
@@ -211,7 +211,7 @@ function mapStateToProps(state, props) {
     panels: state.panels.byId,
     router: state.router,
     runtime: state.runtime
-  };
+  }
 }
 
 const mapDispatchToProps = {
@@ -221,5 +221,5 @@ const mapDispatchToProps = {
   setX,
   toggleExpand,
   updateSettings
-};
-export default connect(mapStateToProps, mapDispatchToProps)(Runtime);
+}
+export default connect(mapStateToProps, mapDispatchToProps)(Runtime)

@@ -1,20 +1,20 @@
-import { navigate } from '../actions';
+import { navigate } from '../actions'
 
 export default function history(store) {
-  const navigateHandler = () => store.dispatch(navigate(location.href));
+  const navigateHandler = () => store.dispatch(navigate(location.href))
 
-  window.addEventListener('popstate', navigateHandler);
+  window.addEventListener('popstate', navigateHandler)
 
   const unsubscribe = store.subscribe(() => {
-    const { uri } = store.getState().router;
+    const { uri } = store.getState().router
 
     if (uri !== location.href) {
-      window.history.pushState(null, null, uri);
+      window.history.pushState(null, null, uri)
     }
-  });
+  })
 
   return function historyOff() {
-    window.removeEventListener('popstate', navigateHandler);
-    unsubscribe();
+    window.removeEventListener('popstate', navigateHandler)
+    unsubscribe()
   }
 }

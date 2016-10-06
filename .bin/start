@@ -3,17 +3,10 @@
 BIN=node_modules/.bin
 
 NODE_ENV=development $BIN/watchify --debug --verbose \
-  --transform [ rollupify --config ./rollup.config.worker.js ] \
-  --outfile playground/panels-worker.js ./worker/worker.js & \
-NODE_ENV=development $BIN/watchify --debug --verbose \
-  --external array-find-index \
-  --external houkou \
-  --external lite-url \
   --external lodash.debounce \
   --external mini-unique-id \
   --external panels-normalise-uri \
   --external panels-ui \
-  --external promise-worker \
   --external react \
   --external react-dom \
   --external react-redux \
@@ -28,14 +21,10 @@ NODE_ENV=development $BIN/watchify --debug --verbose \
   --require ./playground/trails.panels.dev/src.js:trails.panels.dev \
   --outfile playground/trails.panels.dev/app.js & \
 NODE_ENV=development $BIN/watchify --debug --verbose \
-  --external array-find-index \
-  --external houkou \
-  --external lite-url \
   --external lodash.debounce \
   --external mini-unique-id \
   --external panels-normalise-uri \
   --external panels-ui \
-  --external promise-worker \
   --external react \
   --external react-dom \
   --external react-redux \
@@ -50,14 +39,10 @@ NODE_ENV=development $BIN/watchify --debug --verbose \
   --require ./playground/launchpad.panels.dev/src.js:launchpad.panels.dev \
   --outfile playground/launchpad.panels.dev/app.js & \
 NODE_ENV=development $BIN/watchify --debug --verbose \
-  --external array-find-index \
-  --external houkou \
-  --external lite-url \
   --external lodash.debounce \
   --external mini-unique-id \
   --external panels-normalise-uri \
   --external panels-ui \
-  --external promise-worker \
   --external react \
   --external react-dom \
   --external react-redux \
@@ -72,14 +57,10 @@ NODE_ENV=development $BIN/watchify --debug --verbose \
   --require ./playground/launchpad-floating.panels.dev/src.js:launchpad-floating.panels.dev \
   --outfile playground/launchpad-floating.panels.dev/app.js & \
 NODE_ENV=development $BIN/watchify --debug --verbose \
-  --external array-find-index \
-  --external houkou \
-  --external lite-url \
   --external lodash.debounce \
   --external mini-unique-id \
   --external panels-normalise-uri \
   --external panels-ui \
-  --external promise-worker \
   --external react \
   --external react-dom \
   --external react-redux \
@@ -94,14 +75,10 @@ NODE_ENV=development $BIN/watchify --debug --verbose \
   --require ./playground/toc.dev/src.js:toc.dev \
   --outfile playground/toc.dev/app.js & \
 NODE_ENV=development $BIN/watchify --debug --verbose \
-  --external array-find-index \
-  --external houkou \
-  --external lite-url \
   --external lodash.debounce \
   --external mini-unique-id \
   --external panels-normalise-uri \
   --external panels-ui \
-  --external promise-worker \
   --external react \
   --external react-dom \
   --external react-redux \
@@ -116,14 +93,27 @@ NODE_ENV=development $BIN/watchify --debug --verbose \
   --require ./playground/notes.dev/src.js:notes.dev \
   --outfile playground/notes.dev/app.js & \
 NODE_ENV=development $BIN/watchify --debug --verbose \
-  --require array-find-index \
-  --require houkou \
-  --require lite-url \
-  --require lodash.debounce \
+  --external lodash.debounce \
+  --external mini-unique-id \
+  --external panels-normalise-uri \
+  --external panels-ui \
+  --external react \
+  --external react-dom \
+  --external react-redux \
+  --external redux \
+  --external redux-logger \
+  --external ./utils/redux-promise:redux-promise \
+  --external redux-thunk \
+  --external style-to-css \
+  --external waiting \
+  --transform [rollupify --config rollup.config.js] \
+  --transform loose-envify \
+  --require ./playground/custom-parser.panels.dev/app/src.js:custom-parser.panels.dev/app \
+  --outfile playground/custom-parser.panels.dev/app/app.js & \
+NODE_ENV=development $BIN/watchify --debug --verbose \
   --require mini-unique-id \
   --require panels-normalise-uri \
   --require panels-ui \
-  --require promise-worker \
   --require react \
   --require react-dom \
   --require react-redux \

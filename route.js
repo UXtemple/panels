@@ -1,14 +1,14 @@
-import normaliseUri from 'panels-normalise-uri';
-import React, { Component, PropTypes } from 'react';
+import normaliseUri from 'panels-normalise-uri'
+import React, { Component, PropTypes } from 'react'
 
 export default class Route extends Component {
-  state = {};
+  state = {}
 
   isActive = path => {
-    const { route, router, routeIndex } = this.props;
+    const { route, router, routeIndex } = this.props
 
-    const routeAfterContext = router.routes.items[routeIndex + 1];
-    return routeAfterContext && normaliseUri(`${route.context}${path}`) === routeAfterContext;
+    const routeAfterContext = router.routes.items[routeIndex + 1]
+    return routeAfterContext && normaliseUri(`${route.context}${path}`) === routeAfterContext
   }
 
   navigate = (toUri, focus, context, raw = false) => (
@@ -24,10 +24,10 @@ export default class Route extends Component {
   )
 
   componentDidMount() {
-    const { isActive, navigate, toggleExpand, updateSettings } = this;
-    const { isContext, isFocus, panel, present, route, routeIndex, router, store, type } = this.props;
+    const { isActive, navigate, props, toggleExpand, updateSettings } = this
+    const { isContext, isFocus, panel, present, route, routeIndex, router, store, type } = props
 
-    const props = {
+    const typeProps = {
       isActive,
       isContext,
       isFocus,
@@ -40,28 +40,28 @@ export default class Route extends Component {
       store,
       toggleExpand,
       updateSettings
-    };
+    }
 
     try {
-      this.onDestroy = type(this.$el, props, this.subscribe);
+      this.onDestroy = type(this.$el, typeProps, this.subscribe)
 
-      if (this.state.error) {
-        this.setState({ error: false });
-      }
+      // if (this.state.error) {
+      //   this.setState({ error: false })
+      // }
     } catch(error) {
-      console.error('panels:route', error);
+      console.error('panels:route', error)
 
-      this.setState({ error });
+      // this.setState({ error })
     }
   }
 
   componentDidUpdate(prevProps) {
-    const { error } = this.state;
-    const { panel, route, routeIndex, router, type } = this.props;
+    // const { error } = this.state
+    const { panel, route, routeIndex, router, type } = this.props
 
     if (prevProps.type !== type) {
-      this.componentWillUnmount();
-      this.componentDidMount();
+      this.componentWillUnmount()
+      this.componentDidMount()
     } else if (
       typeof this.onChange === 'function' && (
         prevProps.panel !== panel ||
@@ -75,20 +75,20 @@ export default class Route extends Component {
         route,
         routeIndex,
         router
-      });
+      })
     }
   }
 
   componentWillUnmount() {
     if (typeof this.onDestroy === 'function') {
-      this.onDestroy();
+      this.onDestroy()
     }
   }
 
   subscribe = onChange => this.onChange = onChange
 
   render() {
-    const { props, state } = this;
+    const { props, state } = this
 
     return (
       <div
@@ -108,7 +108,7 @@ export default class Route extends Component {
           </pre>
         )}
       </div>
-    );
+    )
   }
 }
 
@@ -119,7 +119,7 @@ const routeShape = PropTypes.shape({
   path: PropTypes.string.isRequired,
   isVisible: PropTypes.bool.isRequired,
   width: PropTypes.number.isRequired
-});
+})
 
 Route.propTypes = {
   isContext: PropTypes.bool,
@@ -152,4 +152,4 @@ Route.propTypes = {
     PropTypes.string
   ]),
   zIndex: PropTypes.number
-};
+}
