@@ -16,6 +16,7 @@ NODE_ENV=development $BIN/browserify --verbose --debug \
   --require panels-normalise-uri \
   --require panels-ui \
   --require react \
+  --require react-addons-transition-group \
   --require react-dom \
   --require react-flip-move \
   --require react-redux \
@@ -25,9 +26,10 @@ NODE_ENV=development $BIN/browserify --verbose --debug \
   --require redux-thunk \
   --require style-to-css \
   --require waiting \
+  --require ./index.dev.js:panels \
   --transform [rollupify --config rollup.config.js] \
   --transform loose-envify \
-  index.dev.js | \
+  --entry index.dev.js | \
   $BIN/exorcist $PANELS.js.map > $PANELS.js
 
 NODE_ENV=production $BIN/browserify --verbose --debug \
@@ -36,6 +38,7 @@ NODE_ENV=production $BIN/browserify --verbose --debug \
   --require panels-normalise-uri \
   --require panels-ui \
   --require react \
+  --require react-addons-transition-group \
   --require react-dom \
   --require react-flip-move \
   --require react-redux \
@@ -44,9 +47,10 @@ NODE_ENV=production $BIN/browserify --verbose --debug \
   --require redux-thunk \
   --require style-to-css \
   --require waiting \
+  --require ./index.dev.js:panels \
   --transform [rollupify --config rollup.config.js] \
   --transform loose-envify \
-  index.js | \
+  --entry index.dev.js | \
   $BIN/exorcist $PANELS-prod.js.map > $PANELS-prod.js &&
   $BIN/uglifyjs --verbose \
     --compress \

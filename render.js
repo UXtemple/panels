@@ -9,7 +9,7 @@ export default function runtimeRender(configureStore, {
   runtime = 'Trails',
   // preferredSnapPoint = 90,
   ...initialState
-}) {
+} = {}) {
   const store = configureStore({
     router: {
       routes: {

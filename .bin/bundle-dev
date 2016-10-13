@@ -6,17 +6,18 @@ BUNDLE=bundle
 VERSION=$1
 PANELS=$BUNDLE/panels-$VERSION
 
-echo "[bundle] bundling panels..."
-mkdir -p $BUNDLE
+echo "[bundle-dev] watching panels..."
 
-echo "[bundle] v${VERSION}..."
-NODE_ENV=development $BIN/browserify --verbose --debug \
+mkdir -p $BUNDLE
+NODE_ENV=development $BIN/watchify --verbose --debug \
   --require lodash.debounce \
   --require mini-unique-id \
   --require panels-normalise-uri \
   --require panels-ui \
   --require react \
+  --require react-addons-transition-group \
   --require react-dom \
+  --require react-flip-move \
   --require react-redux \
   --require redux \
   --require redux-logger \
@@ -24,9 +25,8 @@ NODE_ENV=development $BIN/browserify --verbose --debug \
   --require redux-thunk \
   --require style-to-css \
   --require waiting \
+  --require ./index.dev.js:panels \
   --transform [rollupify --config rollup.config.js] \
   --transform loose-envify \
-  index.dev.js > $PANELS.js
-
-ls -lha $PANELS.*
-echo "[bundle] done"
+  --entry index.dev.js \
+  --outfile $PANELS.js

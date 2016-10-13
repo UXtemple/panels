@@ -1,4 +1,12 @@
 import configureStore from './configure-store'
-import render from './render'
+import renderPanels from './render'
 
-window.addEventListener('load', () => render(configureStore, window.panels || {}))
+export const render = props => (
+  renderPanels(configureStore, props)
+)
+
+if (!window.panelsDontAutoLoad) {
+  window.addEventListener('load', () => {
+    render(configureStore, window.panels)
+  })
+}
