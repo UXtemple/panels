@@ -6,6 +6,7 @@ import history from './router/history'
 import React from 'react'
 
 export default function runtimeRender(configureStore, {
+  snap = true,
   runtime = 'Trails',
   // preferredSnapPoint = 90,
   ...initialState
@@ -27,7 +28,7 @@ export default function runtimeRender(configureStore, {
 
   render(
     <Provider store={store}>
-      <Runtime />
+      <Runtime snap={snap} />
     </Provider>,
     document.getElementById('root')
   )

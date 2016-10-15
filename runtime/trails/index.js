@@ -26,7 +26,9 @@ export class Runtime extends Component {
   }
 
   componentDidMount() {
-    this.$runtime.addEventListener('scroll', this.setX, scrollEventOptions)
+    if (this.props.snap) {
+      this.$runtime.addEventListener('scroll', this.setX, scrollEventOptions)
+    }
     window.addEventListener('resize', this.setViewportWidth, false)
     window.addEventListener('orientationchange', this.setViewportWidth, false)
     document.addEventListener('visibilitychange', this.onVisibilityChange)
@@ -47,25 +49,31 @@ export class Runtime extends Component {
       window.document.title = props.focusPanel.title || props.focusPanel.type
     }
 
-    if (prevProps.runtime.x !== props.runtime.x) {
+    if (props.snap && prevProps.runtime.x !== props.runtime.x) {
       snapX(this.$runtime, props.runtime.x)
     }
   }
 
   componentWillUnmount() {
-    this.$runtime.removeEventListener('scroll', this.setX)
+    if (this.props.snap) {
+      this.$runtime.removeEventListener('scroll', this.setX)
+    }
     window.removeEventListener('resize', this.setViewportWidth)
     window.removeEventListener('orientationchange', this.setViewportWidth)
   }
 
   onVisibilityChange = () => {
     if (document.visibilityState === 'hidden') {
-      this.$runtime.removeEventListener('scroll', this.setX)
+      if (this.props.snap) {
+        this.$runtime.removeEventListener('scroll', this.setX)
+      }
       window.removeEventListener('resize', this.setViewportWidth)
       window.removeEventListener('orientationchange', this.setViewportWidth)
     } else {
       setTimeout(() => {
-        this.$runtime.addEventListener('scroll', this.setX, scrollEventOptions)
+        if (this.props.snap) {
+          this.$runtime.addEventListener('scroll', this.setX, scrollEventOptions)
+        }
         window.addEventListener('resize', this.setViewportWidth, false)
         window.addEventListener('orientationchange', this.setViewportWidth, false)
       }, REBOUND)
@@ -81,7 +89,7 @@ export class Runtime extends Component {
 
   render() {
     const { opacity, presenter } = this.state
-    const { apps, canMoveLeft, focusPanel, moveLeft, navigate, panels, router, runtime, toggleExpand, updateSettings } = this.props
+    const { apps, canMoveLeft, focusPanel, moveLeft, navigate, panels, router, runtime, snap, toggleExpand, updateSettings } = this.props
     const { present } = this
 
     const runtimeStyle = focusPanel ? {
@@ -91,7 +99,7 @@ export class Runtime extends Component {
 
     return (
       <div ref={$e => this.$runtime = $e} style={runtimeStyle}>
-        {canMoveLeft && <MoveLeft onClick={moveLeft} snapPoint={runtime.snapPoint} />}
+        {canMoveLeft && snap && <MoveLeft onClick={moveLeft} snapPoint={runtime.snapPoint} />}
 
         {presenter}
 
@@ -166,6 +174,8 @@ export class Runtime extends Component {
   }, DEBOUNCE)
 
   setX = debounce(event => {
+    if (!this.props.snap) return
+
     if (this.state.autoScroll) {
       this.setState({
         autoScroll: null
