@@ -1,27 +1,28 @@
-import { Teleport, Panel, wrap } from 'panels-ui';
+import Horizontal from '../../blocks/horizontal.js'
 import React, { Component } from 'react';
+import Vertical from '../../blocks/vertical.js'
 
-const Notes = ({ note, panels: { route } }) => (
-  <Panel style={{ backgroundColor: '#00ff00', fontFamily: 'sans-serif', fontSize: 125, padding: 20, width: route.width }}>
+const Notes = ({ width }) => (
+  <Vertical style={{ backgroundColor: '#00ff00', fontFamily: 'sans-serif', fontSize: 125, padding: 20, width }}>
     Notes
 
-    <Teleport style={styleAction} to={'../content-1/note-1'}>Note 1 in Content 1</Teleport>
-    <Teleport style={styleAction} to={'../content-1/note-2'}>Note 2 in Content 1</Teleport>
-    <Teleport style={styleAction} to={'../content-2/note-3'}>Note 3 in Content 2</Teleport>
-    <Teleport style={styleAction} to={'../content-2/note-4'}>Note 4 in Content 2</Teleport>
-    <Teleport style={styleAction} to={'../content-2/note-5'}>Note 5 in Content 2</Teleport>
-  </Panel>
+    <Horizontal style={styleAction} teleportTo={'../content-1/note-1'}>Note 1 in Content 1</Horizontal>
+    <Horizontal style={styleAction} teleportTo={'../content-1/note-2'}>Note 2 in Content 1</Horizontal>
+    <Horizontal style={styleAction} teleportTo={'../content-2/note-3'}>Note 3 in Content 2</Horizontal>
+    <Horizontal style={styleAction} teleportTo={'../content-2/note-4'}>Note 4 in Content 2</Horizontal>
+    <Horizontal style={styleAction} teleportTo={'../content-2/note-5'}>Note 5 in Content 2</Horizontal>
+  </Vertical>
 );
 
-const Note = ({ note, panels: { route } }) => (
-  <Panel style={{ backgroundColor: '#00ff00', fontFamily: 'sans-serif', fontSize: 125, padding: 20, width: route.width }}>
+const Note = ({ note, width }) => (
+  <Vertical style={{ backgroundColor: '#00ff00', fontFamily: 'sans-serif', fontSize: 125, padding: 20, width }}>
     { note }
-  </Panel>
+  </Vertical>
 );
 
 export const types = {
-  'Note': wrap(Note),
-  'Notes': wrap(Notes)
+  Note,
+  Notes
 }
 
 export const panels = {

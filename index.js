@@ -7,6 +7,6 @@ export const render = props => (
 
 if (!window.panelsDontAutoLoad) {
   window.addEventListener('load', () => {
-    render(configureStore, window.panels)
+    render(window.panels)
   })
 }

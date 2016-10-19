@@ -1,12 +1,16 @@
 import { connect } from 'react-redux'
-import { setViewportWidth } from '../actions'
-import { navigate, updateSettings } from '../../actions'
+import { navigate, updateSettings } from '../../actions.js'
+import { setViewportWidth } from '../actions.js'
+import AnimateGroup from '../../blocks/animate-group.js'
+import BaseStyle from '../base-style.js'
 import debounce from 'lodash.debounce'
 import FlipMove from 'react-flip-move'
-import getViewportWidth from '../get-viewport-width'
-import React, { Component, PropTypes } from 'react'
-import Route from '../../route'
-import Waiting from 'waiting'
+import getViewportWidth from '../get-viewport-width.js'
+import Horizontal from '../../blocks/horizontal.js'
+import Knocking from '../../blocks/knocking.js'
+import React, { Component } from 'react'
+import Route from '../../route.js'
+import Vertical from '../../blocks/vertical.js'
 
 const DEBOUNCE = 250
 const LOADING_SIZE = 100
@@ -76,24 +80,25 @@ export class LaunchpadRuntime extends Component {
         routeIndex={dockedRouteIndex}
         router={router}
         store={dockedApp.store}
-        type={dockedApp.types[dockedPanel.type]}
+        Type={dockedApp.types[dockedPanel.type]}
         updateSettings={updateSettings}
         width={dockedRoute.width}
       />
     )
 
-    const translateX = dockedPanel ?
-      (dockedPanel.dockLeft ? dockedRoute.width : -dockedRoute.width) : 0
-
-    const transform = `translateX(${ translateX }px)`
-
-    const mainWidth = runtime.viewportWidth - (dockedPanel && dockedRoute.width || 0)
+    const mainWidth = runtime.viewportWidth - ((dockedRoute && dockedRoute.width) || 0)
 
     return (
-      <div
+      <Vertical
         ref={$e => this.$runtime = $e}
-        style={style}
+        style={{
+          height: '100%',
+          overflow: 'hidden',
+          width: '100%'
+        }}
       >
+        <BaseStyle />
+
         {launchpadPanel && (
           <Route
             navigate={navigate}
@@ -106,23 +111,23 @@ export class LaunchpadRuntime extends Component {
               height: launchpadPanel.height || 0,
               ...launchpadPanel.style
             }}
-            type={launchpadApp.types[launchpadPanel.type]}
+            Type={launchpadApp.types[launchpadPanel.type]}
             updateSettings={updateSettings}
             width={'auto'}
           />
         )}
 
-        <FlipMove
-          duration={200}
-          enterAnimation={'fade'}
-          leaveAnimation={'fade'}
+        <AnimateGroup
+          component={Horizontal}
+          enter={{ animation: 'transition.slideLeftIn' }}
+          leave={{ animation: 'transition.fadeOut' }}
           style={{
             flexDirection: 'row',
             height: `calc(100% - ${(launchpadPanel && launchpadPanel.height) || 0}px)`,
             overflow: 'hidden',
             width: '100vw'
-          }}>
-
+          }}
+        >
           {dockedPanel && dockedPanel.dockLeft && docked}
 
           {mainPanel && (
@@ -134,40 +139,33 @@ export class LaunchpadRuntime extends Component {
               routeIndex={1}
               router={router}
               store={mainApp.store}
-              type={mainApp.types[mainPanel.type]}
+              Type={mainApp.types[mainPanel.type]}
               updateSettings={updateSettings}
               width={mainWidth}
             />
           )}
 
           {dockedPanel && !dockedPanel.dockLeft && docked}
+        </AnimateGroup>
 
-          {router.isLoading ? (
-            <div
-              style={{
-                justifyContent: 'center',
-                left: LOADING_OFFSET,
-                marginTop: LOADING_OFFSET
-              }}
-            >
-              <Waiting size={LOADING_SIZE} />
-            </div>
-            ) : null}
-        </FlipMove>
-      </div>
+        {router.isLoading ? (
+          <Vertical
+            style={{
+              justifyContent: 'center',
+              position: 'absolute',
+              left: LOADING_OFFSET,
+              top: LOADING_OFFSET
+            }}
+          >
+            <Knocking size={LOADING_SIZE} />
+          </Vertical>
+          ) : null}
+      </Vertical>
     )
   }
 
   setViewportWidth = debounce(() => this.props.setViewportWidth(getViewportWidth()), DEBOUNCE)
 }
-
-const style = {
-  height: '100%',
-  overflow: 'hidden',
-  width: '100%'
-}
-
-const getCanMoveLeft = ({ runtime }) => !runtime.shouldGoMobile && runtime.x > 0
 
 function mapStateToProps({ apps, panels, runtime, router }, props) {
   const launchpadRoute = router.routes.byContext[
@@ -215,3 +213,8 @@ const mapDispatchToProps = {
   updateSettings
 }
 export default connect(mapStateToProps, mapDispatchToProps)(LaunchpadRuntime)
+
+          // duration={200}
+          // enterAnimation='fade'
+          // leaveAnimation='fade'
+

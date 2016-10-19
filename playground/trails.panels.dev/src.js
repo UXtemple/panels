@@ -1,13 +1,18 @@
-import { Expand, Teleport, Panel, wrap } from 'panels-ui';
-import React, { Component, PropTypes } from 'react';
+import { VelocityComponent, VelocityTransitionGroup } from 'velocity-react'
+import debounce from 'lodash.debounce'
+import Expand from '../expand.js'
+import Horizontal from '../../blocks/horizontal.js'
+import React, { Component, PropTypes } from 'react'
+import text from './text.js'
+import Text from '../../blocks/text.js'
+import Vertical from '../../blocks/vertical.js'
 
 const Content = (props, context) => (
-  <div style={{marginTop: 25}}>
-    "Captain Ahab," said Tashtego, "that white whale must be the same that some call Moby Dick." "Moby Dick?" shouted Ahab. "Do ye know the white whale then, Tash?" "Does he fan-tail a little curious, sir, before he goes down?" said the Gay-Header deliberately. "And has he a curious spout, too," said Daggoo, "very bushy, even for a parmacetty, and mighty quick, Captain Ahab?" "And he have one, two, three&mdash;oh! good many iron in him hide, too, Captain," cried Queequeg disjointedly, "all twiske-tee be-twisk, like him&mdash;him&mdash;" faltering hard for a word, and screwing his hand round and round as though uncorking a bottle&mdash;"like him&mdash;him&mdash;" "Corkscrew!" cried Ahab, "aye, Queequeg, the harpoons lie all twisted and wrenched in him; aye, Daggoo, his spout is a big one, like a whole shock of wheat, and white as a pile of our Nantucket wool after the great annual sheep-shearing; aye, Tashtego, and he fan-tails like a split jib in a squall. Death and devils! men, it is Moby Dick ye have seen&mdash;Moby Dick&mdash;Moby Dick!" "Captain Ahab," said Starbuck, who, with Stubb and Flask, had thus far been eyeing his superior with increasing surprise, but at last seemed struck with a thought which somewhat explained all the wonder. "Captain Ahab, I have heard of Moby Dick&mdash;but it was not Moby Dick that took off thy leg?" "Who told thee that?" cried Ahab; then pausing, "Aye, Starbuck; aye, my hearties all round; it was Moby Dick that dismasted me; Moby Dick that brought me to this dead stump I stand on now. Aye, aye," he shouted with a terrific, loud, animal sob, like that of a heart-stricken moose; "Aye, aye! it was that accursed white whale that razeed me; made a poor pegging lubber of me for ever and a day!" Then tossing both arms, with measureless imprecations he shouted out: "Aye, aye! and I'll chase him round Good Hope, and round the Horn, and round the Norway Maelstrom, and round perdition's flames before I give him up. And this is what ye have shipped for, men! to chase that white whale on both sides of land, and over all sides of earth, till he spouts black blood and rolls fin out. What say ye, men, will ye splice hands on it, now? I think ye do look brave." "Aye, aye!" shouted the harpooneers and seamen, running closer to the excited old man: "A sharp eye for the white whale; a sharp lance for Moby Dick!" "God bless ye," he seemed to half sob and half shout. "God bless ye, men. Steward! go draw the great measure of grog. But what's this long face about, Mr. Starbuck; wilt thou not chase the white whale? art not game for Moby Dick?" "I am game for his crooked jaw, and for the jaws of Death too, Captain Ahab, if it fairly comes in the way of the business we follow; but I came here to hunt whales, not my commander's vengeance. How many barrels will thy vengeance yield thee even if thou gettest it, Captain Ahab? it will not fetch thee much in our Nantucket market." "Nantucket market! Hoot! But come closer, Starbuck; thou requirest a little lower layer. If money's to be the measurer, man, and the accountants have computed their great counting-house the globe, by girdling it with guineas, one to every three parts of an inch; then, let me tell thee, that my vengeance will fetch a great premium HERE!" "He smites his chest," whispered Stubb, "what's that for? methinks it rings most vast, but hollow." "Vengeance on a dumb brute!" cried Starbuck, "that simply smote thee from blindest instinct! Madness! To be enraged with a dumb thing, Captain Ahab, seems blasphemous." "Hark ye yet again&mdash;the little lower layer. All visible objects, man, are but as pasteboard masks. But in each event&mdash;in the living act, the undoubted deed&mdash;there, some unknown but still reasoning thing puts forth the mouldings of its features from behind the unreasoning mask. If man will strike, strike through the mask! How can the prisoner reach outside except by thrusting through the wall? To me, the white whale is that wall, shoved near to me. Sometimes I think there's naught beyond. But 'tis enough. He tasks me; he heaps me; I see in him outrageous strength, with an inscrutable malice sinewing it. That inscrutable thing is chiefly what I hate; and be the white whale agent, or be the white whale principal, I will wreak that hate upon him."Captain Ahab," said Tashtego, "that white whale must be the same that some call Moby Dick." "Moby Dick?" shouted Ahab. "Do ye know the white whale then, Tash?" "Does he fan-tail a little curious, sir, before he goes down?" said the Gay-Header deliberately. "And has he a curious spout, too," said Daggoo, "very bushy, even for a parmacetty, and mighty quick, Captain Ahab?" "And he have one, two, three&mdash;oh! good many iron in him hide, too, Captain," cried Queequeg disjointedly, "all twiske-tee be-twisk, like him&mdash;him&mdash;" faltering hard for a word, and screwing his hand round and round as though uncorking a bottle&mdash;"like him&mdash;him&mdash;" "Corkscrew!" cried Ahab, "aye, Queequeg, the harpoons lie all twisted and wrenched in him; aye, Daggoo, his spout is a big one, like a whole shock of wheat, and white as a pile of our Nantucket wool after the great annual sheep-shearing; aye, Tashtego, and he fan-tails like a split jib in a squall. Death and devils! men, it is Moby Dick ye have seen&mdash;Moby Dick&mdash;Moby Dick!" "Captain Ahab," said Starbuck, who, with Stubb and Flask, had thus far been eyeing his superior with increasing surprise, but at last seemed struck with a thought which somewhat explained all the wonder. "Captain Ahab, I have heard of Moby Dick&mdash;but it was not Moby Dick that took off thy leg?" "Who told thee that?" cried Ahab; then pausing, "Aye, Starbuck; aye, my hearties all round; it was Moby Dick that dismasted me; Moby Dick that brought me to this dead stump I stand on now. Aye, aye," he shouted with a terrific, loud, animal sob, like that of a heart-stricken moose; "Aye, aye! it was that accursed white whale that razeed me; made a poor pegging lubber of me for ever and a day!" Then tossing both arms, with measureless imprecations he shouted out: "Aye, aye! and I'll chase him round Good Hope, and round the Horn, and round the Norway Maelstrom, and round perdition's flames before I give him up. And this is what ye have shipped for, men! to chase that white whale on both sides of land, and over all sides of earth, till he spouts black blood and rolls fin out. What say ye, men, will ye splice hands on it, now? I think ye do look brave." "Aye, aye!" shouted the harpooneers and seamen, running closer to the excited old man: "A sharp eye for the white whale; a sharp lance for Moby Dick!" "God bless ye," he seemed to half sob and half shout. "God bless ye, men. Steward! go draw the great measure of grog. But what's this long face about, Mr. Starbuck; wilt thou not chase the white whale? art not game for Moby Dick?" "I am game for his crooked jaw, and for the jaws of Death too, Captain Ahab, if it fairly comes in the way of the business we follow; but I came here to hunt whales, not my commander's vengeance. How many barrels will thy vengeance yield thee even if thou gettest it, Captain Ahab? it will not fetch thee much in our Nantucket market." "Nantucket market! Hoot! But come closer, Starbuck; thou requirest a little lower layer. If money's to be the measurer, man, and the accountants have computed their great counting-house the globe, by girdling it with guineas, one to every three parts of an inch; then, let me tell thee, that my vengeance will fetch a great premium HERE!" "He smites his chest," whispered Stubb, "what's that for? methinks it rings most vast, but hollow." "Vengeance on a dumb brute!" cried Starbuck, "that simply smote thee from blindest instinct! Madness! To be enraged with a dumb thing, Captain Ahab, seems blasphemous." "Hark ye yet again&mdash;the little lower layer. All visible objects, man, are but as pasteboard masks. But in each event&mdash;in the living act, the undoubted deed&mdash;there, some unknown but still reasoning thing puts forth the mouldings of its features from behind the unreasoning mask. If man will strike, strike through the mask! How can the prisoner reach outside except by thrusting through the wall? To me, the white whale is that wall, shoved near to me. Sometimes I think there's naught beyond. But 'tis enough. He tasks me; he heaps me; I see in him outrageous strength, with an inscrutable malice sinewing it. That inscrutable thing is chiefly what I hate; and be the white whale agent, or be the white whale principal, I will wreak that hate upon him."Captain Ahab," said Tashtego, "that white whale must be the same that some call Moby Dick." "Moby Dick?" shouted Ahab. "Do ye know the white whale then, Tash?" "Does he fan-tail a little curious, sir, before he goes down?" said the Gay-Header deliberately. "And has he a curious spout, too," said Daggoo, "very bushy, even for a parmacetty, and mighty quick, Captain Ahab?" "And he have one, two, three&mdash;oh! good many iron in him hide, too, Captain," cried Queequeg disjointedly, "all twiske-tee be-twisk, like him&mdash;him&mdash;" faltering hard for a word, and screwing his hand round and round as though uncorking a bottle&mdash;"like him&mdash;him&mdash;" "Corkscrew!" cried Ahab, "aye, Queequeg, the harpoons lie all twisted and wrenched in him; aye, Daggoo, his spout is a big one, like a whole shock of wheat, and white as a pile of our Nantucket wool after the great annual sheep-shearing; aye, Tashtego, and he fan-tails like a split jib in a squall. Death and devils! men, it is Moby Dick ye have seen&mdash;Moby Dick&mdash;Moby Dick!" "Captain Ahab," said Starbuck, who, with Stubb and Flask, had thus far been eyeing his superior with increasing surprise, but at last seemed struck with a thought which somewhat explained all the wonder. "Captain Ahab, I have heard of Moby Dick&mdash;but it was not Moby Dick that took off thy leg?" "Who told thee that?" cried Ahab; then pausing, "Aye, Starbuck; aye, my hearties all round; it was Moby Dick that dismasted me; Moby Dick that brought me to this dead stump I stand on now. Aye, aye," he shouted with a terrific, loud, animal sob, like that of a heart-stricken moose; "Aye, aye! it was that accursed white whale that razeed me; made a poor pegging lubber of me for ever and a day!" Then tossing both arms, with measureless imprecations he shouted out: "Aye, aye! and I'll chase him round Good Hope, and round the Horn, and round the Norway Maelstrom, and round perdition's flames before I give him up. And this is what ye have shipped for, men! to chase that white whale on both sides of land, and over all sides of earth, till he spouts black blood and rolls fin out. What say ye, men, will ye splice hands on it, now? I think ye do look brave." "Aye, aye!" shouted the harpooneers and seamen, running closer to the excited old man: "A sharp eye for the white whale; a sharp lance for Moby Dick!" "God bless ye," he seemed to half sob and half shout. "God bless ye, men. Steward! go draw the great measure of grog. But what's this long face about, Mr. Starbuck; wilt thou not chase the white whale? art not game for Moby Dick?" "I am game for his crooked jaw, and for the jaws of Death too, Captain Ahab, if it fairly comes in the way of the business we follow; but I came here to hunt whales, not my commander's vengeance. How many barrels will thy vengeance yield thee even if thou gettest it, Captain Ahab? it will not fetch thee much in our Nantucket market." "Nantucket market! Hoot! But come closer, Starbuck; thou requirest a little lower layer. If money's to be the measurer, man, and the accountants have computed their great counting-house the globe, by girdling it with guineas, one to every three parts of an inch; then, let me tell thee, that my vengeance will fetch a great premium HERE!" "He smites his chest," whispered Stubb, "what's that for? methinks it rings most vast, but hollow." "Vengeance on a dumb brute!" cried Starbuck, "that simply smote thee from blindest instinct! Madness! To be enraged with a dumb thing, Captain Ahab, seems blasphemous." "Hark ye yet again&mdash;the little lower layer. All visible objects, man, are but as pasteboard masks. But in each event&mdash;in the living act, the undoubted deed&mdash;there, some unknown but still reasoning thing puts forth the mouldings of its features from behind the unreasoning mask. If man will strike, strike through the mask! How can the prisoner reach outside except by thrusting through the wall? To me, the white whale is that wall, shoved near to me. Sometimes I think there's naught beyond. But 'tis enough. He tasks me; he heaps me; I see in him outrageous strength, with an inscrutable malice sinewing it. That inscrutable thing is chiefly what I hate; and be the white whale agent, or be the white whale principal, I will wreak that hate upon him.
-    "Captain Ahab," said Tashtego, "that white whale must be the same that some call Moby Dick." "Moby Dick?" shouted Ahab. "Do ye know the white whale then, Tash?" "Does he fan-tail a little curious, sir, before he goes down?" said the Gay-Header deliberately. "And has he a curious spout, too," said Daggoo, "very bushy, even for a parmacetty, and mighty quick, Captain Ahab?" "And he have one, two, three&mdash;oh! good many iron in him hide, too, Captain," cried Queequeg disjointedly, "all twiske-tee be-twisk, like him&mdash;him&mdash;" faltering hard for a word, and screwing his hand round and round as though uncorking a bottle&mdash;"like him&mdash;him&mdash;" "Corkscrew!" cried Ahab, "aye, Queequeg, the harpoons lie all twisted and wrenched in him; aye, Daggoo, his spout is a big one, like a whole shock of wheat, and white as a pile of our Nantucket wool after the great annual sheep-shearing; aye, Tashtego, and he fan-tails like a split jib in a squall. Death and devils! men, it is Moby Dick ye have seen&mdash;Moby Dick&mdash;Moby Dick!" "Captain Ahab," said Starbuck, who, with Stubb and Flask, had thus far been eyeing his superior with increasing surprise, but at last seemed struck with a thought which somewhat explained all the wonder. "Captain Ahab, I have heard of Moby Dick&mdash;but it was not Moby Dick that took off thy leg?" "Who told thee that?" cried Ahab; then pausing, "Aye, Starbuck; aye, my hearties all round; it was Moby Dick that dismasted me; Moby Dick that brought me to this dead stump I stand on now. Aye, aye," he shouted with a terrific, loud, animal sob, like that of a heart-stricken moose; "Aye, aye! it was that accursed white whale that razeed me; made a poor pegging lubber of me for ever and a day!" Then tossing both arms, with measureless imprecations he shouted out: "Aye, aye! and I'll chase him round Good Hope, and round the Horn, and round the Norway Maelstrom, and round perdition's flames before I give him up. And this is what ye have shipped for, men! to chase that white whale on both sides of land, and over all sides of earth, till he spouts black blood and rolls fin out. What say ye, men, will ye splice hands on it, now? I think ye do look brave." "Aye, aye!" shouted the harpooneers and seamen, running closer to the excited old man: "A sharp eye for the white whale; a sharp lance for Moby Dick!" "God bless ye," he seemed to half sob and half shout. "God bless ye, men. Steward! go draw the great measure of grog. But what's this long face about, Mr. Starbuck; wilt thou not chase the white whale? art not game for Moby Dick?" "I am game for his crooked jaw, and for the jaws of Death too, Captain Ahab, if it fairly comes in the way of the business we follow; but I came here to hunt whales, not my commander's vengeance. How many barrels will thy vengeance yield thee even if thou gettest it, Captain Ahab? it will not fetch thee much in our Nantucket market." "Nantucket market! Hoot! But come closer, Starbuck; thou requirest a little lower layer. If money's to be the measurer, man, and the accountants have computed their great counting-house the globe, by girdling it with guineas, one to every three parts of an inch; then, let me tell thee, that my vengeance will fetch a great premium HERE!" "He smites his chest," whispered Stubb, "what's that for? methinks it rings most vast, but hollow." "Vengeance on a dumb brute!" cried Starbuck, "that simply smote thee from blindest instinct! Madness! To be enraged with a dumb thing, Captain Ahab, seems blasphemous." "Hark ye yet again&mdash;the little lower layer. All visible objects, man, are but as pasteboard masks. But in each event&mdash;in the living act, the undoubted deed&mdash;there, some unknown but still reasoning thing puts forth the mouldings of its features from behind the unreasoning mask. If man will strike, strike through the mask! How can the prisoner reach outside except by thrusting through the wall? To me, the white whale is that wall, shoved near to me. Sometimes I think there's naught beyond. But 'tis enough. He tasks me; he heaps me; I see in him outrageous strength, with an inscrutable malice sinewing it. That inscrutable thing is chiefly what I hate; and be the white whale agent, or be the white whale principal, I will wreak that hate upon him.
+  <Vertical style={{ backgroundColor: props.color, marginTop: 25, opacity: props.on ? 1 : 0.5 }} _ref={props._ref}>
+    <Text text={text} />
     { context.scrollTo ? <button onClick={() => context.scrollTo(300)}>scroll to 300</button> : null }
-  </div>
-);
+  </Vertical>
+)
 Content.contextTypes = {
   scrollTo: PropTypes.func
 }
@@ -21,157 +26,195 @@ const style = {
 }
 
 class Lightgreen extends Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      showText: true
+    }
+  }
+
   update() {
     this.props.panels.updateSettings({
       maxWidth: 400,
       width: 200
-    });
+    })
+
+    this.$vHorizontal.runAnimation()
+
+    this.setState({
+      showText: !this.state.showText
+    })
   }
 
   scrollTo = (y) => {
-    this.$scroller.scrollTop = y;
+    this.$scroller.scrollTop = y
   }
 
   getChildContext() {
     return {
       scrollTo: this.scrollTo
-    };
+    }
+  }
+
+  // componentDidMount() {
+  //   this.$scroller.addEventListener
+  // }
+
+  onScroll = debounce(e => {
+    const { redTop:r, greenTop:g, blueTop:b } = this
+    const top = this.$scroller.scrollTop
+
+    console.log(r, g, b)
+
+    let on
+    if (top > r && top < g) {
+      on = 'red'
+    } else if (top > g && top < b) {
+      on = 'green'
+    } else if (top > b) {
+      on = 'blue'
+    }
+
+    this.setState({
+      on
+    })
+  }, 25)
+
+  componentDidUpdate(prevState) {
+    if (prevState.on === this.state.on)  return
+
+    switch (this.state.on) {
+    case 'green':
+        return this.vG.runAnimation()
+    case 'blue':
+        return this.vB.runAnimation()
+    case 'red':
+        return this.vR.runAnimation()
+    }
   }
 
   render() {
+    const { props, state } = this
     return (
-      <Panel style={{ backgroundColor: 'lightgreen' }}>
-        <div style={style.innerWrapper} ref={$e => { this.$scroller = $e }}>
-          width: { this.props.panels.route.width }
-          <button onClick={() => this.update()}>update</button>
-          <Teleport to='a/'
-            context={1}
-            style={{paddingBottom: 10, paddingTop: 10, textDecoration: 'none'}}
-            styleActive={{ backgroundColor: 'white', color: 'lightgreen'}}
-            styleHover={{ backgroundColor: 'lightgreen', color: 'white'}}>{'/a'}</Teleport>
-          <Teleport to='..'>..</Teleport>
+      <Vertical style={{ backgroundColor: state.on, height: '100%', overflowY: 'auto', width: props.width, transition: 'all 0.5s linear' }}>
+        <Vertical style={style.innerWrapper} _ref={$e => { this.$scroller = $e }} onScroll={this.onScroll}>
+          <VelocityTransitionGroup
+            enter={{ animation: "transition.slideUpIn", stagger: 55, drag: true }}
+            leave={{animation: "transition.slideUpOut"}}
+            runOnMount
+          >
+            { state.showText ? <Text text={`width: ${props.width}`} /> : null }
 
-          <Teleport to=')a'>sliced a</Teleport>
-          <Teleport context={0} to='how'>how!</Teleport>
+            <VelocityComponent
+              animation={"callout.tada"}
+              ref={$e => { this.$vHorizontal = $e }}
+            >
+              <Horizontal onClick={() => this.update()}>update</Horizontal>
+            </VelocityComponent>
 
-          <Content />
-          <div onClick={() => this.scrollTo(100) }>scroll</div>
-          <Teleport to='a/'
-            style={{paddingBottom: 10, paddingTop: 10, textDecoration: 'none'}}
-            styleActive={{ backgroundColor: 'white', color: 'lightgreen'}}
-            styleHover={{ backgroundColor: 'lightgreen', color: 'white'}}>{'/a'}</Teleport>
-          <Teleport to='..'>..</Teleport>
-        </div>
+            <Horizontal teleportTo='a/'
+              context={1}
+              style={{paddingBottom: 10, paddingTop: 10, textDecoration: 'none'}}
+              styleActive={{ backgroundColor: 'white', color: 'lightgreen'}}
+              styleHover={{ backgroundColor: 'lightgreen', color: 'white'}}>{'/a'}</Horizontal>
+
+            <Horizontal teleportTo='..'>..</Horizontal>
+
+            <Horizontal teleportTo=')a'>sliced a</Horizontal>
+
+            <VelocityComponent
+              animation={"transition.slideLeftBigIn"}
+              ref={$e => { this.vR = $e }}
+            >
+              <Content _ref={$e => this.redTop = $e ? $e.offsetTop : 0 }/>
+            </VelocityComponent>
+
+            <VelocityComponent
+              animation={"transition.slideLeftBigIn"}
+              ref={$e => { this.vG = $e }}
+            >
+              <Content _ref={$e => this.greenTop = $e ? $e.offsetTop : 0 } />
+            </VelocityComponent>
+
+            <VelocityComponent
+              animation={"transition.slideLeftBigIn"}
+              ref={$e => { this.vB = $e }}
+            >
+              <Content _ref={$e => this.blueTop = $e ? $e.offsetTop : 0 }/>
+            </VelocityComponent>
+
+            <Horizontal onClick={() => this.scrollTo(100) }>scroll</Horizontal>
+
+            <Horizontal teleportTo='a/'
+              style={{paddingBottom: 10, paddingTop: 10, textDecoration: 'none'}}
+              styleActive={{ backgroundColor: 'white', color: 'lightgreen'}}
+              styleHover={{ backgroundColor: 'lightgreen', color: 'white'}}>{'/a'}</Horizontal>
+            <Horizontal teleportTo='..'>..</Horizontal>
+          </VelocityTransitionGroup>
+        </Vertical>
         <Expand />
-      </Panel>
-    );
+      </Vertical>
+    )
   }
 }
 Lightgreen.childContextTypes = {
   scrollTo: PropTypes.func
-};
-
-class How extends Component {
-  componentDidMount() {
-    if (this.props.isFocus) {
-      this.props.present(this.renderPresenter());
-    }
-  }
-
-  componentDidUpdate(prevProps) {
-    const { context, props } = this;
-    if (props.isFocus !== prevProps.isFocus) {
-      props.present(props.isFocus && this.renderPresenter());
-    }
-  }
-
-  componentWillUnmount() {
-    this.props.present();
-  }
-
-  renderPresenter() {
-    return (
-      <video
-        autoPlay
-        loop
-        ref={ $e => this.$presenter = $e }
-        style={{ backgroundColor: 'black', position: 'fixed', left: 0, top: 0, height: '100%', width: '100%' }}
-        src='http://ak2.picdn.net/shutterstock/videos/2909092/preview/stock-footage-beautiful-sunrise-over-the-earth-cities-at-night-hd.mp4'
-      />
-    );
-  }
-
-  render() {
-    return (
-      <Panel style={{ backgroundColor: '#fafafa' }}>
-        <div onClick={this.pausePresenter}>pause</div>
-      </Panel>
-    );
-  }
-
-  pausePresenter = () => {
-    if (this.$presenter.paused) {
-      this.$presenter.play();
-    } else {
-      this.$presenter.pause();
-    }
-  }
 }
 
 export const types = {
-  'Lightgreen': wrap(Lightgreen),
-  'Lightyellow': wrap(props => (
-    <Panel style={{ backgroundColor: 'lightyellow', padding: 20 }}>
-      <Teleport context={0} to='b/'>{'/a/b'}</Teleport>
-      <Teleport to='http://panels.dev/'>{'teleport /'}</Teleport>
-      <Teleport to='..'>..</Teleport>
+  Lightgreen,
+  Lightyellow: props => (
+    <Vertical style={{ backgroundColor: 'lightyellow', height: '100%', overflowY: 'auto', padding: 20, width: props.width }}>
+      <Horizontal context={0} teleportTo='b/'>{'/a/b'}</Horizontal>
+      <Horizontal teleportTo='http://panels.dev/'>{'teleport /'}</Horizontal>
+      <Horizontal teleportTo='..'>..</Horizontal>
       <Content />
-    </Panel>
-  )),
-  'Lightblue': wrap(props => (
-    <Panel style={{ backgroundColor: 'lightblue', padding: 20 }}>
-      <Teleport to='c/'>{'/a/b/c'}</Teleport>
-      <Teleport to='..'>..</Teleport>
+    </Vertical>
+  ),
+  Lightblue: props => (
+    <Vertical style={{ backgroundColor: 'lightblue', padding: 20, width: props.width }}>
+      <Horizontal teleportTo='c/'>{'/a/b/c'}</Horizontal>
+      <Horizontal teleportTo='..'>..</Horizontal>
       <Content />
-    </Panel>
-  )),
-  'Lightpink': wrap(props => (
-    <Panel style={{ backgroundColor: 'lightpink', height: '100%' }}>
-      <div style={style.innerWrapper}>
-        <Teleport to='d/'>{'/a/b/c/d'}</Teleport>
-        <Teleport to='..'>..</Teleport>
+    </Vertical>
+  ),
+  Lightpink: props => (
+    <Vertical style={{ backgroundColor: 'lightpink', height: '100%', width: props.width }}>
+      <Vertical style={style.innerWrapper}>
+        <Horizontal teleportTo='d/'>{'/a/b/c/d'}</Horizontal>
+        <Horizontal teleportTo='..'>..</Horizontal>
         <Content />
-      </div>
+      </Vertical>
       <Expand />
-    </Panel>
-  )),
-  'Fuchsia': wrap(props => (
-    <Panel style={{ backgroundColor: 'fuchsia', padding: 20 }}>
-      <Teleport to='e/'>{'/a/b/c/d/e'}</Teleport>
-      <Teleport to='..'>..</Teleport>
+    </Vertical>
+  ),
+  Fuchsia: props => (
+    <Vertical style={{ backgroundColor: 'fuchsia', padding: 20, width: props.width }}>
+      <Horizontal teleportTo='e/'>{'/a/b/c/d/e'}</Horizontal>
+      <Horizontal teleportTo='..'>..</Horizontal>
       <Content />
-    </Panel>
-  )),
-  'Red': wrap(props => (
-    <Panel style={{ backgroundColor: 'red' }}>
-      <Teleport to='f/'>{'/a/b/c/d/e/f'}</Teleport>
-      <Teleport to='..'>..</Teleport>
+    </Vertical>
+  ),
+  Red: props => (
+    <Vertical style={{ backgroundColor: 'red', width: props.width }}>
+      <Horizontal teleportTo='f/'>{'/a/b/c/d/e/f'}</Horizontal>
+      <Horizontal teleportTo='..'>..</Horizontal>
       <Content />
-    </Panel>
-  )),
-  'Blue': wrap(props => (
-    <Panel style={{ backgroundColor: 'blue' }}>
-      <Teleport to='..'>..</Teleport>
+    </Vertical>
+  ),
+  Blue: props => (
+    <Vertical style={{ backgroundColor: 'blue', width: props.width }}>
+      <Horizontal teleportTo='..'>..</Horizontal>
       <Content />
-    </Panel>
-  )),
-  'Random': wrap(props => (
-    <Panel style={{ border: '1px solid black' }}>
+    </Vertical>
+  ),
+  Random: props => (
+    <Vertical style={{ border: '1px solid black', width: props.width }}>
       random { props.id }
-    </Panel>
-  )),
-  How: wrap(How)
-};
+    </Vertical>
+  )
+}
 
 export const panels = {
   '/': {type: 'Lightgreen', maxWidth: 720, styleBackground: {backgroundColor: '#f2f2f2'}, title: 'main'},
@@ -184,14 +227,12 @@ export const panels = {
   '/random:id': ({ id }) => ({
     context: 0,
     title: id,
-    props,
     type: 'Random',
     width: 360 * parseFloat(id, 10)
-  }),
-  '/how': { type: 'How' }
-};
+  })
+}
 
-export const lookup = ['/random:id'];
+export const lookup = ['/random:id']
 
 export const notify = action => {
   console.info('notified', action)

@@ -1,9 +1,7 @@
-import normaliseUri from 'panels-normalise-uri'
+import normaliseUri from './utils/normalise-uri/index.js'
 import React, { Component, PropTypes } from 'react'
 
 export default class Route extends Component {
-  state = {}
-
   isActive = path => {
     const { route, router, routeIndex } = this.props
 
@@ -23,9 +21,108 @@ export default class Route extends Component {
     this.props.updateSettings(this.props.route.context, settings)
   )
 
-  componentDidMount() {
+  getChildContext() {
+    const { isActive, navigate, toggleExpand, updateSettings } = this
+    const { isContext, isFocus, panel, route, routeIndex, router } = this.props
+
+    return {
+      isActive,
+      isContext,
+      isFocus,
+      navigate,
+      panel,
+      route,
+      routeIndex,
+      router,
+      toggleExpand,
+      updateSettings
+    }
+  }
+
+  render() {
     const { isActive, navigate, props, toggleExpand, updateSettings } = this
-    const { isContext, isFocus, panel, present, route, routeIndex, router, store, type } = props
+
+    if (props.panel.isCustom) {
+      return <CustomRoute {...props} />
+    } else {
+      const { Type, width, ...rest } = props
+
+      // the order below is correct, width can be overwritten but panels shouldn't be
+      return (
+        <Type
+          width={width}
+          {...props.panel.props}
+          panels={{
+            ...rest,
+            isActive,
+            navigate,
+            toggleExpand,
+            updateSettings
+          }}
+        />
+      )
+    }
+  }
+}
+
+const routeShape = PropTypes.shape({
+  app: PropTypes.string.isRequired,
+  context: PropTypes.string.isRequired,
+  panelId: PropTypes.string.isRequired,
+  path: PropTypes.string.isRequired,
+  isVisible: PropTypes.bool.isRequired,
+  width: PropTypes.number.isRequired
+})
+
+Route.childContextTypes = {
+  isActive: PropTypes.func.isRequired,
+  isContext: PropTypes.bool,
+  isFocus: PropTypes.bool,
+  navigate: PropTypes.func.isRequired,
+  panel: PropTypes.object.isRequired,
+  route: routeShape.isRequired,
+  routeIndex: PropTypes.number.isRequired,
+  router: PropTypes.shape({
+    routes: PropTypes.shape({
+      byContext: PropTypes.objectOf(routeShape),
+      items: PropTypes.arrayOf(PropTypes.string)
+    }),
+    uri: PropTypes.string.isRequired
+  }),
+  toggleExpand: PropTypes.func.isRequired,
+  updateSettings: PropTypes.func.isRequired
+}
+Route.propTypes = {
+  isContext: PropTypes.bool,
+  isFocus: PropTypes.bool,
+  navigate: PropTypes.func.isRequired,
+  panel: PropTypes.object.isRequired,
+  route: routeShape.isRequired,
+  routeIndex: PropTypes.number.isRequired,
+  router: PropTypes.shape({
+    routes: PropTypes.shape({
+      byContext: PropTypes.objectOf(routeShape),
+      items: PropTypes.arrayOf(PropTypes.string)
+    }),
+    uri: PropTypes.string.isRequired
+  }),
+  store: PropTypes.any,
+  Type: PropTypes.func.isRequired,
+  toggleExpand: PropTypes.func,
+  updateSettings: PropTypes.func.isRequired,
+  width: PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.string
+  ]),
+  zIndex: PropTypes.number
+}
+
+class CustomRoute extends Component {
+  state = {}
+
+  componentDidMount() {
+    const { isActive, navigate, toggleExpand, updateSettings } = this
+    const { isContext, isFocus, panel, route, routeIndex, router, store, Type } = this.props
 
     const typeProps = {
       isActive,
@@ -33,7 +130,6 @@ export default class Route extends Component {
       isFocus,
       navigate,
       panel,
-      present,
       route,
       routeIndex,
       router,
@@ -43,20 +139,13 @@ export default class Route extends Component {
     }
 
     try {
-      this.onDestroy = type(this.$el, typeProps, this.subscribe)
-
-      // if (this.state.error) {
-      //   this.setState({ error: false })
-      // }
+      this.onDestroy = Type(this.$el, typeProps, this.subscribe)
     } catch(error) {
       console.error('panels:route', error)
-
-      // this.setState({ error })
     }
   }
 
   componentDidUpdate(prevProps) {
-    // const { error } = this.state
     const { panel, route, routeIndex, router, type } = this.props
 
     if (prevProps.type !== type) {
@@ -110,46 +199,4 @@ export default class Route extends Component {
       </div>
     )
   }
-}
-
-const routeShape = PropTypes.shape({
-  app: PropTypes.string.isRequired,
-  context: PropTypes.string.isRequired,
-  panelId: PropTypes.string.isRequired,
-  path: PropTypes.string.isRequired,
-  isVisible: PropTypes.bool.isRequired,
-  width: PropTypes.number.isRequired
-})
-
-Route.propTypes = {
-  isContext: PropTypes.bool,
-  isFocus: PropTypes.bool,
-  navigate: PropTypes.func.isRequired,
-  panel: PropTypes.object.isRequired,
-  present: PropTypes.func,
-  route: routeShape.isRequired,
-  routeIndex: PropTypes.number.isRequired,
-  router: PropTypes.shape({
-    routes: PropTypes.shape({
-      byContext: PropTypes.objectOf(routeShape),
-      items: PropTypes.arrayOf(PropTypes.string)
-    }),
-    uri: PropTypes.string.isRequired
-  }),
-  store: PropTypes.oneOfType([
-    PropTypes.bool,
-    PropTypes.shape({
-      dispatch: PropTypes.func.isRequired,
-      getState: PropTypes.func.isRequired,
-      subscribe: PropTypes.func.isRequired
-    })
-  ]).isRequired,
-  type: PropTypes.func.isRequired,
-  toggleExpand: PropTypes.func,
-  updateSettings: PropTypes.func.isRequired,
-  width: PropTypes.oneOfType([
-    PropTypes.number,
-    PropTypes.string
-  ]),
-  zIndex: PropTypes.number
 }

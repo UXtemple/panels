@@ -1,22 +1,40 @@
-import { Panel, wrap } from 'panels-ui';
-import { Horizontal, Text } from 'usepages-blocks';
-import normaliseUri from 'panels-normalise-uri';
-import React, { Component, PropTypes } from 'react';
+import normaliseUri from '../../utils/normalise-uri/index.js'
+import Horizontal from '../../blocks/horizontal.js'
+import React, { Component, PropTypes } from 'react'
+import Text from '../../blocks/text.js'
+import Vertical from '../../blocks/vertical.js'
 
+const styleAction = {
+  backgroundColor: '#f0f0f0',
+  borderRadius: 5,
+  color: '#000000',
+  cursor: 'pointer',
+  fontFamily: 'sans-serif',
+  fontSize: 20,
+  justifyContent: 'center',
+  margin: 2.5,
+  padding: '10px 20px',
+  textDecoration: 'none',
+  textTransform: 'uppercase'
+}
+const styleActionActive = {
+  backgroundColor: '#000000',
+  color: '#f0f0f0'
+}
 const getTeleportTo = ({ path, route, routeIndex, router }) => {
-  const prevRouteContext = router.routes.items[routeIndex - 1];
+  const prevRouteContext = router.routes.items[routeIndex - 1]
 
-  const currentPathToRemainInContext = route.context.replace(prevRouteContext, '');
+  const currentPathToRemainInContext = route.context.replace(prevRouteContext, '')
   const dotsToGoBack = currentPathToRemainInContext.split('/')
-    .map((s, i) => (i > 0 ? '../' : '')).join('');
+    .map((s, i) => (i > 0 ? '../' : '')).join('')
 
-  return `${dotsToGoBack}${path}/${currentPathToRemainInContext}`;
-};
+  return `${dotsToGoBack}${path}/${currentPathToRemainInContext}`
+}
 
 class Toc extends Component {
   isActive = path => {
-    const { route, router } = this.props.panels;
-    return normaliseUri(`${route.context}${path}`) === router.uri;
+    const { route, router } = this.props.panels
+    return normaliseUri(`${route.context}${path}`) === router.uri
   }
 
   getChildContext() {
@@ -26,17 +44,17 @@ class Toc extends Component {
   }
 
   render() {
-    const { list, panels: { route, routeIndex, router } } = this.props;
+    const { list, panels: { route, routeIndex, router }, width } = this.props
 
     return (
-      <Panel
+      <Vertical
         style={{
           backgroundColor: '#3D3DF4',
           color: '#ffffff',
           fontFamily: 'sans-serif',
           fontSize: 125,
           padding: 20,
-          width: route.width
+          width
         }}
       >
         Toc
@@ -51,8 +69,8 @@ class Toc extends Component {
             <Text key={i} text={title} />
           </Horizontal>
         ))}
-      </Panel>
-    );
+      </Vertical>
+    )
   }
 }
 Toc.defaultProps = {
@@ -72,14 +90,14 @@ Toc.defaultProps = {
     path: 'page-4',
     title: 'Page 4'
   }]
-};
+}
 Toc.childContextTypes = {
   isActive: PropTypes.func
 }
 
 export const types = {
-  'Toc': wrap(Toc)
-};
+  Toc
+}
 
 export const panels = {
   '/': {
@@ -87,22 +105,5 @@ export const panels = {
     type: 'Toc',
     width: 360
   }
-};
+}
 
-const styleAction = {
-  backgroundColor: '#f0f0f0',
-  borderRadius: 5,
-  color: '#000000',
-  cursor: 'pointer',
-  fontFamily: 'sans-serif',
-  fontSize: 20,
-  justifyContent: 'center',
-  margin: 2.5,
-  padding: '10px 20px',
-  textDecoration: 'none',
-  textTransform: 'uppercase'
-};
-const styleActionActive = {
-  backgroundColor: '#000000',
-  color: '#f0f0f0'
-};

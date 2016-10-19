@@ -1,5 +1,5 @@
-import configureStore from './configure-store.dev'
-import renderPanels from './render'
+import configureStore from './configure-store.dev.js'
+import renderPanels from './render.js'
 
 export const render = props => (
   renderPanels(configureStore, props)
@@ -7,8 +7,6 @@ export const render = props => (
 
 if (!window.panelsDontAutoLoad) {
   window.addEventListener('load', () => {
-    const store = render(window.panels)
-
-    window._store = store
+    window._store = render(window.panels)
   })
 }

@@ -2,127 +2,45 @@
 
 BIN=node_modules/.bin
 
+function run {
+  NODE_ENV=development $BIN/watchify --debug --verbose \
+    --external panels \
+    --external panels/blocks \
+    --external panels/normalise-uri \
+    --external panels/snap \
+    --external react \
+    --external react-dom \
+    --external velocity-react \
+    --transform [rollupify --config rollup.config.js] \
+    --transform loose-envify \
+    --require ./playground/$1/src.js:$1 \
+    --outfile playground/$1/app.js
+}
+
+run trails.panels.dev & \
+run launchpad.panels.dev & \
+run launchpad-floating.panels.dev & \
+run toc.dev & \
+run notes.dev & \
 NODE_ENV=development $BIN/watchify --debug --verbose \
-  --external lodash.debounce \
-  --external mini-unique-id \
-  --external panels-normalise-uri \
-  --external panels-ui \
+  --external panels \
+  --external panels/blocks \
+  --external panels/normalise-uri \
+  --external panels/snap \
   --external react \
   --external react-dom \
-  --external react-redux \
-  --external redux \
-  --external redux-logger \
-  --external ./utils/redux-promise:redux-promise \
-  --external redux-thunk \
-  --external style-to-css \
-  --external waiting \
+  --external velocity-react \
   --transform [rollupify --config rollup.config.js] \
   --transform loose-envify \
-  --require ./playground/trails.panels.dev/src.js:trails.panels.dev \
-  --outfile playground/trails.panels.dev/app.js & \
-NODE_ENV=development $BIN/watchify --debug --verbose \
-  --external lodash.debounce \
-  --external mini-unique-id \
-  --external panels-normalise-uri \
-  --external panels-ui \
-  --external react \
-  --external react-dom \
-  --external react-redux \
-  --external redux \
-  --external redux-logger \
-  --external ./utils/redux-promise:redux-promise \
-  --external redux-thunk \
-  --external style-to-css \
-  --external waiting \
-  --transform [rollupify --config rollup.config.js] \
-  --transform loose-envify \
-  --require ./playground/launchpad.panels.dev/src.js:launchpad.panels.dev \
-  --outfile playground/launchpad.panels.dev/app.js & \
-NODE_ENV=development $BIN/watchify --debug --verbose \
-  --external lodash.debounce \
-  --external mini-unique-id \
-  --external panels-normalise-uri \
-  --external panels-ui \
-  --external react \
-  --external react-dom \
-  --external react-redux \
-  --external redux \
-  --external redux-logger \
-  --external ./utils/redux-promise:redux-promise \
-  --external redux-thunk \
-  --external style-to-css \
-  --external waiting \
-  --transform [rollupify --config rollup.config.js] \
-  --transform loose-envify \
-  --require ./playground/launchpad-floating.panels.dev/src.js:launchpad-floating.panels.dev \
-  --outfile playground/launchpad-floating.panels.dev/app.js & \
-NODE_ENV=development $BIN/watchify --debug --verbose \
-  --external lodash.debounce \
-  --external mini-unique-id \
-  --external panels-normalise-uri \
-  --external panels-ui \
-  --external react \
-  --external react-dom \
-  --external react-redux \
-  --external redux \
-  --external redux-logger \
-  --external ./utils/redux-promise:redux-promise \
-  --external redux-thunk \
-  --external style-to-css \
-  --external waiting \
-  --transform [rollupify --config rollup.config.js] \
-  --transform loose-envify \
-  --require ./playground/toc.dev/src.js:toc.dev \
-  --outfile playground/toc.dev/app.js & \
-NODE_ENV=development $BIN/watchify --debug --verbose \
-  --external lodash.debounce \
-  --external mini-unique-id \
-  --external panels-normalise-uri \
-  --external panels-ui \
-  --external react \
-  --external react-dom \
-  --external react-redux \
-  --external redux \
-  --external redux-logger \
-  --external ./utils/redux-promise:redux-promise \
-  --external redux-thunk \
-  --external style-to-css \
-  --external waiting \
-  --transform [rollupify --config rollup.config.js] \
-  --transform loose-envify \
-  --require ./playground/notes.dev/src.js:notes.dev \
-  --outfile playground/notes.dev/app.js & \
-NODE_ENV=development $BIN/watchify --debug --verbose \
-  --external lodash.debounce \
-  --external mini-unique-id \
-  --external panels-normalise-uri \
-  --external panels-ui \
-  --external react \
-  --external react-dom \
-  --external react-redux \
-  --external redux \
-  --external redux-logger \
-  --external ./utils/redux-promise:redux-promise \
-  --external redux-thunk \
-  --external style-to-css \
-  --external waiting \
-  --transform [rollupify --config rollup.config.js] \
-  --transform loose-envify \
-  --require ./playground/custom-parser.panels.dev/app/src.js:custom-parser.panels.dev/app \
+  --require ./playground/custom-parser.panels.dev/app/src.js:custom-parser.panels.dev \
   --outfile playground/custom-parser.panels.dev/app/app.js & \
 NODE_ENV=development $BIN/watchify --debug --verbose \
-  --require mini-unique-id \
-  --require panels-normalise-uri \
-  --require panels-ui \
   --require react \
   --require react-dom \
-  --require react-redux \
-  --require redux \
-  --require redux-logger \
-  --require ./utils/redux-promise:redux-promise \
-  --require redux-thunk \
-  --require style-to-css \
-  --require waiting \
+  --require velocity-react \
+  --require ./blocks/index.js:panels/blocks \
+  --require ./utils/normalise-uri/index.js:panels/normalise-uri \
+  --require ./utils/snap.js:panels/snap \
   --transform [rollupify --config rollup.config.js] \
   --transform loose-envify \
   --outfile playground/panels.js index.dev.js & \

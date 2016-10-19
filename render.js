@@ -1,3 +1,5 @@
+import 'velocity-animate'
+import 'velocity-animate/velocity.ui'
 import { navigate } from './actions'
 import { render } from 'react-dom'
 import { Provider } from 'react-redux'

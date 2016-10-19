@@ -10,22 +10,15 @@ echo "[bundle-dev] watching panels..."
 
 mkdir -p $BUNDLE
 NODE_ENV=development $BIN/watchify --verbose --debug \
-  --require lodash.debounce \
-  --require mini-unique-id \
-  --require panels-normalise-uri \
-  --require panels-ui \
   --require react \
-  --require react-addons-transition-group \
   --require react-dom \
-  --require react-flip-move \
-  --require react-redux \
-  --require redux \
-  --require redux-logger \
-  --require ./utils/redux-promise:redux-promise \
-  --require redux-thunk \
-  --require style-to-css \
-  --require waiting \
   --require ./index.dev.js:panels \
+  --require ./panels-ui-compat.js:panels-ui \
+  --require ./react-flip-move-compat.js:react-flip-move \
+  --require ./usepages-blocks-compat.js:usepages-blocks \
+  --require ./blocks/index.js:panels/blocks \
+  --require ./utils/normalise-uri/index.js:panels/normalise-uri \
+  --require ./utils/snap.js:panels/snap \
   --transform [rollupify --config rollup.config.js] \
   --transform loose-envify \
   --entry index.dev.js \

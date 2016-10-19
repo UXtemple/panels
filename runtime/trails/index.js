@@ -1,15 +1,17 @@
 import { connect } from 'react-redux'
-import { moveLeft, setViewportWidth, setX } from '../actions'
-import { navigate, toggleExpand, updateSettings } from '../../actions'
-import { snapX } from 'panels-ui'
+import { moveLeft, setViewportWidth, setX } from '../actions.js'
+import { navigate, toggleExpand, updateSettings } from '../../actions.js'
+import { snapX } from '../../utils/snap.js'
+import AnimateGroup from '../../blocks/animate-group.js'
+import BaseStyle from '../base-style.js'
 import debounce from 'lodash.debounce'
-import FlipMove from 'react-flip-move'
-import getViewportWidth from '../get-viewport-width'
-import MoveLeft from './move-left'
-import React, { Component, PropTypes } from 'react'
-import Route from '../../route'
-import supportsPassiveEvents from '../../utils/supports-passive-events'
-import Waiting from 'waiting'
+import getViewportWidth from '../get-viewport-width.js'
+import Horizontal from '../../blocks/horizontal.js'
+import Knocking from '../../blocks/knocking.js'
+import MoveLeft from './move-left.js'
+import React, { Component } from 'react'
+import Route from '../../route.js'
+import supportsPassiveEvents from '../../utils/supports-passive-events.js'
 
 const DEBOUNCE = 250
 const LOADING_SIZE = 100
@@ -18,11 +20,16 @@ const REBOUND = 500
 
 const scrollEventOptions = supportsPassiveEvents ? { passive: true } : false
 
+const style = {
+  height: '100%',
+  overflowX: 'auto',
+  overflowY: 'hidden',
+  width: '100vw'
+}
+
 export class Runtime extends Component {
   state = {
-    autoScroll: null,
-    opacity: 1,
-    presenter: null
+    autoScroll: null
   }
 
   componentDidMount() {
@@ -32,14 +39,6 @@ export class Runtime extends Component {
     window.addEventListener('resize', this.setViewportWidth, false)
     window.addEventListener('orientationchange', this.setViewportWidth, false)
     document.addEventListener('visibilitychange', this.onVisibilityChange)
-  }
-
-  componentWillReceiveProps(nextProps) {
-    const { props } = this
-
-    if (props.focusPanel !== nextProps.focusPanel || props.runtime.x !== nextProps.runtime.x) {
-      this.toggleOpacityIfPresenting()
-    }
   }
 
   componentDidUpdate(prevProps) {
@@ -80,17 +79,9 @@ export class Runtime extends Component {
     }
   }
 
-  present = (presenter = null) => {
-    this.setState({
-      opacity: presenter ? 0 : 1,
-      presenter
-    })
-  }
-
   render() {
-    const { opacity, presenter } = this.state
-    const { apps, canMoveLeft, focusPanel, moveLeft, navigate, panels, router, runtime, snap, toggleExpand, updateSettings } = this.props
-    const { present } = this
+    const { apps, canMoveLeft, focusPanel, moveLeft, navigate, panels, router, runtime, snap,
+      toggleExpand, updateSettings, visibleRoutes } = this.props
 
     const runtimeStyle = focusPanel ? {
       ...style,
@@ -98,65 +89,62 @@ export class Runtime extends Component {
     } : style
 
     return (
-      <div ref={$e => this.$runtime = $e} style={runtimeStyle}>
+      <Horizontal _ref={$e => this.$runtime = $e} style={runtimeStyle}>
+        <BaseStyle />
+
         {canMoveLeft && snap && <MoveLeft onClick={moveLeft} snapPoint={runtime.snapPoint} />}
 
-        {presenter}
-
-        <FlipMove
-          enterAnimation='fade'
-          leaveAnimation='fade'
-          onClick={this.toggleOpacityIfPresenting}
+        <AnimateGroup
+          component={Horizontal}
+          enter={{ animation: 'transition.slideLeftBigIn', drag: true }}
+          leave={{ animation: 'transition.fadeOut' }}
           style={{
             flexDirection: 'row',
             height: '100%',
-            opacity,
             overflowY: 'hidden',
             paddingLeft: runtime.snapPoint,
-            transition: 'opacity 0.5s ease-in',
             width: runtime.width,
-            willChange: 'scroll-position, opacity'
+            willChange: 'scroll-position'
           }}
         >
-          {router.routes.items.map((context, i) => {
+          {visibleRoutes.map((context, i) => {
             const route = router.routes.byContext[context]
             const app = apps[route.app]
             const panel = panels[route.panelId]
 
-            return !route.isVisible ? null : (
+            return (
               <Route
                 isContext={i >= router.context}
                 isFocus={i === router.focus}
-                key={context.replace(/[()]/g, '')}
+                key={`${i}-${app.name}-${panel.type}`}
                 navigate={navigate}
                 panel={panel}
-                present={present}
                 route={route}
                 routeIndex={i}
                 router={router}
                 store={app.store}
-                type={app.types[panel.type]}
                 toggleExpand={toggleExpand}
+                Type={app.types[panel.type]}
                 updateSettings={updateSettings}
                 width={route.width}
                 zIndex={router.routes.items.length - i}
               />
             )
           })}
-        </FlipMove>
+        </AnimateGroup>
 
         {router.isLoading ? (
-          <div
+          <Horizontal
             style={{
               justifyContent: 'center',
               left: router.routes.items.length ? LOADING_OFFSET : LOADING_OFFSET - runtime.snapPoint,
               marginTop: LOADING_OFFSET
             }}
           >
-            <Waiting size={LOADING_SIZE} />
-          </div>
+            <Knocking size={LOADING_SIZE} />
+          </Horizontal>
           ) : null}
-      </div>
+      </Horizontal>
     )
   }
 
@@ -187,23 +175,6 @@ export class Runtime extends Component {
       this.props.setX(nextX)
     }
   }, DEBOUNCE)
-
-  toggleOpacityIfPresenting = event => {
-    const { state } = this
-
-    if (state.presenter && state.opacity === 0) {
-      this.setState({
-        opacity: state.opacity === 1 ? 0 : 1
-      })
-    }
-  }
-}
-
-const style = {
-  height: '100%',
-  overflowX: 'auto',
-  overflowY: 'hidden',
-  width: '100vw'
 }
 
 const getFocusPanel = ({ panels, router }) => {
@@ -220,7 +191,8 @@ function mapStateToProps(state, props) {
     focusPanel: getFocusPanel(state),
     panels: state.panels.byId,
     router: state.router,
-    runtime: state.runtime
+    runtime: state.runtime,
+    visibleRoutes: state.router.routes.items.filter(r => state.router.routes.byContext[r].isVisible)
   }
 }
 

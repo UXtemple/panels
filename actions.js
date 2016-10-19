@@ -3,7 +3,7 @@ import getContextAndFocus from './router/get-context-and-focus'
 import getIndexOfPanelToShow from './runtime/get-index-of-panel-to-show'
 import getNextPosition from './runtime/get-next-position'
 import getRegions from './runtime/get-regions'
-import normalise from 'panels-normalise-uri'
+import normaliseUri from './utils/normalise-uri/index.js'
 import parse from './router/parse'
 
 function ensurePanelShape(panel) {
@@ -17,7 +17,7 @@ export function navigate(rawUri, nextFocus = 1, nextContext) {
   return async function navigateThunk(dispatch, getState) {
     const { apps, panels, router, runtime } = getState()
 
-    const uri = normalise(rawUri)
+    const uri = normaliseUri(rawUri)
     if (uri === router.uri) {
       return
     }
@@ -140,7 +140,7 @@ export function navigate(rawUri, nextFocus = 1, nextContext) {
       const focusPanel = nextPanels.byId[focusRoute.panelId]
       opts.currentFocus = last
       opts.next.focus = 0
-      if (context in focusPanel) {
+      if (typeof focusPanel.context !== 'undefined') {
         opts.next.context = focusPanel.context
       }
     }
@@ -243,7 +243,6 @@ export function toggleExpand(routeContext) {
 
     const routes = router.routes
     const route = routes.byContext[routeContext]
-    const routeIndex = routes.items.indexOf(routeContext)
 
     routes.byContext = {
       ...routes.byContext,
@@ -285,7 +284,6 @@ export function updateSettings(routeContext, { maxWidth, title, styleBackground,
 
     if (!route.isVisible) return
 
-    const routeIndex = router.routes.items.indexOf(routeContext)
     const panel = {
       ...nextPanels.byId[route.panelId]
     }

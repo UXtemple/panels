@@ -1,9 +1,9 @@
-import { Horizontal } from 'usepages-blocks'
-import { Panel, wrap } from 'panels-ui'
+import Horizontal from '../../../blocks/horizontal.js'
 import React, { PropTypes } from 'react'
+import Vertical from '../../../blocks/vertical.js'
 
 const Content = props => (
-  <Panel>
+  <Vertical>
     custom-parser content {props.content}
 
     <Horizontal teleportTo='..'>
@@ -13,23 +13,23 @@ const Content = props => (
     <Horizontal teleportTo='http://trails.panels.dev'>
       teleport
     </Horizontal>
-  </Panel>
+  </Vertical>
 )
 Content.propTypes = {
   content: PropTypes.string
 }
 const Index = () => (
-  <Panel>
+  <Vertical>
     custom-parser index
     <Horizontal teleportTo='some-content'>
       Some content
     </Horizontal>
-  </Panel>
+  </Vertical>
 )
 
 export const types = {
-  Content: wrap(Content),
-  Index: wrap(Index)
+  Content,
+  Index
 }
 
 export const panels = {

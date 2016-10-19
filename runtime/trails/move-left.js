@@ -1,4 +1,4 @@
-import { ArrowLeft } from 'panels-ui'
+import ArrowLeft from '../../playground/arrow-left.js'
 import React from 'react'
 
 const DIAMETER = 40
@@ -17,7 +17,7 @@ const MoveLeft = ({ onClick, snapPoint }) => (
       left: snapPoint - DIAMETER / 2,
       position: 'fixed',
       width: DIAMETER,
-      zIndex: 10
+      zIndex: 100000
     }}
   >
     <ArrowLeft />

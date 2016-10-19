@@ -1,6 +1,6 @@
 import withTrailingSlash from './with-trailing-slash'
 
-const DEFAULT_PARSER = /^https?:\/\/([a-zA-Z0-9\-\_\.]+)()(\/.*)/
+const DEFAULT_PARSER = /^https?:\/\/([a-zA-Z0-9\-_\.]+)()(\/.*)/
 const PROTOCOL = /(https?):\/\//
 const SLICE_END = ')'
 const SLICE_START = '('
@@ -19,10 +19,10 @@ export default function parse(uri, parsers = []) {
   }
 
   // Make sure we always have a trailing slash on the URI
+  const protocol = uri.match(PROTOCOL)[1]
   let nextUri = withTrailingSlash(uri)
 
   do {
-    let protocol = uri.match(PROTOCOL)[1]
     let app
     let path
     let fullPath
