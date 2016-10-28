@@ -6,7 +6,27 @@ const SLICE_END = ')'
 const SLICE_START = '('
 const SLICE_MARKERS = new RegExp(`[${SLICE_START}${SLICE_END}]`, 'g')
 
-const cleanPath = s => /\?/.test(s) ? s.match(/(.*?)\?/)[1] : s
+// TODO review this, instead of discarding the query string perhaps we can pass it down to
+// the last panel?
+const withoutQueryString = s => /\?/.test(s) ? s.match(/(.*?)\?/)[1] : s
+
+const MANY_APPS = /^(https?:\/\/.+?\/)(https?:\/\/.+)/
+
+const appSplit = s => {
+  let currentUri = s
+  let nextUri = false
+
+  const manyAppsMatch = s.match(MANY_APPS)
+  if (manyAppsMatch) {
+    currentUri = manyAppsMatch[1]
+    nextUri = manyAppsMatch[2]
+  }
+
+  return {
+    currentUri,
+    nextUri
+  }
+}
 
 export default function parse(uri, parsers = []) {
   const apps = {
@@ -20,27 +40,15 @@ export default function parse(uri, parsers = []) {
 
   // Make sure we always have a trailing slash on the URI
   const protocol = uri.match(PROTOCOL)[1]
-  let nextUri = withTrailingSlash(uri)
+  let nextUri = withoutQueryString(withTrailingSlash(uri))
 
   do {
-    let app
-    let path
-    let fullPath
+    const split = appSplit(nextUri)
+    const currentUri = split.currentUri
+    nextUri = split.nextUri
 
-    const parser = parsers.find(p => p.test(nextUri)) || DEFAULT_PARSER
-    const result = nextUri.match(parser)
-    if (result) {
-      app = result[1]
-      fullPath = cleanPath(result[3] || '/')
-    }
-
-    if (PROTOCOL.test(fullPath)) {
-      path = fullPath.split(PROTOCOL)[0]
-      nextUri = fullPath.replace(path, '')
-    } else {
-      path = fullPath
-      nextUri = undefined
-    }
+    const parser = parsers.find(p => p.test(currentUri)) || DEFAULT_PARSER
+    let [ _0, app, _1, path ] = currentUri.match(parser)
 
     const base = `${protocol}://${app}`
     const context = routes.items.length > 0 ? routes.items[routes.items.length - 1] : ''

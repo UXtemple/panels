@@ -1,13 +1,14 @@
 import parse from '../parse'
 
-const whitelist = [/^https?:\/\/((specificDomain\.com)\/[a-zA-Z0-9\-\_]+)(\/.*)/]
-
 const fixtures = [{
   uri: 'https://UXtemple.com/',
   name: 'basic: one panel https://UXtemple.com/'
 },{
   uri: 'https://UXtemple.com/panels',
   name: 'basic: many panels https://UXtemple.com/panels'
+}, {
+  uri: 'https://UXtemple.com/panels?stuff',
+  name: 'basic: many panels https://UXtemple.com/panels discards query string'
 }, {
   uri: 'https://UXtemple.com/panels/../back',
   name: 'basic: backwards panels https://UXtemple.com/panels/../back'
@@ -42,11 +43,23 @@ const fixtures = [{
 }, {
   uri: 'https://specificDomain.com/root/https://UXtemple.com/',
   name: 'routerWhitelist: one specific domain and a standard domain https://specificDomain.com/root/https://UXtemple.com/',
-  whitelist
-},{
-  uri: 'https://specificDomain.com/root/panelhttps://UXtemple.com/otherPanel',
-  name: 'routerWhitelist: one specific domain and panel and a standard domain with panel https://specificDomain.com/root/panelhttps://UXtemple.com/otherPanel',
-  whitelist
+  whitelist: [
+    /^https?:\/\/((specificDomain\.com)\/[a-zA-Z0-9\-_]+)(\/.*)/
+  ]
+}, {
+  uri: 'https://specificDomain.com/root/panel/https://UXtemple.com/otherPanel',
+  name: 'routerWhitelist: one specific domain and panel and a standard domain with panel https://specificDomain.com/root/panel/https://UXtemple.com/otherPanel',
+  whitelist: [
+    /^https?:\/\/((specificDomain\.com)\/[a-zA-Z0-9\-_]+)(\/.*)/
+  ]
+}, {
+  uri: 'http://app.domain.com/content/bar/baz/qux/quux/corge/grault/garply/http://app.domain.com/root/waldo/',
+  name: 'routerWhitelist: two specific domains matched by different parsers and panel and a standard domain with panel http://app.domain.com/content/bar/baz/qux/quux/corge/grault/garply/http://app.domain.com/root/waldo/',
+  whitelist: [
+    /^https?:\/\/((.*domain.com)\/root\/[a-zA-Z0-9\-_]+)(\/.*)/,
+    /^https?:\/\/((.*domain.com)\/content\/bar\/baz\/qux\/quux\/corge\/grault)(\/.*)/,
+    /^https?:\/\/((root.dev)\/[a-zA-Z0-9\-_]+)(\/.*)/
+  ]
 }]
 
 fixtures.forEach(f => {

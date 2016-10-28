@@ -98,6 +98,38 @@ Object {
 }
 `;
 
+exports[`test basic: many panels https://UXtemple.com/panels discards query string 1`] = `
+Object {
+  "apps": Object {
+    "byName": Object {
+      "UXtemple.com": Object {
+        "app": "UXtemple.com",
+        "panels": Array [
+          "/",
+        ],
+      },
+    },
+    "items": Array [
+      "UXtemple.com",
+    ],
+  },
+  "routes": Object {
+    "byContext": Object {
+      "https://UXtemple.com/": Object {
+        "app": "UXtemple.com",
+        "context": "https://UXtemple.com/",
+        "isVisible": true,
+        "panelId": "UXtemple.com/",
+        "path": "/",
+      },
+    },
+    "items": Array [
+      "https://UXtemple.com/",
+    ],
+  },
+}
+`;
+
 exports[`test basic: one panel https://UXtemple.com/ 1`] = `
 Object {
   "apps": Object {
@@ -177,7 +209,7 @@ Object {
 }
 `;
 
-exports[`test routerWhitelist: one specific domain and panel and a standard domain with panel https://specificDomain.com/root/panelhttps://UXtemple.com/otherPanel 1`] = `
+exports[`test routerWhitelist: one specific domain and panel and a standard domain with panel https://specificDomain.com/root/panel/https://UXtemple.com/otherPanel 1`] = `
 Object {
   "apps": Object {
     "byName": Object {
@@ -192,6 +224,7 @@ Object {
         "app": "specificDomain.com/root",
         "panels": Array [
           "/",
+          "/panel",
         ],
       },
     },
@@ -209,16 +242,23 @@ Object {
         "panelId": "specificDomain.com/root/",
         "path": "/",
       },
-      "https://specificDomain.com/root/https://UXtemple.com/": Object {
+      "https://specificDomain.com/root/panel/": Object {
+        "app": "specificDomain.com/root",
+        "context": "https://specificDomain.com/root/panel/",
+        "isVisible": true,
+        "panelId": "specificDomain.com/root/panel",
+        "path": "/panel",
+      },
+      "https://specificDomain.com/root/panel/https://UXtemple.com/": Object {
         "app": "UXtemple.com",
-        "context": "https://specificDomain.com/root/https://UXtemple.com/",
+        "context": "https://specificDomain.com/root/panel/https://UXtemple.com/",
         "isVisible": true,
         "panelId": "UXtemple.com/",
         "path": "/",
       },
-      "https://specificDomain.com/root/https://UXtemple.com/otherPanel/": Object {
+      "https://specificDomain.com/root/panel/https://UXtemple.com/otherPanel/": Object {
         "app": "UXtemple.com",
-        "context": "https://specificDomain.com/root/https://UXtemple.com/otherPanel/",
+        "context": "https://specificDomain.com/root/panel/https://UXtemple.com/otherPanel/",
         "isVisible": true,
         "panelId": "UXtemple.com/otherPanel",
         "path": "/otherPanel",
@@ -226,8 +266,65 @@ Object {
     },
     "items": Array [
       "https://specificDomain.com/root/",
-      "https://specificDomain.com/root/https://UXtemple.com/",
-      "https://specificDomain.com/root/https://UXtemple.com/otherPanel/",
+      "https://specificDomain.com/root/panel/",
+      "https://specificDomain.com/root/panel/https://UXtemple.com/",
+      "https://specificDomain.com/root/panel/https://UXtemple.com/otherPanel/",
+    ],
+  },
+}
+`;
+
+exports[`test routerWhitelist: two specific domains matched by different parsers and panel and a standard domain with panel http://app.domain.com/content/bar/baz/qux/quux/corge/grault/garply/http://app.domain.com/root/waldo/ 1`] = `
+Object {
+  "apps": Object {
+    "byName": Object {
+      "app.domain.com/content/bar/baz/qux/quux/corge/grault": Object {
+        "app": "app.domain.com/content/bar/baz/qux/quux/corge/grault",
+        "panels": Array [
+          "/",
+          "/garply",
+        ],
+      },
+      "app.domain.com/root/waldo": Object {
+        "app": "app.domain.com/root/waldo",
+        "panels": Array [
+          "/",
+        ],
+      },
+    },
+    "items": Array [
+      "app.domain.com/content/bar/baz/qux/quux/corge/grault",
+      "app.domain.com/root/waldo",
+    ],
+  },
+  "routes": Object {
+    "byContext": Object {
+      "http://app.domain.com/content/bar/baz/qux/quux/corge/grault/": Object {
+        "app": "app.domain.com/content/bar/baz/qux/quux/corge/grault",
+        "context": "http://app.domain.com/content/bar/baz/qux/quux/corge/grault/",
+        "isVisible": true,
+        "panelId": "app.domain.com/content/bar/baz/qux/quux/corge/grault/",
+        "path": "/",
+      },
+      "http://app.domain.com/content/bar/baz/qux/quux/corge/grault/garply/": Object {
+        "app": "app.domain.com/content/bar/baz/qux/quux/corge/grault",
+        "context": "http://app.domain.com/content/bar/baz/qux/quux/corge/grault/garply/",
+        "isVisible": true,
+        "panelId": "app.domain.com/content/bar/baz/qux/quux/corge/grault/garply",
+        "path": "/garply",
+      },
+      "http://app.domain.com/content/bar/baz/qux/quux/corge/grault/garply/http://app.domain.com/root/waldo/": Object {
+        "app": "app.domain.com/root/waldo",
+        "context": "http://app.domain.com/content/bar/baz/qux/quux/corge/grault/garply/http://app.domain.com/root/waldo/",
+        "isVisible": true,
+        "panelId": "app.domain.com/root/waldo/",
+        "path": "/",
+      },
+    },
+    "items": Array [
+      "http://app.domain.com/content/bar/baz/qux/quux/corge/grault/",
+      "http://app.domain.com/content/bar/baz/qux/quux/corge/grault/garply/",
+      "http://app.domain.com/content/bar/baz/qux/quux/corge/grault/garply/http://app.domain.com/root/waldo/",
     ],
   },
 }
