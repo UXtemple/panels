@@ -12,6 +12,7 @@ module.exports = {
     Object.keys(pkg.dependencies)
       .concat(Object.keys(pkg.devDependencies))
       .concat('regenerator-runtime')
+      .concat('velocity-animate/velocity.ui')
   ),
   plugins: [{
       resolveId(importee) {
