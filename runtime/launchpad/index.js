@@ -1,10 +1,8 @@
 import { connect } from 'react-redux'
 import { navigate, updateSettings } from '../../actions.js'
 import { setViewportWidth } from '../actions.js'
-import AnimateGroup from '../../blocks/animate-group.js'
 import BaseStyle from '../base-style.js'
 import debounce from 'lodash.debounce'
-import FlipMove from 'react-flip-move'
 import getViewportWidth from '../get-viewport-width.js'
 import Horizontal from '../../blocks/horizontal.js'
 import Knocking from '../../blocks/knocking.js'
@@ -117,10 +115,7 @@ export class LaunchpadRuntime extends Component {
           />
         )}
 
-        <AnimateGroup
-          component={Horizontal}
-          enter={{ animation: 'transition.slideLeftIn' }}
-          leave={{ animation: 'transition.fadeOut' }}
+        <Horizontal
           style={{
             flexDirection: 'row',
             height: `calc(100% - ${(launchpadPanel && launchpadPanel.height) || 0}px)`,
@@ -146,7 +141,7 @@ export class LaunchpadRuntime extends Component {
           )}
 
           {dockedPanel && !dockedPanel.dockLeft && docked}
-        </AnimateGroup>
+        </Horizontal>
 
         {router.isLoading ? (
           <Vertical
@@ -213,8 +208,3 @@ const mapDispatchToProps = {
   updateSettings
 }
 export default connect(mapStateToProps, mapDispatchToProps)(LaunchpadRuntime)
-
-          // duration={200}
-          // enterAnimation='fade'
-          // leaveAnimation='fade'
-
