@@ -111,7 +111,7 @@ export class LaunchpadRuntime extends Component {
             }}
             Type={launchpadApp.types[launchpadPanel.type]}
             updateSettings={updateSettings}
-            width={'auto'}
+            width={runtime.viewportWidth}
           />
         )}
 
@@ -197,8 +197,8 @@ function mapStateToProps({ apps, panels, runtime, router }, props) {
     launchpadPanel: launchpadRoute && panels.byId[launchpadRoute.panelId],
     launchpadRoute,
 
-    router: router,
-    runtime: runtime
+    router,
+    runtime
   }
 }
 
