@@ -25,5 +25,10 @@ export default props => (
       padding: 0;
       outline: 0;
     }
+    button::-moz-focus-inner {
+      border: 0;
+      margin: 0;
+      padding: 0;
+    }
   `}</style>
 )
