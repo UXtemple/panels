@@ -2,6 +2,9 @@ import React from 'react'
 
 export default props => (
   <style>{`
+    * {
+      -webkit-overflow-scrolling: touch;
+    }
     html, body, #root {
       height: 100%;
       margin: 0;
