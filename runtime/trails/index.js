@@ -96,7 +96,7 @@ export class Runtime extends Component {
 
         <AnimateGroup
           component={Horizontal}
-          enter={{ animation: 'transition.slideLeftBigIn', drag: true }}
+          enter={{ animation: 'transition.slideLeftBigIn', display: 'flex', drag: true }}
           leave={{ animation: 'transition.fadeOut' }}
           style={{
             flexDirection: 'row',
