@@ -22,3 +22,5 @@ export Svg from './svg.js'
 export Path from './path.js'
 export Polygon from './polygon.js'
 export Polyline from './polyline.js'
+
+export registerEffect from './register-effect.js'

@@ -1,6 +1,5 @@
 import React, { Component, PropTypes } from 'react';
 import toCSS from 'style-to-css';
-import uniqueId from 'mini-unique-id';
 
 export default class OnClick extends Component {
   constructor(...args) {
@@ -40,8 +39,32 @@ export default class OnClick extends Component {
   }
 
   bindOnClick(onClick) {
+    const { context } = this
+
     /* eslint-disable no-console */
-    const finalOnClick = typeof onClick === 'function' ? onClick : () => console.log(onClick);
+    let finalOnClick
+    if (typeof onClick === 'function') {
+      finalOnClick = () => {
+        try {
+          onClick()
+        } catch(err) {
+          const match = err.message.match(/props\.(.+) is not a function/)
+          if (match) {
+            context.transitionTo(match[1].trim(), true)
+          }
+        }
+      }
+    } else {
+      let match
+      if (typeof onClick === 'string') {
+        match = onClick.match(/transitionTo\((.+)\)/)
+      }
+      if (match && typeof context.transitionTo === 'function') {
+        finalOnClick = () => context.transitionTo(match[1].trim())
+      } else {
+        finalOnClick = () => console.log(onClick)
+      }
+    }
 
     this.onClick = event => {
       finalOnClick(event);
@@ -103,6 +126,9 @@ export default class OnClick extends Component {
       </button>
     );
   }
+}
+OnClick.contextTypes = {
+  transitionTo: PropTypes.func
 }
 OnClick.defaultProps = {
   styleActiveTimeout: 1000
