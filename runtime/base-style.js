@@ -5,9 +5,9 @@ export default props => (
     * {
       -webkit-overflow-scrolling: touch;
     }
-    html, body, #root {
-      height: 100%;
-      margin: 0;
+    html,body,#root {
+      height:100%;
+      margin:0;
     }
     a,button,div,img,input,form,h1,h2,h3,h4,h5,h6,h7,nav,label,li,ol,p,span,svg,ul {
       box-sizing: border-box;

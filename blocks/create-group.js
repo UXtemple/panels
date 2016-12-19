@@ -10,17 +10,22 @@ export default function createGroup(name, groupStyle) {
     constructor(props, context) {
       super(props, context)
 
-      this.className = `${name}-${uniqueId()}`
+      this.localClassName = `${name}-${uniqueId()}`
     }
 
     render() {
       const { children, className:moreClassName, goTo, style, teleportTo, ...props } = this.props
-      const { className } = this
+      const { localClassName } = this
       const { pages } = this.context
 
       const finalStyle = {
         ...groupStyle,
         ...style
+      }
+
+      let className = localClassName
+      if (typeof moreClassName === 'string') {
+        className += ` ${moreClassName}`
       }
 
       let Base
@@ -37,13 +42,13 @@ export default function createGroup(name, groupStyle) {
 
         let inlineStyle = null
         if (Object.keys(styleHover).length) {
-          inlineStyle = <style>{`.${className}:hover {${toCSS(styleHover)}}`}</style>
+          inlineStyle = <style>{`.${localClassName}:hover {${toCSS(styleHover)}}`}</style>
         }
 
         return (
           <div
             {...rest}
-            className={`${className} ${moreClassName}`}
+            className={className}
             ref={_ref}
             style={finalStyle}
           >
