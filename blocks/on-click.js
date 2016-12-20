@@ -114,7 +114,7 @@ export default class OnClick extends Component {
     }
 
     return (
-      <button
+      <div
         {...rest}
         className={className}
         disabled={isActive}
@@ -123,7 +123,7 @@ export default class OnClick extends Component {
       >
         {inlineStyle}
         {children}
-      </button>
+      </div>
     );
   }
 }
