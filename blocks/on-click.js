@@ -96,7 +96,8 @@ export default class OnClick extends Component {
 
     let inlineStyle = null
     if (!isActive && Object.keys(styleHover).length) {
-      inlineStyle = <style>{`.${className}:hover {${toCSS(styleHover)}}`}</style>;
+      const fClass = className.split(' ')[0]
+      inlineStyle = <style>{`.${fClass}:hover {${toCSS(styleHover)}}`}</style>;
     }
 
     const finalStyle = isActive ? {
