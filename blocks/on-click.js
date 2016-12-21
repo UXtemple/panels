@@ -104,13 +104,12 @@ export default class OnClick extends Component {
     }
 
     const finalStyle = isActive ? {
+      cursor: 'pointer',
       ...style,
-      ...styleActive,
-      outline: 0
+      ...styleActive
     } : {
-      ...style,
-      outline: 0,
-      cursor: 'pointer'
+      cursor: 'pointer',
+      ...style
     };
 
     if (_ref) {
