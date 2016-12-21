@@ -12,14 +12,20 @@ export default class Teleport extends Component {
   render() {
     const { className } = this
     const {
-      context, children, focus, loose, onClick, _ref, style, styleActive, styleHover, title, to,
-      ...rest
+      context, children, focus, loose, onClick, _ref, style, styleActive, styleActiveHover,
+      styleHover, title, to, ...rest
     } = this.props
     const { isActive, navigate, route } = this.context
     const active = isActive(to, loose)
     const href = normaliseUri(`${route.context}${to}`)
 
-    const inlineStyle = styleHover ? `.${className}:hover {${toCSS(styleHover)}}` : ''
+    let inlineStyle = ''
+    if (!active && styleHover) {
+     inlineStyle = `.${className}:hover {${toCSS(styleHover)}}`
+    }
+    if (active && styleActiveHover) {
+     inlineStyle = `.${className}:hover {${toCSS(styleActiveHover)}}`
+    }
     const finalStyle = active ? { ...style, ...styleActive } : style
 
     const finalOnClick = event => {

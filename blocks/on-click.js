@@ -90,14 +90,17 @@ export default class OnClick extends Component {
     const { isActive } = this.state;
     /* eslint-disable no-unused-vars */
     const {
-      children, className, isActive: _isActive, _ref, style, styleActive, styleActiveTimeout,
-      styleHover, ...rest
+      children, className, isActive: _isActive, _ref, style, styleActive, styleActiveHover,
+      styleActiveTimeout, styleHover, ...rest
     } = this.props;
 
     let inlineStyle = null
-    if (!isActive && Object.keys(styleHover).length) {
-      const fClass = className.split(' ')[0]
+    const fClass = className.split(' ')[0]
+    if (!isActive && styleHover) {
       inlineStyle = <style>{`.${fClass}:hover {${toCSS(styleHover)}}`}</style>;
+    }
+    if (isActive && styleActiveHover) {
+      inlineStyle = <style>{`.${fClass}:hover {${toCSS(styleActiveHover)}}`}</style>;
     }
 
     const finalStyle = isActive ? {
