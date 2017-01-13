@@ -1,10 +1,10 @@
 import React, { PropTypes } from 'react';
 
-const Text = ({ 'data-block': dataBlock, lineBreak, style, text }) => {
+const Text = ({ lineBreak, style, text, ...props }) => {
   const styleLine = { marginTop: lineBreak };
 
   return (
-    <div data-block={dataBlock} style={style}>
+    <div {...props} style={style}>
       {`${text}`.split('\n').map((t, i) => (
         <div key={i} style={i ? styleLine : undefined}>{t}</div>
       ))}
