@@ -90,27 +90,39 @@ export default class OnClick extends Component {
     const { isActive } = this.state;
     /* eslint-disable no-unused-vars */
     const {
-      children, className, isActive: _isActive, _ref, style, styleActive, styleActiveHover,
-      styleActiveTimeout, styleHover, ...rest
+      children, className, isActive: _isActive, isDisabled, _ref, style, styleActive,
+      styleActiveHover, styleActiveTimeout, styleDisabled, styleHover, ...rest
     } = this.props;
 
     let inlineStyle = null
-    const fClass = className.split(' ')[0]
-    if (!isActive && styleHover) {
-      inlineStyle = <style>{`.${fClass}:hover {${toCSS(styleHover)}}`}</style>;
-    }
-    if (isActive && styleActiveHover) {
-      inlineStyle = <style>{`.${fClass}:hover {${toCSS(styleActiveHover)}}`}</style>;
+    if (!isDisabled) {
+      rest.onClick = this.onClick
+
+      const fClass = className.split(' ')[0]
+      if (!isActive && styleHover) {
+        inlineStyle = <style>{`.${fClass}:hover {${toCSS(styleHover)}}`}</style>;
+      }
+      if (isActive &&styleActiveHover) {
+        inlineStyle = <style>{`.${fClass}:hover {${toCSS(styleActiveHover)}}`}</style>;
+      }
     }
 
-    const finalStyle = isActive ? {
-      cursor: 'pointer',
-      ...style,
-      ...styleActive
-    } : {
+    let finalStyle = {
       cursor: 'pointer',
       ...style
-    };
+    }
+    if (isDisabled) {
+      finalStyle = {
+        ...finalStyle,
+        cursor: 'default',
+        ...styleDisabled
+      }
+    } else if (isActive) {
+      finalStyle = {
+        ...finalStyle,
+        ...styleActive
+      }
+    }
 
     if (_ref) {
       rest.ref = _ref;
@@ -120,8 +132,6 @@ export default class OnClick extends Component {
       <div
         {...rest}
         className={className}
-        disabled={isActive}
-        onClick={this.onClick}
         style={finalStyle}
       >
         {inlineStyle}

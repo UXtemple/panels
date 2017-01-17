@@ -18,7 +18,7 @@ export default function createGroup(name, groupStyle) {
       const { localClassName } = this
       const { pages } = this.context
 
-      const finalStyle = {
+      let finalStyle = {
         ...groupStyle,
         ...style
       }
@@ -38,11 +38,20 @@ export default function createGroup(name, groupStyle) {
       } else if (props.onClick) {
         Base = OnClick
       } else {
-        const { _ref, styleActive, styleHover, ...rest } = props
+        const { isDisabled, _ref, styleDisabled, styleHover, ...rest } = props
 
         let inlineStyle = null
-        if (Object.keys(styleHover).length) {
-          inlineStyle = <style>{`.${localClassName}:hover {${toCSS(styleHover)}}`}</style>
+        if (isDisabled) {
+          if (styleDisabled) {
+            finalStyle = {
+              ...finalStyle,
+              ...styleDisabled
+            }
+          }
+        } else {
+          if (Object.keys(styleHover).length) {
+            inlineStyle = <style>{`.${localClassName}:hover {${toCSS(styleHover)}}`}</style>
+          }
         }
 
         return (
