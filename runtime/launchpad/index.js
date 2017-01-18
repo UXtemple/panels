@@ -52,6 +52,7 @@ export class LaunchpadRuntime extends Component {
       window.removeEventListener('orientationchange', this.setViewportWidth)
     } else {
       setTimeout(() => {
+        this.setViewportWidth()
         window.addEventListener('resize', this.setViewportWidth, false)
         window.addEventListener('orientationchange', this.setViewportWidth, false)
       }, REBOUND)
