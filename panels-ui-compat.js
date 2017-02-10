@@ -6,6 +6,8 @@ export class Panel extends Component {
 
     return (
       <div
+        aria-labelledby={props['aria-labelledby']}
+        role={props.rol}
         ref={props._ref}
         style={{
           height: '100%',
