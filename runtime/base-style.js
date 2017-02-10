@@ -28,6 +28,17 @@ export default props => (
       padding: 0;
       outline: 0;
     }
+    button,a {
+      background-color: transparent;
+      border: 0;
+      margin: 0;
+      padding: 0;
+      white-space: normal;
+      line-height: inherit;
+      text-align: left;
+      font-family: inherit;
+      font-size: inherit;
+    }
     button::-moz-focus-inner {
       border: 0;
       margin: 0;
