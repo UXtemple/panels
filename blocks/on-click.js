@@ -129,14 +129,14 @@ export default class OnClick extends Component {
     }
 
     return (
-      <div
+      <button
         {...rest}
         className={className}
         style={finalStyle}
       >
         {inlineStyle}
         {children}
-      </div>
+      </button>
     );
   }
 }
