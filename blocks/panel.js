@@ -7,6 +7,8 @@ export default class Panel extends Component {
 
     return (
       <Vertical
+        aria-labelledby={props['aria-labelledby']}
+        role={props.role}
         ref={props._ref}
         style={{
           height: '100%',
