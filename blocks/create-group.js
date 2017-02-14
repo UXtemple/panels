@@ -38,7 +38,7 @@ export default function createGroup(name, groupStyle) {
       } else if (props.onClick) {
         Base = OnClick
       } else {
-        const { isDisabled, _ref, styleDisabled, styleHover, ...rest } = props
+        const { isDisabled, _ref, styleDisabled, styleActive, styleActiveHover, styleHover, ...rest } = props
 
         let inlineStyle = null
         if (isDisabled) {
