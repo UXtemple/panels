@@ -35,10 +35,10 @@ export default function createGroup(name, groupStyle) {
       } else if (goTo) {
         Base = GoTo
         props.href = goTo
-      } else if (props.onClick) {
+      } else if (props.onClick && !props.noButton) {
         Base = OnClick
       } else {
-        const { isDisabled, _ref, styleDisabled, styleActive, styleActiveHover, styleHover, ...rest } = props
+        const { isDisabled, noButton, _ref, styleDisabled, styleActive, styleActiveHover, styleHover, ...rest } = props
 
         let inlineStyle = null
         if (isDisabled) {
