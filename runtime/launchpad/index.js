@@ -27,8 +27,8 @@ export class LaunchpadRuntime extends Component {
   componentDidUpdate(prevProps) {
     const { props } = this
 
-    if (props.focusPanel) {
-      window.document.title = props.focusPanel.title || props.focusPanel.type
+    if (props.mainPanel && props.mainPanel.title) {
+      window.document.title = props.mainPanel.title
     }
 
     this.ensureDefault()
@@ -54,23 +54,35 @@ export class LaunchpadRuntime extends Component {
       setTimeout(() => {
         this.setViewportWidth()
         window.addEventListener('resize', this.setViewportWidth, false)
-        window.addEventListener('orientationchange', this.setViewportWidth, false)
+        window.addEventListener(
+          'orientationchange',
+          this.setViewportWidth,
+          false
+        )
       }, REBOUND)
     }
   }
 
   render() {
     const {
-      dockedApp, dockedPanel, dockedRoute, dockedRouteIndex,
-      mainApp, mainPanel, mainRoute,
-      launchpadApp, launchpadPanel, launchpadRoute,
+      dockedApp,
+      dockedPanel,
+      dockedRoute,
+      dockedRouteIndex,
+      mainApp,
+      mainPanel,
+      mainRoute,
+      launchpadApp,
+      launchpadPanel,
+      launchpadRoute,
       navigate,
       router,
       runtime,
-      updateSettings
+      updateSettings,
     } = this.props
 
-    const docked = dockedPanel && (
+    const docked =
+      dockedPanel &&
       <Route
         key={`docked-${dockedPanel.dockLeft ? 'left' : 'right'}`}
         navigate={navigate}
@@ -83,22 +95,22 @@ export class LaunchpadRuntime extends Component {
         updateSettings={updateSettings}
         width={dockedRoute.width}
       />
-    )
 
-    const mainWidth = runtime.viewportWidth - ((dockedRoute && dockedRoute.width) || 0)
+    const mainWidth =
+      runtime.viewportWidth - ((dockedRoute && dockedRoute.width) || 0)
 
     return (
       <Vertical
-        ref={$e => this.$runtime = $e}
+        ref={$e => (this.$runtime = $e)}
         style={{
           height: '100%',
           overflow: 'hidden',
-          width: '100%'
+          width: '100%',
         }}
       >
         <BaseStyle />
 
-        {launchpadPanel && (
+        {launchpadPanel &&
           <Route
             navigate={navigate}
             panel={launchpadPanel}
@@ -108,25 +120,24 @@ export class LaunchpadRuntime extends Component {
             store={launchpadApp.store}
             style={{
               height: launchpadPanel.height || 0,
-              ...launchpadPanel.style
+              ...launchpadPanel.style,
             }}
             Type={launchpadApp.types[launchpadPanel.type]}
             updateSettings={updateSettings}
             width={runtime.viewportWidth}
-          />
-        )}
+          />}
 
         <Horizontal
           style={{
             flexDirection: 'row',
             height: `calc(100% - ${(launchpadPanel && launchpadPanel.height) || 0}px)`,
             overflow: 'hidden',
-            width: '100vw'
+            width: '100vw',
           }}
         >
           {dockedPanel && dockedPanel.dockLeft && docked}
 
-          {mainPanel && (
+          {mainPanel &&
             <Route
               key={'main'}
               navigate={navigate}
@@ -138,45 +149,41 @@ export class LaunchpadRuntime extends Component {
               Type={mainApp.types[mainPanel.type]}
               updateSettings={updateSettings}
               width={mainWidth}
-            />
-          )}
+            />}
 
           {dockedPanel && !dockedPanel.dockLeft && docked}
         </Horizontal>
 
-        {router.isLoading ? (
-          <Vertical
-            style={{
-              justifyContent: 'center',
-              position: 'absolute',
-              left: LOADING_OFFSET,
-              top: LOADING_OFFSET
-            }}
-          >
-            <Knocking size={LOADING_SIZE} />
-          </Vertical>
-          ) : null}
+        {router.isLoading
+          ? <Vertical
+              style={{
+                justifyContent: 'center',
+                position: 'absolute',
+                left: LOADING_OFFSET,
+                top: LOADING_OFFSET,
+              }}
+            >
+              <Knocking size={LOADING_SIZE} />
+            </Vertical>
+          : null}
       </Vertical>
     )
   }
 
-  setViewportWidth = debounce(() => this.props.setViewportWidth(getViewportWidth()), DEBOUNCE)
+  setViewportWidth = debounce(
+    () => this.props.setViewportWidth(getViewportWidth()),
+    DEBOUNCE
+  )
 }
 
 function mapStateToProps({ apps, panels, runtime, router }, props) {
-  const launchpadRoute = router.routes.byContext[
-    router.routes.items[0]
-  ]
-  const mainRoute = router.routes.byContext[
-    router.routes.items[1]
-  ]
+  const launchpadRoute = router.routes.byContext[router.routes.items[0]]
+  const mainRoute = router.routes.byContext[router.routes.items[1]]
   let dockedRoute
   let dockedRouteIndex
   if (router.routes.items.length > 2) {
     dockedRouteIndex = router.routes.items.length - 1
-    dockedRoute = router.routes.byContext[
-      router.routes.items[dockedRouteIndex]
-    ]
+    dockedRoute = router.routes.byContext[router.routes.items[dockedRouteIndex]]
   }
 
   const dockedPanel = dockedRoute && panels.byId[dockedRoute.panelId]
@@ -199,13 +206,13 @@ function mapStateToProps({ apps, panels, runtime, router }, props) {
     launchpadRoute,
 
     router,
-    runtime
+    runtime,
   }
 }
 
 const mapDispatchToProps = {
   navigate,
   setViewportWidth,
-  updateSettings
+  updateSettings,
 }
 export default connect(mapStateToProps, mapDispatchToProps)(LaunchpadRuntime)
