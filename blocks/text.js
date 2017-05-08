@@ -1,27 +1,30 @@
-import React, { PropTypes } from 'react';
+import React, { PropTypes } from 'react'
 
 const Text = ({ lineBreak, style, text, ...props }) => {
-  const styleLine = { marginTop: lineBreak };
+  const styleLine = { marginTop: lineBreak }
+  const children = /\n/.test(text)
+    ? text
+        .split('\n')
+        .map((t, i) => <div key={i} style={i ? styleLine : undefined}>{t}</div>)
+    : text
 
   return (
     <div {...props} style={style}>
-      {`${text}`.split('\n').map((t, i) => (
-        <div key={i} style={i ? styleLine : undefined}>{t}</div>
-      ))}
+      {children}
     </div>
-  );
-};
+  )
+}
 
 Text.defaultProps = {
   lineBreak: 10,
   style: {},
-  text: ''
-};
+  text: '',
+}
 
 Text.propTypes = {
   lineBreak: PropTypes.number,
   style: PropTypes.object,
-  text: PropTypes.string.isRequired
-};
+  text: PropTypes.string.isRequired,
+}
 
-export default Text;
+export default Text
