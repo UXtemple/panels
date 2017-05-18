@@ -14,13 +14,20 @@ export default function createGroup(name, groupStyle) {
     }
 
     render() {
-      const { children, className:moreClassName, goTo, style, teleportTo, ...props } = this.props
+      const {
+        children,
+        className: moreClassName,
+        goTo,
+        style,
+        teleportTo,
+        ...props
+      } = this.props
       const { localClassName } = this
       const { pages } = this.context
 
       let finalStyle = {
         ...groupStyle,
-        ...style
+        ...style,
       }
 
       let className = localClassName
@@ -35,32 +42,41 @@ export default function createGroup(name, groupStyle) {
       } else if (goTo) {
         Base = GoTo
         props.href = goTo
-      } else if (props.onClick && !props.noButton) {
+      } else if (
+        (props.onClick || props.onMouseDown || props.onMouseUp) &&
+        !props.noButton
+      ) {
         Base = OnClick
       } else {
-        const { isDisabled, noButton, _ref, styleDisabled, styleActive, styleActiveHover, styleHover, ...rest } = props
+        const {
+          isDisabled,
+          noButton,
+          _ref,
+          styleDisabled,
+          styleActive,
+          styleActiveHover,
+          styleHover,
+          ...rest
+        } = props
 
         let inlineStyle = null
         if (isDisabled) {
           if (styleDisabled) {
             finalStyle = {
               ...finalStyle,
-              ...styleDisabled
+              ...styleDisabled,
             }
           }
         } else {
           if (Object.keys(styleHover).length) {
-            inlineStyle = <style>{`.${localClassName}:hover {${toCSS(styleHover)}}`}</style>
+            inlineStyle = (
+              <style>{`.${localClassName}:hover {${toCSS(styleHover)}}`}</style>
+            )
           }
         }
 
         return (
-          <div
-            {...rest}
-            className={className}
-            ref={_ref}
-            style={finalStyle}
-          >
+          <div {...rest} className={className} ref={_ref} style={finalStyle}>
             {inlineStyle}
             {children}
           </div>
@@ -77,11 +93,7 @@ export default function createGroup(name, groupStyle) {
       }
 
       return (
-        <Base
-          {...props}
-          className={className}
-          style={finalStyle}
-        >
+        <Base {...props} className={className} style={finalStyle}>
           {children}
         </Base>
       )
@@ -90,15 +102,15 @@ export default function createGroup(name, groupStyle) {
 
   Group.contextTypes = {
     pages: PropTypes.shape({
-      isSelecting: PropTypes.bool
-    })
+      isSelecting: PropTypes.bool,
+    }),
   }
 
   Group.defaultProps = {
     className: '',
     style: {},
     styleActive: {},
-    styleHover: {}
+    styleHover: {},
   }
 
   Group.displayName = name
@@ -109,13 +121,13 @@ export default function createGroup(name, groupStyle) {
     onClick: PropTypes.oneOfType([
       PropTypes.bool,
       PropTypes.string,
-      PropTypes.func
+      PropTypes.func,
     ]),
     _ref: PropTypes.func,
     style: PropTypes.object,
     styleActive: PropTypes.object,
     styleHover: PropTypes.object,
-    teleportTo: PropTypes.string
+    teleportTo: PropTypes.string,
   }
 
   return Group
