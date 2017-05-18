@@ -1,5 +1,5 @@
-import React, { Component, PropTypes } from 'react';
-import toCSS from 'style-to-css';
+import React, { Component, PropTypes } from 'react'
+import toCSS from 'style-to-css'
 
 export default class OnClick extends Component {
   constructor(...args) {
@@ -13,28 +13,28 @@ export default class OnClick extends Component {
     const manualActive = typeof props.isActive === 'boolean'
     this.setState({
       isActive: manualActive ? props.isActive : false,
-      manualActive
-    });
+      manualActive,
+    })
 
-    this.bindOnClick(props.onClick);
+    this.bindOnClick(props.onClick)
   }
 
   componentWillReceiveProps(nextProps) {
-    this.bindOnClick(nextProps.onClick);
+    this.bindOnClick(nextProps.onClick)
 
     const manualActive = typeof nextProps.isActive === 'boolean'
 
     if (manualActive) {
       this.setState({
         isActive: nextProps.isActive,
-        manualActive
+        manualActive,
       })
     }
   }
 
   componentWillUnmount() {
     if (this.onClickTimeout) {
-      clearTimeout(this.onClickTimeout);
+      clearTimeout(this.onClickTimeout)
     }
   }
 
@@ -47,7 +47,7 @@ export default class OnClick extends Component {
       finalOnClick = () => {
         try {
           onClick()
-        } catch(err) {
+        } catch (err) {
           const match = err.message.match(/props\.(.+) is not a function/)
           if (match) {
             context.transitionTo(match[1].trim(), true)
@@ -67,32 +67,42 @@ export default class OnClick extends Component {
     }
 
     this.onClick = event => {
-      finalOnClick(event);
+      finalOnClick(event)
 
-      event.stopPropagation();
+      event.stopPropagation()
 
       if (!this.state.manualActive) {
         this.setState({
-          isActive: true
-        });
+          isActive: true,
+        })
 
         this.onClickTimeout = setTimeout(() => {
           this.setState({
-            isActive: false
-          });
-          this.onClickTimeout = null;
-        }, this.props.styleActiveTimeout);
+            isActive: false,
+          })
+          this.onClickTimeout = null
+        }, this.props.styleActiveTimeout)
       }
-    };
+    }
   }
 
   render() {
-    const { isActive } = this.state;
+    const { isActive } = this.state
     /* eslint-disable no-unused-vars */
     const {
-      children, className, isActive: _isActive, isDisabled, _ref, style, styleActive,
-      styleActiveHover, styleActiveTimeout, styleDisabled, styleHover, ...rest
-    } = this.props;
+      children,
+      className,
+      isActive: _isActive,
+      isDisabled,
+      _ref,
+      style,
+      styleActive,
+      styleActiveHover,
+      styleActiveTimeout,
+      styleDisabled,
+      styleHover,
+      ...rest
+    } = this.props
 
     let inlineStyle = null
     if (!isDisabled) {
@@ -100,61 +110,56 @@ export default class OnClick extends Component {
 
       const fClass = className.split(' ')[0]
       if (!isActive && styleHover) {
-        inlineStyle = <style>{`.${fClass}:hover {${toCSS(styleHover)}}`}</style>;
+        inlineStyle = <style>{`.${fClass}:hover {${toCSS(styleHover)}}`}</style>
       }
-      if (isActive &&styleActiveHover) {
-        inlineStyle = <style>{`.${fClass}:hover {${toCSS(styleActiveHover)}}`}</style>;
+      if (isActive && styleActiveHover) {
+        inlineStyle = (
+          <style>{`.${fClass}:hover {${toCSS(styleActiveHover)}}`}</style>
+        )
       }
     }
 
     let finalStyle = {
       cursor: 'pointer',
-      ...style
+      ...style,
     }
     if (isDisabled) {
       finalStyle = {
         ...finalStyle,
         cursor: 'default',
-        ...styleDisabled
+        ...styleDisabled,
       }
     } else if (isActive) {
       finalStyle = {
         ...finalStyle,
-        ...styleActive
+        ...styleActive,
       }
     }
 
     if (_ref) {
-      rest.ref = _ref;
+      rest.ref = _ref
     }
 
     return (
-      <button
-        {...rest}
-        className={className}
-        style={finalStyle}
-      >
+      <button {...rest} className={className} style={finalStyle}>
         {inlineStyle}
         {children}
       </button>
-    );
+    )
   }
 }
 OnClick.contextTypes = {
-  transitionTo: PropTypes.func
+  transitionTo: PropTypes.func,
 }
 OnClick.defaultProps = {
-  styleActiveTimeout: 1000
-};
+  styleActiveTimeout: 1000,
+}
 OnClick.propTypes = {
   isActive: PropTypes.bool,
-  onClick: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.string
-  ]),
+  onClick: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   _ref: PropTypes.func,
   style: PropTypes.object,
   styleActive: PropTypes.object,
   styleActiveTimeout: PropTypes.number.isRequired,
-  styleHover: PropTypes.object
-};
+  styleHover: PropTypes.object,
+}
