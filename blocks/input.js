@@ -6,7 +6,7 @@ const PLACEHOLDER_PREFIXES = [
   '::-webkit-input-placeholder',
   '::-moz-placeholder',
   ':-ms-input-placeholder',
-  ':placeholder-shown'
+  ':placeholder-shown',
 ];
 
 export default class Input extends Component {
@@ -18,34 +18,56 @@ export default class Input extends Component {
   render() {
     const { id } = this;
     const {
-      onEnter, _ref, style, styleFocus, styleHover, stylePlaceholder, styleWrapper, ...rest
+      disabled,
+      onEnter,
+      _ref,
+      style,
+      styleDisabled,
+      styleFocus,
+      styleHover,
+      stylePlaceholder,
+      styleWrapper,
+      ...rest
     } = this.props;
+
+    let finalStyle = style;
 
     const backgroundColor = (style && style.backgroundColor) || 'transparent';
     const color = (style && style.color) || 'black';
-    const inlineStyle = [`#${id}:-webkit-autofill {
+    const inlineStyle = [
+      `#${id}:-webkit-autofill {
       background-color: ${backgroundColor} !important;
       box-shadow: 0 0 0px 1000px ${backgroundColor} inset;
       color: ${color} !important;
-    }`];
-
+    }`,
+    ];
 
     if (stylePlaceholder) {
       PLACEHOLDER_PREFIXES.forEach(prefix => {
         inlineStyle.push(`#${id}${prefix} {${toCSS(stylePlaceholder)}}`);
       });
     }
-    if (styleHover) {
-      inlineStyle.push(`${inlineStyle} #${id}:hover {${toCSS(styleHover)}}`);
-    }
-    if (styleFocus) {
-      inlineStyle.push(`#${id}:focus {${toCSS(styleFocus)}}`);
+
+    if (styleDisabled && disabled) {
+      finalStyle = {
+        ...style,
+        ...styleDisabled,
+      };
+    } else {
+      if (styleHover) {
+        inlineStyle.push(`${inlineStyle} #${id}:hover {${toCSS(styleHover)}}`);
+      }
+      if (styleFocus) {
+        inlineStyle.push(`#${id}:focus {${toCSS(styleFocus)}}`);
+      }
     }
 
     let onKeyUp;
     if (typeof onEnter !== 'undefined') {
       /* eslint-disable no-console */
-      const finalOnEnter = typeof onEnter === 'function' ? onEnter : () => console.log(onEnter);
+      const finalOnEnter = typeof onEnter === 'function'
+        ? onEnter
+        : () => console.log(onEnter);
       onKeyUp = event => event.key === 'Enter' && finalOnEnter(event);
     }
 
@@ -58,7 +80,7 @@ export default class Input extends Component {
           id={id}
           onKeyUp={onKeyUp}
           ref={_ref}
-          style={style}
+          style={finalStyle}
         />
       </div>
     );
@@ -70,7 +92,7 @@ Input.defaultProps = {
   style: {},
   styleHover: {},
   styleWrapper: {},
-  type: 'text'
+  type: 'text',
 };
 
 Input.propTypes = {
@@ -82,5 +104,5 @@ Input.propTypes = {
   styleHover: PropTypes.object,
   stylePlaceholder: PropTypes.object,
   styleWrapper: PropTypes.object,
-  type: PropTypes.string.isRequired
+  type: PropTypes.string.isRequired,
 };
