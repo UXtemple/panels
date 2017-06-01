@@ -1,8 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 
-export default class Path extends Component {
-  render() {
-    const { props } = this
-    return <path {...props} />
-  }
-}
+const Path = props => <path {...props} />
+export default Path

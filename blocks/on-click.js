@@ -1,11 +1,9 @@
-import React, { Component, PropTypes } from 'react'
+import PropTypes from 'prop-types'
+import React from 'react'
 import toCSS from 'style-to-css'
 
-export default class OnClick extends Component {
-  constructor(...args) {
-    super(...args)
-    this.state = {}
-  }
+export default class OnClick extends React.Component {
+  state = {}
 
   componentWillMount() {
     const { props } = this
@@ -153,13 +151,4 @@ OnClick.contextTypes = {
 }
 OnClick.defaultProps = {
   styleActiveTimeout: 1000,
-}
-OnClick.propTypes = {
-  isActive: PropTypes.bool,
-  onClick: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
-  _ref: PropTypes.func,
-  style: PropTypes.object,
-  styleActive: PropTypes.object,
-  styleActiveTimeout: PropTypes.number.isRequired,
-  styleHover: PropTypes.object,
 }

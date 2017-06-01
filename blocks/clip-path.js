@@ -1,8 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 
-export default class ClipPath extends Component {
-  render() {
-    const { props } = this
-    return <clip-path {...props} />
-  }
-}
+const ClipPath = props => <clip-path {...props} />
+export default ClipPath

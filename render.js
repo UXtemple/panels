@@ -1,5 +1,3 @@
-import 'velocity-animate'
-import 'velocity-animate/velocity.ui'
 import { navigate } from './actions'
 import { render } from 'react-dom'
 import { Provider } from 'react-redux'
@@ -7,20 +5,23 @@ import * as runtimes from './runtime/index'
 import history from './router/history'
 import React from 'react'
 
-export default function runtimeRender(configureStore, {
-  snap = true,
-  runtime = 'Trails',
-  // preferredSnapPoint = 90,
-  ...initialState
-} = {}) {
+export default function runtimeRender(
+  configureStore,
+  {
+    snap = true,
+    runtime = 'Trails',
+    // preferredSnapPoint = 90,
+    ...initialState
+  } = {}
+) {
   const store = configureStore({
     router: {
       routes: {
         byContext: {},
-        items: []
+        items: [],
       },
-      parsers: initialState.router && initialState.router.parsers
-    }
+      parsers: initialState.router && initialState.router.parsers,
+    },
   })
   store.dispatch(navigate(location.href))
 

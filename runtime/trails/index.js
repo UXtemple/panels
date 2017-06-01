@@ -2,14 +2,13 @@ import { connect } from 'react-redux'
 import { moveLeft, setViewportWidth, setX } from '../actions.js'
 import { navigate, toggleExpand, updateSettings } from '../../actions.js'
 import { snapX } from '../../utils/snap.js'
-import AnimateGroup from '../../blocks/animate-group.js'
 import BaseStyle from '../base-style.js'
 import debounce from 'lodash.debounce'
 import getViewportWidth from '../get-viewport-width.js'
 import Horizontal from '../../blocks/horizontal.js'
 import Knocking from '../../blocks/knocking.js'
 import MoveLeft from './move-left.js'
-import React, { Component } from 'react'
+import React from 'react'
 import Route from '../../route.js'
 import supportsPassiveEvents from '../../utils/supports-passive-events.js'
 
@@ -24,12 +23,12 @@ const style = {
   height: '100%',
   overflowX: 'auto',
   overflowY: 'hidden',
-  width: '100vw'
+  width: '100vw',
 }
 
-export class Runtime extends Component {
+export class Runtime extends React.Component {
   state = {
-    autoScroll: null
+    autoScroll: null,
   }
 
   componentDidMount() {
@@ -71,40 +70,61 @@ export class Runtime extends Component {
     } else {
       setTimeout(() => {
         if (this.props.snap) {
-          this.$runtime.addEventListener('scroll', this.setX, scrollEventOptions)
+          this.$runtime.addEventListener(
+            'scroll',
+            this.setX,
+            scrollEventOptions
+          )
         }
         window.addEventListener('resize', this.setViewportWidth, false)
-        window.addEventListener('orientationchange', this.setViewportWidth, false)
+        window.addEventListener(
+          'orientationchange',
+          this.setViewportWidth,
+          false
+        )
       }, REBOUND)
     }
   }
 
   render() {
-    const { apps, canMoveLeft, focusPanel, moveLeft, navigate, panels, router, runtime, snap,
-      toggleExpand, updateSettings, visibleRoutes } = this.props
+    const {
+      apps,
+      canMoveLeft,
+      focusPanel,
+      moveLeft,
+      navigate,
+      panels,
+      router,
+      runtime,
+      snap,
+      toggleExpand,
+      updateSettings,
+      visibleRoutes,
+    } = this.props
 
-    const runtimeStyle = focusPanel ? {
-      ...style,
-      ...focusPanel.styleBackground
-    } : style
+    const runtimeStyle = focusPanel
+      ? {
+          ...style,
+          ...focusPanel.styleBackground,
+        }
+      : style
 
     return (
-      <Horizontal _ref={$e => this.$runtime = $e} style={runtimeStyle}>
+      <Horizontal _ref={$e => (this.$runtime = $e)} style={runtimeStyle}>
         <BaseStyle />
 
-        {canMoveLeft && snap && <MoveLeft onClick={moveLeft} snapPoint={runtime.snapPoint} />}
+        {canMoveLeft &&
+          snap &&
+          <MoveLeft onClick={moveLeft} snapPoint={runtime.snapPoint} />}
 
-        <AnimateGroup
-          component={Horizontal}
-          enter={{ animation: 'transition.slideLeftBigIn', display: 'flex', drag: true }}
-          leave={{ animation: 'transition.fadeOut' }}
+        <Horizontal
           style={{
             flexDirection: 'row',
             height: '100%',
             overflowY: 'hidden',
             paddingLeft: runtime.snapPoint,
             width: runtime.width,
-            willChange: 'scroll-position'
+            willChange: 'scroll-position',
           }}
         >
           {visibleRoutes.map((context, i) => {
@@ -131,19 +151,21 @@ export class Runtime extends Component {
               />
             )
           })}
-        </AnimateGroup>
+        </Horizontal>
 
-        {router.isLoading ? (
-          <Horizontal
-            style={{
-              justifyContent: 'center',
-              left: router.routes.items.length ? LOADING_OFFSET : LOADING_OFFSET - runtime.snapPoint,
-              marginTop: LOADING_OFFSET
-            }}
-          >
-            <Knocking size={LOADING_SIZE} />
-          </Horizontal>
-          ) : null}
+        {router.isLoading
+          ? <Horizontal
+              style={{
+                justifyContent: 'center',
+                left: router.routes.items.length
+                  ? LOADING_OFFSET
+                  : LOADING_OFFSET - runtime.snapPoint,
+                marginTop: LOADING_OFFSET,
+              }}
+            >
+              <Knocking size={LOADING_SIZE} />
+            </Horizontal>
+          : null}
       </Horizontal>
     )
   }
@@ -166,7 +188,7 @@ export class Runtime extends Component {
 
     if (this.state.autoScroll) {
       this.setState({
-        autoScroll: null
+        autoScroll: null,
       })
     }
 
@@ -192,7 +214,9 @@ function mapStateToProps(state, props) {
     panels: state.panels.byId,
     router: state.router,
     runtime: state.runtime,
-    visibleRoutes: state.router.routes.items.filter(r => state.router.routes.byContext[r].isVisible)
+    visibleRoutes: state.router.routes.items.filter(
+      r => state.router.routes.byContext[r].isVisible
+    ),
   }
 }
 
@@ -202,6 +226,6 @@ const mapDispatchToProps = {
   setViewportWidth,
   setX,
   toggleExpand,
-  updateSettings
+  updateSettings,
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Runtime)

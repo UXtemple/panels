@@ -1,9 +1,10 @@
 import normaliseUri from '../utils/normalise-uri/index.js'
-import React, { Component, PropTypes } from 'react'
+import PropTypes from 'prop-types'
+import React from 'react'
 import toCSS from 'style-to-css'
 import uniqueId from 'mini-unique-id'
 
-export default class Teleport extends Component {
+export default class Teleport extends React.Component {
   constructor(props, context) {
     super(props, context)
     this.className = `Teleport-${uniqueId()}`
@@ -12,8 +13,19 @@ export default class Teleport extends Component {
   render() {
     const { className } = this
     const {
-      context, children, focus, loose, onClick, _ref, style, styleActive, styleActiveHover,
-      styleHover, title, to, ...rest
+      context,
+      children,
+      focus,
+      loose,
+      onClick,
+      _ref,
+      style,
+      styleActive,
+      styleActiveHover,
+      styleHover,
+      title,
+      to,
+      ...rest
     } = this.props
     const { isActive, navigate, route } = this.context
     const active = isActive(to, loose)
@@ -21,10 +33,10 @@ export default class Teleport extends Component {
 
     let inlineStyle = ''
     if (!active && styleHover) {
-     inlineStyle = `.${className}:hover {${toCSS(styleHover)}}`
+      inlineStyle = `.${className}:hover {${toCSS(styleHover)}}`
     }
     if (active && styleActiveHover) {
-     inlineStyle = `.${className}:hover {${toCSS(styleActiveHover)}}`
+      inlineStyle = `.${className}:hover {${toCSS(styleActiveHover)}}`
     }
     const finalStyle = active ? { ...style, ...styleActive } : style
 
@@ -64,16 +76,6 @@ Teleport.contextTypes = {
   isActive: PropTypes.func.isRequired,
   navigate: PropTypes.func.isRequired,
   route: PropTypes.shape({
-    context: PropTypes.string.isRequired
-  }).isRequired
-}
-
-Teleport.propTypes = {
-  _ref: PropTypes.func,
-  styleActive: PropTypes.object,
-  styleHover: PropTypes.object,
-  to: PropTypes.string.isRequired,
-  onClick: PropTypes.func,
-  style: PropTypes.object,
-  title: PropTypes.string
+    context: PropTypes.string.isRequired,
+  }).isRequired,
 }

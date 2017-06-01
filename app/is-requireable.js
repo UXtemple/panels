@@ -4,8 +4,7 @@ export default function isRequireable(dep) {
   try {
     require(dep)
     is = true
-  } catch(err) {
-  }
+  } catch (err) {}
 
   return is
 }

@@ -1,25 +1,29 @@
 import normaliseUri from './utils/normalise-uri/index.js'
-import React, { Component, PropTypes } from 'react'
+import PropTypes from 'prop-types'
+import React from 'react'
 
-export default class Route extends Component {
+export default class Route extends React.Component {
   isActive = path => {
     const { route, router, routeIndex } = this.props
 
     const routeAfterContext = router.routes.items[routeIndex + 1]
-    return routeAfterContext && normaliseUri(`${route.context}${path}`) === routeAfterContext
+    return (
+      routeAfterContext &&
+      normaliseUri(`${route.context}${path}`) === routeAfterContext
+    )
   }
 
-  navigate = (toUri, focus, context, raw = false) => (
-    this.props.navigate(raw ? toUri : `${this.props.route.context}${toUri}`, focus, context)
-  )
+  navigate = (toUri, focus, context, raw = false) =>
+    this.props.navigate(
+      raw ? toUri : `${this.props.route.context}${toUri}`,
+      focus,
+      context
+    )
 
-  toggleExpand = () => (
-    this.props.toggleExpand(this.props.route.context)
-  )
+  toggleExpand = () => this.props.toggleExpand(this.props.route.context)
 
-  updateSettings = settings => (
+  updateSettings = settings =>
     this.props.updateSettings(this.props.route.context, settings)
-  )
 
   getChildContext() {
     const { isActive, navigate, toggleExpand, updateSettings } = this
@@ -35,7 +39,7 @@ export default class Route extends Component {
       routeIndex,
       router,
       toggleExpand,
-      updateSettings
+      updateSettings,
     }
   }
 
@@ -57,7 +61,7 @@ export default class Route extends Component {
             isActive,
             navigate,
             toggleExpand,
-            updateSettings
+            updateSettings,
           }}
         />
       )
@@ -71,7 +75,7 @@ const routeShape = PropTypes.shape({
   panelId: PropTypes.string.isRequired,
   path: PropTypes.string.isRequired,
   isVisible: PropTypes.bool.isRequired,
-  width: PropTypes.number.isRequired
+  width: PropTypes.number.isRequired,
 })
 
 Route.childContextTypes = {
@@ -85,44 +89,29 @@ Route.childContextTypes = {
   router: PropTypes.shape({
     routes: PropTypes.shape({
       byContext: PropTypes.objectOf(routeShape),
-      items: PropTypes.arrayOf(PropTypes.string)
+      items: PropTypes.arrayOf(PropTypes.string),
     }),
-    uri: PropTypes.string.isRequired
+    uri: PropTypes.string.isRequired,
   }),
   toggleExpand: PropTypes.func.isRequired,
-  updateSettings: PropTypes.func.isRequired
-}
-Route.propTypes = {
-  isContext: PropTypes.bool,
-  isFocus: PropTypes.bool,
-  navigate: PropTypes.func.isRequired,
-  panel: PropTypes.object.isRequired,
-  route: routeShape.isRequired,
-  routeIndex: PropTypes.number.isRequired,
-  router: PropTypes.shape({
-    routes: PropTypes.shape({
-      byContext: PropTypes.objectOf(routeShape),
-      items: PropTypes.arrayOf(PropTypes.string)
-    }),
-    uri: PropTypes.string.isRequired
-  }),
-  store: PropTypes.any,
-  Type: PropTypes.func.isRequired,
-  toggleExpand: PropTypes.func,
   updateSettings: PropTypes.func.isRequired,
-  width: PropTypes.oneOfType([
-    PropTypes.number,
-    PropTypes.string
-  ]),
-  zIndex: PropTypes.number
 }
 
-class CustomRoute extends Component {
+class CustomRoute extends React.Component {
   state = {}
 
   componentDidMount() {
     const { isActive, navigate, toggleExpand, updateSettings } = this
-    const { isContext, isFocus, panel, route, routeIndex, router, store, Type } = this.props
+    const {
+      isContext,
+      isFocus,
+      panel,
+      route,
+      routeIndex,
+      router,
+      store,
+      Type,
+    } = this.props
 
     const typeProps = {
       isActive,
@@ -135,12 +124,12 @@ class CustomRoute extends Component {
       router,
       store,
       toggleExpand,
-      updateSettings
+      updateSettings,
     }
 
     try {
       this.onDestroy = Type(this.$el, typeProps, this.subscribe)
-    } catch(error) {
+    } catch (error) {
       console.error('panels:route', error)
     }
   }
@@ -152,18 +141,17 @@ class CustomRoute extends Component {
       this.componentWillUnmount()
       this.componentDidMount()
     } else if (
-      typeof this.onChange === 'function' && (
-        prevProps.panel !== panel ||
+      typeof this.onChange === 'function' &&
+      (prevProps.panel !== panel ||
         prevProps.route !== route ||
         prevProps.routeIndex !== routeIndex ||
-        prevProps.router !== router
-      )
+        prevProps.router !== router)
     ) {
       this.onChange({
         panel,
         route,
         routeIndex,
-        router
+        router,
       })
     }
   }
@@ -174,28 +162,29 @@ class CustomRoute extends Component {
     }
   }
 
-  subscribe = onChange => this.onChange = onChange
+  subscribe = onChange => (this.onChange = onChange)
 
   render() {
     const { props, state } = this
 
     return (
       <div
-        ref={$el => { this.$el = $el }}
+        ref={$el => {
+          this.$el = $el
+        }}
         style={{
           backgroundColor: state.error && '#ff5959',
           height: '100%',
           overflowY: 'auto',
           width: props.width,
           zIndex: props.zIndex,
-          ...props.style
+          ...props.style,
         }}
       >
-        {state.error && (
+        {state.error &&
           <pre style={{ color: '#ffffff', overflowX: 'scroll', padding: 10 }}>
             {state.error.stack}
-          </pre>
-        )}
+          </pre>}
       </div>
     )
   }

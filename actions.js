@@ -25,7 +25,7 @@ export function navigate(rawUri, nextFocus = 1, nextContext) {
 
     const routes = {
       byContext: parsed.routes.byContext,
-      items: parsed.routes.items
+      items: parsed.routes.items,
     }
 
     const createAppContext = (appName, appModule) => {
@@ -46,41 +46,43 @@ export function navigate(rawUri, nextFocus = 1, nextContext) {
       return {
         access,
         navigate: (...args) => dispatch(navigate(...args)),
-        routes
+        routes,
       }
     }
 
     // get the next apps
     const nextApps = {
       byName: {},
-      items: parsed.apps.items.filter(name => apps.items.indexOf(name) === -1)
+      items: parsed.apps.items.filter(name => apps.items.indexOf(name) === -1),
     }
 
     if (nextApps.items.length) {
       dispatch({
         type: NAVIGATE,
         sequence: {
-          type: 'start'
+          type: 'start',
         },
         meta: {
-          uri
-        }
+          uri,
+        },
       })
     }
 
-    await Promise.all(nextApps.items.map(async name => {
-      try {
-        // otherwise fetch it! :)
-        nextApps.byName[name] = await getApp(name, createAppContext)
-      } catch (error) {
-        // TODO
-        console.error(`Can't load app ${name}`, error)
-      }
-    }))
+    await Promise.all(
+      nextApps.items.map(async name => {
+        try {
+          // otherwise fetch it! :)
+          nextApps.byName[name] = await getApp(name, createAppContext)
+        } catch (error) {
+          // TODO
+          console.error(`Can't load app ${name}`, error)
+        }
+      })
+    )
 
     const nextPanels = {
       byId: {},
-      items: []
+      items: [],
     }
 
     // we still need to go through all the apps
@@ -106,7 +108,7 @@ export function navigate(rawUri, nextFocus = 1, nextContext) {
           } else {
             panel = {
               ...panel,
-              props: props
+              props: props,
             }
           }
 
@@ -130,10 +132,10 @@ export function navigate(rawUri, nextFocus = 1, nextContext) {
       currentFocus: router.focus,
       next: {
         context: nextContext,
-        focus: nextFocus
+        focus: nextFocus,
       },
       uri,
-      last
+      last,
     }
     if (isFirstLoad) {
       const focusRoute = parsed.routes.byContext[parsed.routes.items[last]]
@@ -160,9 +162,12 @@ export function navigate(rawUri, nextFocus = 1, nextContext) {
           width = runtime.viewportWidth
         } else {
           const prevRoute = router.routes.byContext[routeContext]
-          width = route.isExpanded ? panel.maxWidth : ((prevRoute && prevRoute.width) || panel.width)
+          width = route.isExpanded
+            ? panel.maxWidth
+            : (prevRoute && prevRoute.width) || panel.width
 
-          const percentageMatch = typeof width === 'string' && width.match(/([0-9]+)%/)
+          const percentageMatch =
+            typeof width === 'string' && width.match(/([0-9]+)%/)
           if (percentageMatch) {
             width = maxFullPanelWidth * parseInt(percentageMatch, 10) / 100
           }
@@ -209,7 +214,7 @@ export function navigate(rawUri, nextFocus = 1, nextContext) {
     dispatch({
       type: NAVIGATE,
       sequence: {
-        type: 'next'
+        type: 'next',
       },
       payload: {
         apps: nextApps,
@@ -218,7 +223,7 @@ export function navigate(rawUri, nextFocus = 1, nextContext) {
           context,
           focus,
           routes,
-          uri
+          uri,
         },
         runtime: {
           maxFullPanelWidth,
@@ -226,12 +231,12 @@ export function navigate(rawUri, nextFocus = 1, nextContext) {
           snappedAt,
           width: maxFullPanelWidth + widths.reduce((a, b) => a + b, 0),
           widths,
-          x
-        }
+          x,
+        },
       },
       meta: {
-        uri
-      }
+        uri,
+      },
     })
   }
 }
@@ -248,8 +253,8 @@ export function toggleExpand(routeContext) {
       ...routes.byContext,
       [routeContext]: {
         ...route,
-        isExpanded: !route.isExpanded
-      }
+        isExpanded: !route.isExpanded,
+      },
     }
 
     const nextPosition = getNextPosition({
@@ -260,24 +265,27 @@ export function toggleExpand(routeContext) {
       routes,
       panels,
       shouldGoMobile: runtime.shouldGoMobile,
-      viewportWidth: runtime.viewportWidth
+      viewportWidth: runtime.viewportWidth,
     })
 
     dispatch({
       type: TOGGLE_EXPAND,
-      payload: nextPosition
+      payload: nextPosition,
     })
   }
 }
 
 export const UPDATE_SETTINGS = 'panels/panels/UPDATE_SETTINGS'
-export function updateSettings(routeContext, { maxWidth, title, styleBackground, width }) {
+export function updateSettings(
+  routeContext,
+  { maxWidth, title, styleBackground, width }
+) {
   return function updateSettingsThunk(dispatch, getState) {
     const { panels, router, runtime } = getState()
 
     const nextPanels = {
       byId: panels.byId,
-      items: panels.items
+      items: panels.items,
     }
 
     const route = router.routes.byContext[routeContext]
@@ -285,7 +293,7 @@ export function updateSettings(routeContext, { maxWidth, title, styleBackground,
     if (!route.isVisible) return
 
     const panel = {
-      ...nextPanels.byId[route.panelId]
+      ...nextPanels.byId[route.panelId],
     }
 
     if (maxWidth) {
@@ -303,7 +311,7 @@ export function updateSettings(routeContext, { maxWidth, title, styleBackground,
 
     nextPanels.byId = {
       ...nextPanels.byId,
-      [route.panelId]: panel
+      [route.panelId]: panel,
     }
 
     let nextPosition
@@ -315,7 +323,7 @@ export function updateSettings(routeContext, { maxWidth, title, styleBackground,
         routes: router.routes,
         panels: nextPanels,
         shouldGoMobile: runtime.shouldGoMobile,
-        viewportWidth: runtime.viewportWidth
+        viewportWidth: runtime.viewportWidth,
       })
     }
 
@@ -323,8 +331,8 @@ export function updateSettings(routeContext, { maxWidth, title, styleBackground,
       type: UPDATE_SETTINGS,
       payload: {
         nextPanelsById: nextPanels.byId,
-        nextPosition
-      }
+        nextPosition,
+      },
     })
   }
 }

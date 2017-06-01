@@ -8,19 +8,20 @@ function compare(a, b) {
 }
 
 // cache the app's patterns as routes ready to be matched
-const getPatterns = lookup => (
+const getPatterns = lookup =>
   lookup.map(def => {
-    const { pattern, ...config } = typeof def === 'string' ? {pattern: def} : def
+    const { pattern, ...config } = typeof def === 'string'
+      ? { pattern: def }
+      : def
 
     return {
       pattern,
-      route: new Route(pattern, config)
+      route: new Route(pattern, config),
     }
   })
-)
 
 // define a matcher in case we need to work with a dynamic panel
-const match = (path, lookup) => (
+const match = (path, lookup) =>
   getPatterns(lookup)
     .map(({ pattern, route }) => {
       const params = route.match(path)
@@ -28,7 +29,7 @@ const match = (path, lookup) => (
       if (params) {
         return {
           params,
-          pattern
+          pattern,
         }
       } else {
         return false
@@ -36,7 +37,6 @@ const match = (path, lookup) => (
     })
     .filter(Boolean)
     .sort(compare)[0]
-)
 
 export default function createFindPanel(panels, lookup = []) {
   // return our grand matcher
@@ -61,7 +61,7 @@ export default function createFindPanel(panels, lookup = []) {
 
     return {
       panel,
-      props
+      props,
     }
   }
 }

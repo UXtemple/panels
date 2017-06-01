@@ -1,8 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 
-export default class Polygon extends Component {
-  render() {
-    const { props } = this
-    return <polygon {...props} />
-  }
-}
+const Polygon = props => <polygon {...props} />
+export default Polygon

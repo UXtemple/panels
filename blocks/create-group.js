@@ -1,12 +1,13 @@
 import Teleport from './teleport.js'
 import GoTo from './go-to'
 import OnClick from './on-click'
-import React, { Component, PropTypes } from 'react'
+import PropTypes from 'prop-types'
+import React from 'react'
 import toCSS from 'style-to-css'
 import uniqueId from 'mini-unique-id'
 
 export default function createGroup(name, groupStyle) {
-  class Group extends Component {
+  class Group extends React.Component {
     constructor(props, context) {
       super(props, context)
 
@@ -55,6 +56,7 @@ export default function createGroup(name, groupStyle) {
           styleDisabled,
           styleActive,
           styleActiveHover,
+          styleActiveTimeout,
           styleHover,
           ...rest
         } = props
@@ -114,21 +116,6 @@ export default function createGroup(name, groupStyle) {
   }
 
   Group.displayName = name
-
-  Group.propTypes = {
-    blocks: PropTypes.any,
-    goTo: PropTypes.string,
-    onClick: PropTypes.oneOfType([
-      PropTypes.bool,
-      PropTypes.string,
-      PropTypes.func,
-    ]),
-    _ref: PropTypes.func,
-    style: PropTypes.object,
-    styleActive: PropTypes.object,
-    styleHover: PropTypes.object,
-    teleportTo: PropTypes.string,
-  }
 
   return Group
 }

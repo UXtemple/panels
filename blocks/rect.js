@@ -1,8 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 
-export default class Rect extends Component {
-  render() {
-    const { props } = this
-    return <rect {...props} />
-  }
-}
+const Rect = props => <rect {...props} />
+export default Rect

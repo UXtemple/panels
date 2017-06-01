@@ -1,5 +1,5 @@
 import Horizontal from './horizontal.js'
-import React, { PropTypes } from 'react'
+import React from 'react'
 
 const animation = `@keyframes scaleout {
   0% {
@@ -20,14 +20,11 @@ const Knocking = ({ 'data-block': dataBlock, size, style = {} }) => {
     height: size,
     WebkitAnimation: 'scaleout 1.0s infinite linear',
     width: size,
-    ...style
+    ...style,
   }
 
   return (
-    <Horizontal
-      data-block={dataBlock}
-      style={finalStyle}
-    >
+    <Horizontal data-block={dataBlock} style={finalStyle}>
       <style>{animation}</style>
     </Horizontal>
   )
@@ -35,14 +32,9 @@ const Knocking = ({ 'data-block': dataBlock, size, style = {} }) => {
 
 Knocking.defaultProps = {
   style: {
-    color: '#323232'
+    color: '#323232',
   },
-  size: 32
-}
-
-Knocking.propTypes = {
-  style: PropTypes.object,
-  size: PropTypes.number.isRequired
+  size: 32,
 }
 
 export default Knocking

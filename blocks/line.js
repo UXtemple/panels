@@ -1,8 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 
-export default class Line extends Component {
-  render() {
-    const { props } = this
-    return <line {...props} />
-  }
-}
+const Line = props => <line {...props} />
+export default Line

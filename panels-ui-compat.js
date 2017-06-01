@@ -1,8 +1,8 @@
-import React, { Component, PropTypes } from 'react';
+import React from 'react'
 
-export class Panel extends Component {
+export class Panel extends React.Component {
   render() {
-    const { props } = this;
+    const { props } = this
 
     return (
       <div
@@ -12,17 +12,13 @@ export class Panel extends Component {
         style={{
           height: '100%',
           overflowY: 'auto',
-          ...props.style
+          ...props.style,
         }}
       >
         {props.children}
       </div>
-    );
+    )
   }
-}
-Panel.propTypes = {
-  _ref: PropTypes.func,
-  style: PropTypes.object
 }
 
 export { snapX, snapY } from './utils/snap.js'

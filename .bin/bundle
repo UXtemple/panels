@@ -13,10 +13,9 @@ echo "[bundle] v${VERSION}..."
 NODE_ENV=development $BIN/browserify --verbose --debug \
   --require react \
   --require react-dom \
+  --require prop-types \
   --require ./index.dev.js:panels \
   --require ./panels-ui-compat.js:panels-ui \
-  --require ./react-flip-move-compat.js:react-flip-move \
-  --require ./usepages-blocks-compat.js:usepages-blocks \
   --require ./blocks/index.js:panels/blocks \
   --require ./utils/normalise-uri/index.js:panels/normalise-uri \
   --require ./utils/snap.js:panels/snap \
@@ -28,16 +27,15 @@ NODE_ENV=development $BIN/browserify --verbose --debug \
 NODE_ENV=production $BIN/browserify --verbose --debug \
   --require react \
   --require react-dom \
+  --require prop-types \
   --require ./index.js:panels \
   --require ./panels-ui-compat.js:panels-ui \
-  --require ./react-flip-move-compat.js:react-flip-move \
-  --require ./usepages-blocks-compat.js:usepages-blocks \
   --require ./blocks/index.js:panels/blocks \
   --require ./utils/normalise-uri/index.js:panels/normalise-uri \
   --require ./utils/snap.js:panels/snap \
   --transform [rollupify --config rollup.config.js] \
   --transform loose-envify \
-  --entry index.dev.js | \
+  --entry index.js | \
   $BIN/exorcist $PANELS-prod.js.map > $PANELS-prod.js &&
   $BIN/uglifyjs --verbose \
     --compress \

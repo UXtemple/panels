@@ -1,9 +1,9 @@
 import { load } from 'webfontloader'
-import { Component, PropTypes } from 'react'
+import React from 'react'
 
 const loaded = []
 
-export default class Font extends Component {
+export default class Font extends React.Component {
   componentDidMount() {
     this.load()
   }
@@ -22,7 +22,7 @@ export default class Font extends Component {
     if (props.family === 'FontAwesome') {
       source = 'custom'
       urls = [
-        'https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css'
+        'https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css',
       ]
     } else if (typeof props.weight === 'string') {
       family = `${family}:${props.weight}`
@@ -34,8 +34,8 @@ export default class Font extends Component {
     load({
       [source]: {
         families: [family],
-        urls
-      }
+        urls,
+      },
     })
   }
 
@@ -44,13 +44,5 @@ export default class Font extends Component {
   }
 }
 Font.defaultProps = {
-  source: 'google'
-}
-Font.propTypes = {
-  family: PropTypes.string.isRequired,
-  source: PropTypes.oneOf([
-    'custom',
-    'google'
-  ]).isRequired,
-  weight: PropTypes.string
+  source: 'google',
 }

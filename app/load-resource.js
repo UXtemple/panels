@@ -16,7 +16,12 @@ export default function load(file) {
     }
 
     resource.onload = resource.onreadystatechange = e => {
-      if (!(done && (!this.readyState || this.readyState === 'complete' || this.readyState === 'loaded'))) {
+      if (
+        !(done &&
+          (!this.readyState ||
+            this.readyState === 'complete' ||
+            this.readyState === 'loaded'))
+      ) {
         ready(null)
       }
     }

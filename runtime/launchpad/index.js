@@ -42,7 +42,9 @@ export class LaunchpadRuntime extends Component {
   ensureDefault() {
     const { props } = this
     if (props.launchpadPanel && !props.mainPanel) {
-      props.navigate(`${props.launchpadRoute.context}/${props.launchpadPanel.default}`)
+      props.navigate(
+        `${props.launchpadRoute.context}/${props.launchpadPanel.default}`
+      )
     }
   }
 

@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
 
 const Text = ({ lineBreak, style, text, ...props }) => {
   const styleLine = { marginTop: lineBreak }
@@ -19,12 +19,6 @@ Text.defaultProps = {
   lineBreak: 10,
   style: {},
   text: '',
-}
-
-Text.propTypes = {
-  lineBreak: PropTypes.number,
-  style: PropTypes.object,
-  text: PropTypes.string.isRequired,
 }
 
 export default Text

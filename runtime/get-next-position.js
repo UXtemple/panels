@@ -1,4 +1,12 @@
-export default function getNextPosition({ context, focus, maxFullPanelWidth, routes, panels, shouldGoMobile, viewportWidth }) {
+export default function getNextPosition({
+  context,
+  focus,
+  maxFullPanelWidth,
+  routes,
+  panels,
+  shouldGoMobile,
+  viewportWidth,
+}) {
   let nextRoutesByContext = routes.byContext
 
   const widths = routes.items.map(routeContext => {
@@ -12,7 +20,8 @@ export default function getNextPosition({ context, focus, maxFullPanelWidth, rou
       } else {
         width = route.isExpanded ? panel.maxWidth : panel.width
 
-        const percentageMatch = typeof width === 'string' && width.match(/([0-9]+)%/)
+        const percentageMatch =
+          typeof width === 'string' && width.match(/([0-9]+)%/)
         if (percentageMatch) {
           width = maxFullPanelWidth * parseInt(percentageMatch, 10) / 100
         }
@@ -26,8 +35,8 @@ export default function getNextPosition({ context, focus, maxFullPanelWidth, rou
         ...nextRoutesByContext,
         [routeContext]: {
           ...route,
-          width
-        }
+          width,
+        },
       }
     }
 
@@ -59,6 +68,6 @@ export default function getNextPosition({ context, focus, maxFullPanelWidth, rou
     routesByContext: nextRoutesByContext,
     x,
     width: maxFullPanelWidth + widths.reduce((a, b) => a + b, 0),
-    widths
+    widths,
   }
 }

@@ -17,7 +17,8 @@ async function loadModule(app) {
   } catch (err) {
     console.error(err)
     if (err instanceof SyntaxError) {
-      throw new Error(`We can't load ${app}.
+      throw new Error(
+        `We can't load ${app}.
         We can't find your app's logic source.
 
         If you're inlining your app with Panels, make sure the script tag is inserted after panels
@@ -29,7 +30,8 @@ async function loadModule(app) {
 
         {
           "logic": "https://panels.com/my-application-logic.js"
-        }`)
+        }`
+      )
     }
   }
 
@@ -75,7 +77,7 @@ export default async function get(app, createContext) {
     findPanel: createFindPanel(panels, lookup),
     name,
     notify,
-    store: typeof setup === 'function' && await setup(app, props, context),
-    types
+    store: typeof setup === 'function' && (await setup(app, props, context)),
+    types,
   }
 }

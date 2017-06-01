@@ -1,7 +1,7 @@
-import React, { Component, PropTypes } from 'react'
+import React from 'react'
 import Vertical from './vertical.js'
 
-export default class Panel extends Component {
+export default class Panel extends React.Component {
   render() {
     const { props } = this
 
@@ -13,15 +13,11 @@ export default class Panel extends Component {
         style={{
           height: '100%',
           overflowY: 'auto',
-          ...props.style
+          ...props.style,
         }}
       >
         {props.children}
       </Vertical>
     )
   }
-}
-Panel.propTypes = {
-  _ref: PropTypes.func,
-  style: PropTypes.object
 }

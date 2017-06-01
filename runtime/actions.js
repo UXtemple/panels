@@ -13,8 +13,8 @@ export function moveLeft() {
         type: MOVE_LEFT,
         payload: {
           snappedAt: nextSnappedAt,
-          x: runtime.x - runtime.widths[nextSnappedAt]
-        }
+          x: runtime.x - runtime.widths[nextSnappedAt],
+        },
       })
     }
   }
@@ -26,20 +26,23 @@ export function moveTo(to) {
     const { router, runtime } = getState()
 
     // check that we're not already snapped there and that the panel we're trying to snap to exists
-    if (runtime.snappedAt !== to && to >= 0 && to < router.routes.items.length) {
+    if (
+      runtime.snappedAt !== to &&
+      to >= 0 &&
+      to < router.routes.items.length
+    ) {
       const x = runtime.widths.slice(0, to).reduce((a, b) => a + b, 0)
 
       dispatch({
         type: MOVE_TO,
         payload: {
           snappedAt: to,
-          x // : runtime.x - runtime.widths[to]
-        }
+          x, // : runtime.x - runtime.widths[to]
+        },
       })
     }
   }
 }
-
 
 export const MOBILE_THRESHOLD = 720
 
@@ -59,7 +62,7 @@ export function setViewportWidth(viewportWidth) {
       routes: router.routes,
       panels,
       shouldGoMobile,
-      viewportWidth
+      viewportWidth,
     })
 
     dispatch({
@@ -69,8 +72,8 @@ export function setViewportWidth(viewportWidth) {
         shouldGoMobile,
         snapPoint,
         viewportWidth,
-        ...nextPosition
-      }
+        ...nextPosition,
+      },
     })
   }
 }
@@ -78,7 +81,7 @@ export function setViewportWidth(viewportWidth) {
 export const SET_X = 'panels/runtime/SET_X'
 export function setX(fromX) {
   return function setXThunk(dispatch, getState) {
-    const { router, runtime } = getState()
+    const { runtime } = getState()
     const snappedAt = getIndexOfPanelToShow(fromX, runtime.regions)
     const x = runtime.widths.slice(0, snappedAt).reduce((a, b) => a + b, 0)
 
@@ -88,8 +91,8 @@ export function setX(fromX) {
           type: SET_X,
           payload: {
             snappedAt,
-            x
-          }
+            x,
+          },
         })
       }
     } else {
@@ -99,16 +102,16 @@ export function setX(fromX) {
         type: SET_X,
         payload: {
           snappedAt,
-          x: fromX
-        }
+          x: fromX,
+        },
       })
 
       dispatch({
         type: SET_X,
         payload: {
           snappedAt,
-          x
-        }
+          x,
+        },
       })
     }
   }

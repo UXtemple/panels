@@ -1,6 +1,6 @@
 import withTrailingSlash from './with-trailing-slash'
 
-const DEFAULT_PARSER = /^https?:\/\/([a-zA-Z0-9\-_\.]+)()(\/.*)/
+const DEFAULT_PARSER = /^https?:\/\/([a-zA-Z0-9\-_.]+)()(\/.*)/
 const PROTOCOL = /(https?):\/\//
 const SLICE_END = ')'
 const SLICE_START = '('
@@ -8,7 +8,7 @@ const SLICE_MARKERS = new RegExp(`[${SLICE_START}${SLICE_END}]`, 'g')
 
 // TODO review this, instead of discarding the query string perhaps we can pass it down to
 // the last panel?
-const withoutQueryString = s => /\?/.test(s) ? s.match(/(.*?)\?/)[1] : s
+const withoutQueryString = s => (/\?/.test(s) ? s.match(/(.*?)\?/)[1] : s)
 
 const MANY_APPS = /^(https?:\/\/.+?\/)(https?:\/\/.+)/
 
@@ -24,18 +24,18 @@ const appSplit = s => {
 
   return {
     currentUri,
-    nextUri
+    nextUri,
   }
 }
 
 export default function parse(uri, parsers = []) {
   const apps = {
     byName: {},
-    items: []
+    items: [],
   }
   const routes = {
     byContext: {},
-    items: []
+    items: [],
   }
 
   // Make sure we always have a trailing slash on the URI
@@ -48,10 +48,12 @@ export default function parse(uri, parsers = []) {
     nextUri = split.nextUri
 
     const parser = parsers.find(p => p.test(currentUri)) || DEFAULT_PARSER
-    let [ _0, app, _1, path ] = currentUri.match(parser)
+    let [_0, app, _1, path] = currentUri.match(parser)
 
     const base = `${protocol}://${app}`
-    const context = routes.items.length > 0 ? routes.items[routes.items.length - 1] : ''
+    const context = routes.items.length > 0
+      ? routes.items[routes.items.length - 1]
+      : ''
 
     // Get every path 'bit' which is indeed every panel we need to load
     let pathRoute = []
@@ -61,7 +63,8 @@ export default function parse(uri, parsers = []) {
       const lastBit = path.length > 1 ? path[path.length - 2] : ''
       path = path.slice(0, path.length - 1).join('/')
       const hasSliceEndMarkerForRoot = lastBit.indexOf(SLICE_END) === 0
-      const hasSliceEndMarker = !hasSliceEndMarkerForRoot && lastBit.indexOf(SLICE_END) > -1
+      const hasSliceEndMarker =
+        !hasSliceEndMarkerForRoot && lastBit.indexOf(SLICE_END) > -1
       const hasSliceStartMarker = lastBit.indexOf(SLICE_START) > -1
 
       if (hasSliceEndMarker || hasSliceStartMarker) {
@@ -77,17 +80,19 @@ export default function parse(uri, parsers = []) {
         context: `${context}${base}${withTrailingSlash(path)}`,
         isVisible,
         panelId,
-        path: panelPath
+        path: panelPath,
       })
 
-      isVisible = hasSliceEndMarkerForRoot ? false : (hasSliceStartMarker ? true : isVisible)
+      isVisible = hasSliceEndMarkerForRoot
+        ? false
+        : hasSliceStartMarker ? true : isVisible
     } while (path.length)
 
     if (apps.items.indexOf(app) === -1) {
       apps.items.push(app)
       apps.byName[app] = {
         app,
-        panels: []
+        panels: [],
       }
     }
 
@@ -103,6 +108,6 @@ export default function parse(uri, parsers = []) {
 
   return {
     apps,
-    routes
+    routes,
   }
 }

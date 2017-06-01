@@ -1,8 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 
-export default class Ellipse extends Component {
-  render() {
-    const { props } = this
-    return <ellipse {...props} />
-  }
-}
+const Ellipse = props => <ellipse {...props} />
+export default Ellipse

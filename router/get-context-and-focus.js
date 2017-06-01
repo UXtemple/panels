@@ -22,6 +22,6 @@ export default function getContextAndFocus({ currentFocus, next, last }) {
 
   return {
     context,
-    focus
+    focus,
   }
 }
