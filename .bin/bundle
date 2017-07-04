@@ -43,7 +43,6 @@ NODE_ENV=production $BIN/browserify --verbose --debug \
     --screw-ie8 \
     --in-source-map $PANELS-prod.js.map \
     --source-map $PANELS.min.js.map $PANELS-prod.js > $PANELS.min.js
-rm $PANELS-prod*
 
 ls -lha $PANELS.*
 echo "[bundle] done"
