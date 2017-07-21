@@ -1,7 +1,7 @@
 import React from 'react'
 
 const Text = ({ lineBreak, style, text, ...props }) => {
-  const styleLine = { marginTop: lineBreak }
+  const styleLine = { marginTop: lineBreak, minHeight: '1em' }
   const children = /\n/.test(text)
     ? text
         .split('\n')
