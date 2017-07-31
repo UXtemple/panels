@@ -47,10 +47,6 @@ export default class Route extends React.Component {
   render() {
     const { isActive, navigate, props, toggleExpand, updateSettings } = this
 
-    setTimeout(() => {
-      throw 'wttttffffffff'
-    }, 5000)
-
     let res
 
     if (props.panel.isCustom) {
