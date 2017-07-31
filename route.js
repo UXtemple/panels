@@ -1,3 +1,4 @@
+import ErrorBoundary from './error-boundary.js'
 import normaliseUri from './utils/normalise-uri/index.js'
 import PropTypes from 'prop-types'
 import React from 'react'
@@ -46,13 +47,19 @@ export default class Route extends React.Component {
   render() {
     const { isActive, navigate, props, toggleExpand, updateSettings } = this
 
+    setTimeout(() => {
+      throw 'wttttffffffff'
+    }, 5000)
+
+    let res
+
     if (props.panel.isCustom) {
-      return <CustomRoute {...props} />
+      res = <CustomRoute {...props} />
     } else {
       const { Type, width, ...rest } = props
 
       // the order below is correct, width can be overwritten but panels shouldn't be
-      return (
+      res = (
         <Type
           width={width}
           {...props.panel.props}
@@ -66,6 +73,8 @@ export default class Route extends React.Component {
         />
       )
     }
+
+    return <ErrorBoundary>{res}</ErrorBoundary>
   }
 }
 

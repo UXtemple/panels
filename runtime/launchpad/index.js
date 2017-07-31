@@ -2,13 +2,11 @@ import { connect } from 'react-redux'
 import { navigate, updateSettings } from '../../actions.js'
 import { setViewportWidth } from '../actions.js'
 import BaseStyle from '../base-style.js'
-import debounce from 'lodash.debounce'
+import debounce from 'debounce'
 import getViewportWidth from '../get-viewport-width.js'
-import Horizontal from '../../blocks/horizontal.js'
 import Knocking from '../../blocks/knocking.js'
 import React, { Component } from 'react'
 import Route from '../../route.js'
-import Vertical from '../../blocks/vertical.js'
 
 const DEBOUNCE = 250
 const LOADING_SIZE = 100
@@ -102,9 +100,10 @@ export class LaunchpadRuntime extends Component {
       runtime.viewportWidth - ((dockedRoute && dockedRoute.width) || 0)
 
     return (
-      <Vertical
+      <div
         ref={$e => (this.$runtime = $e)}
         style={{
+          flexDirection: 'column',
           height: '100%',
           overflow: 'hidden',
           width: '100%',
@@ -129,10 +128,11 @@ export class LaunchpadRuntime extends Component {
             width={runtime.viewportWidth}
           />}
 
-        <Horizontal
+        <div
           style={{
             flexDirection: 'row',
-            height: `calc(100% - ${(launchpadPanel && launchpadPanel.height) || 0}px)`,
+            height: `calc(100% - ${(launchpadPanel && launchpadPanel.height) ||
+              0}px)`,
             overflow: 'hidden',
             width: '100vw',
           }}
@@ -154,11 +154,12 @@ export class LaunchpadRuntime extends Component {
             />}
 
           {dockedPanel && !dockedPanel.dockLeft && docked}
-        </Horizontal>
+        </div>
 
         {router.isLoading
-          ? <Vertical
+          ? <div
               style={{
+                flexDirection: 'column',
                 justifyContent: 'center',
                 position: 'absolute',
                 left: LOADING_OFFSET,
@@ -166,9 +167,9 @@ export class LaunchpadRuntime extends Component {
               }}
             >
               <Knocking size={LOADING_SIZE} />
-            </Vertical>
+            </div>
           : null}
-      </Vertical>
+      </div>
     )
   }
 
