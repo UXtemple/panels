@@ -12,10 +12,9 @@ mkdir -p $BUNDLE
 NODE_ENV=development $BIN/watchify --verbose --debug \
   --require react \
   --require react-dom \
+  --require prop-types \
   --require ./index.dev.js:panels \
   --require ./panels-ui-compat.js:panels-ui \
-  --require ./react-flip-move-compat.js:react-flip-move \
-  --require ./usepages-blocks-compat.js:usepages-blocks \
   --require ./blocks/index.js:panels/blocks \
   --require ./utils/normalise-uri/index.js:panels/normalise-uri \
   --require ./utils/snap.js:panels/snap \
