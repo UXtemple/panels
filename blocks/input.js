@@ -81,7 +81,15 @@ export default class Input extends React.Component {
           id={id}
           onKeyUp={onKeyUp}
           ref={_ref}
-          placeholder={context.i18n ? context.i18n.t(placeholder) : placeholder}
+          placeholder={
+            placeholder ? context.i18n ? (
+              context.i18n.t(placeholder)
+            ) : (
+              placeholder
+            ) : (
+              undefined
+            )
+          }
           style={finalStyle}
         />
       </div>
