@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import toCSS from 'style-to-css'
 import uniqueId from 'mini-unique-id'
 
@@ -16,10 +17,11 @@ export default class Textarea extends Component {
   }
 
   render() {
-    const { id } = this
+    const { context, id } = this
 
     const {
       _ref,
+      placeholder,
       stylePlaceholder,
       styleHover,
       styleFocus,
@@ -52,7 +54,16 @@ export default class Textarea extends Component {
       <div>
         <style>{inlineStyle.join('\n')}</style>
 
-        <textarea {...rest} id={id} ref={_ref} />
+        <textarea
+          {...rest}
+          id={id}
+          ref={_ref}
+          placeholder={
+            placeholder
+              ? context.i18n ? context.i18n.t(placeholder) : placeholder
+              : undefined
+          }
+        />
       </div>
     )
   }
@@ -64,4 +75,10 @@ Textarea.defaultProps = {
   styleFocus: {},
   stylePlaceholder: {},
   text: '',
+}
+
+Textarea.contextTypes = {
+  i18n: PropTypes.shape({
+    t: PropTypes.func.isRequired,
+  }),
 }
