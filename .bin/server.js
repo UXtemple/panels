@@ -16,7 +16,7 @@ http.createServer((req, res) => {
     let appBase = `${base}/${req.headers.host}`
     let path = req.url
 
-    if (req.headers.host === 'custom-parser.panels.dev') {
+    if (req.headers.host === 'custom-parser.panels.localhost') {
       appBase = `${appBase}/app`
       path = path.replace(/^\/app/, '')
     }
@@ -32,13 +32,14 @@ http.createServer((req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
   send(req, file).pipe(res);
-}).listen(80, '0.0.0.0');
-
+}).listen(80, '0.0.0.0', (err) => {
+  console.log('error?', err)
 console.log(
   `Panels dev server is up!
   Runtimes:
-    - Trails: http://trails.panels.dev
-    - Launchpad: http://launchpad.panels.dev
+    - Trails: http://trails.panels.localhost
+    - Launchpad: http://launchpad.panels.localhost
   Tests:
-  - Custom parser: http://custom-parser.panels.dev/app
-`);
+  - Custom parser: http://custom-parser.panels.localhost/app
+`)
+});

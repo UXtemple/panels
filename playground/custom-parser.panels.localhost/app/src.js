@@ -10,7 +10,7 @@ const Content = props => (
       back
     </Horizontal>
 
-    <Horizontal teleportTo='http://trails.panels.dev'>
+    <Horizontal teleportTo='http://trails.panels.localhost'>
       teleport
     </Horizontal>
   </Vertical>

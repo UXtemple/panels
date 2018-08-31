@@ -225,7 +225,7 @@ export const types = {
       }}
     >
       <Horizontal context={0} teleportTo="b/">{'/a/b'}</Horizontal>
-      <Horizontal teleportTo="http://panels.dev/">{'teleport /'}</Horizontal>
+      <Horizontal teleportTo="http://panels.localhost/">{'teleport /'}</Horizontal>
       <Horizontal teleportTo="..">..</Horizontal>
       <Content />
     </Vertical>,

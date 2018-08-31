@@ -17,11 +17,11 @@ function run {
     --outfile playground/$1/app.js
 }
 
-run trails.panels.dev & \
-run launchpad.panels.dev & \
-run launchpad-floating.panels.dev & \
-run toc.dev & \
-run notes.dev & \
+run trails.panels.localhost & \
+run launchpad.panels.localhost & \
+run launchpad-floating.panels.localhost & \
+run toc.localhost & \
+run notes.localhost & \
 NODE_ENV=development $BIN/watchify --debug --verbose \
   --external panels \
   --external panels/blocks \
@@ -32,8 +32,8 @@ NODE_ENV=development $BIN/watchify --debug --verbose \
   --external velocity-react \
   --transform [rollupify --config rollup.config.js] \
   --transform loose-envify \
-  --require ./playground/custom-parser.panels.dev/app/src.js:custom-parser.panels.dev \
-  --outfile playground/custom-parser.panels.dev/app/app.js & \
+  --require ./playground/custom-parser.panels.localhost/app/src.js:custom-parser.panels.localhost \
+  --outfile playground/custom-parser.panels.localhost/app/app.js & \
 NODE_ENV=development $BIN/watchify --debug --verbose \
   --require react \
   --require react-dom \

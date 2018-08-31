@@ -41,8 +41,8 @@ const Content = ({ content, width }) => (
   <Vertical style={{ backgroundColor: '#000000', color: '#ffffff', fontFamily: 'sans-serif', fontSize: 125, padding: 20, width }}>
     { content }
 
-    <Horizontal style={styleAction} to={'http://notes.dev/note-1'}>Note 1</Horizontal>
-    <Horizontal style={styleAction} to={'http://notes.dev/note-2'}>Note 2</Horizontal>
+    <Horizontal style={styleAction} to={'http://notes.localhost/note-1'}>Note 1</Horizontal>
+    <Horizontal style={styleAction} to={'http://notes.localhost/note-2'}>Note 2</Horizontal>
   </Vertical>
 )
 
@@ -50,8 +50,8 @@ const Launchpad = ({ panels: { router, runtime }, width }) => {
   const [ lCtx = '', mCtx = '', dCtx = '' ] = router.routes.items
   const base = mCtx.replace(lCtx, '')
 
-  let notes = `${base}http://notes.dev/`
-  let toc = `${base}http://toc.dev/`
+  let notes = `${base}http://notes.localhost/`
+  let toc = `${base}http://toc.localhost/`
 
   if (dCtx.indexOf(notes) !== -1) {
     notes = base
