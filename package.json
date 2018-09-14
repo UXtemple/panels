@@ -5,9 +5,8 @@
   "scripts": {
     "bundle": ".bin/bundle `node -e \"console.log(require('./package.json').version)\"`",
     "bundle:dev": ".bin/bundle-dev `node -e \"console.log(require('./package.json').version)\"`",
-    "deploy": "scp bundle/* cdn:~/public",
     "start": ".bin/start",
-    "postpublish": "npm run deploy && rm -rf bundle && git checkout package.json && git push && git push --tags",
+    "postpublish": "rm -rf bundle && git checkout package.json && git push && git push --tags",
     "prepublish": "npm run bundle",
     "push": "git tag $(npm version $VERSION) && npm publish",
     "test": "jest"
