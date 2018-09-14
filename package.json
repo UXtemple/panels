@@ -1,72 +1,72 @@
 {
-    "name": "panels",
-    "description": "Panels by UXtemple",
-    "main": "index.js",
-    "scripts": {
-        "bundle": ".bin/bundle `node -e \"console.log(require('./package.json').version)\"`",
-        "bundle:dev": ".bin/bundle-dev `node -e \"console.log(require('./package.json').version)\"`",
-        "deploy": "scp bundle/* cdn:~/public",
-        "start": ".bin/start",
-        "postpublish": "npm run deploy && rm -rf bundle && git checkout package.json && git push && git push --tags",
-        "prepublish": "npm run bundle",
-        "push": "git tag $(npm version $VERSION) && npm publish",
-        "test": "jest"
-    },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/UXtemple/panels.git"
-    },
-    "keywords": [
-        "panels",
-        "UXtemple"
-    ],
-    "author": "UXtemple <hi@uxtemple.com>",
-    "contributors": [
-        "Darío Javier Cravero <dario@uxtemple.com>",
-        "Tom Parandyk <tom@uxtemple.com>"
-    ],
-    "license": "MIT",
-    "bugs": {
-        "url": "https://github.com/UXtemple/panels/issues"
-    },
-    "homepage": "https://github.com/UXtemple/panels#readme",
-    "dependencies": {
-        "debounce": "^1.0.2",
-        "houkou": "^0.2.2",
-        "mini-unique-id": "^1.0.1",
-        "prop-types": "^15.5.10",
-        "react": "^16.0.0",
-        "react-dom": "^16.0.0",
-        "react-redux": "^5.0.5",
-        "redux": "^3.5.2",
-        "redux-thunk": "^2.1.0",
-        "style-to-css": "^1.0.1",
-        "velocity-react": "^1.4.1",
-        "webfontloader": "^1.6.26"
-    },
-    "devDependencies": {
-        "babel-cli": "^6.3.17",
-        "babel-eslint": "^6.0.4",
-        "babel-jest": "^16.0.0",
-        "babel-plugin-external-helpers": "^6.8.0",
-        "babel-plugin-transform-es2015-modules-commonjs": "^6.8.0",
-        "babel-polyfill": "^6.16.0",
-        "babel-preset-react-app-rollup": "^0.0.4",
-        "browserify": "^13.0.0",
-        "eslint": "^3.8.1",
-        "eslint-config-react-app": "^0.2.1",
-        "eslint-plugin-flowtype": "^2.20.0",
-        "eslint-plugin-jsx-a11y": "^2.2.3",
-        "eslint-plugin-react": "^6.4.1",
-        "exorcist": "^0.4.0",
-        "jest": "^16.0.1",
-        "loose-envify": "^1.1.0",
-        "redux-logger": "^2.6.1",
-        "rollup-plugin-babel": "^2.4.0",
-        "rollup-plugin-replace": "^1.1.1",
-        "rollupify": "0.3.4",
-        "send": "^0.14.1",
-        "uglify-js": "^2.4.24",
-        "watchify": "^3.4.0"
-    }
+  "name": "panels",
+  "description": "Panels by UXtemple",
+  "main": "index.js",
+  "scripts": {
+    "bundle": ".bin/bundle `node -e \"console.log(require('./package.json').version)\"`",
+    "bundle:dev": ".bin/bundle-dev `node -e \"console.log(require('./package.json').version)\"`",
+    "deploy": "scp bundle/* cdn:~/public",
+    "start": ".bin/start",
+    "postpublish": "npm run deploy && rm -rf bundle && git checkout package.json && git push && git push --tags",
+    "prepublish": "npm run bundle",
+    "push": "git tag $(npm version $VERSION) && npm publish",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/UXtemple/panels.git"
+  },
+  "keywords": [
+    "panels",
+    "UXtemple"
+  ],
+  "author": "UXtemple <hi@uxtemple.com>",
+  "contributors": [
+    "Darío Javier Cravero <dario@uxtemple.com>",
+    "Tom Parandyk <tom@uxtemple.com>"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/UXtemple/panels/issues"
+  },
+  "homepage": "https://github.com/UXtemple/panels#readme",
+  "dependencies": {
+    "debounce": "^1.0.2",
+    "houkou": "^0.2.2",
+    "mini-unique-id": "^1.0.1",
+    "prop-types": "^15.5.10",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
+    "react-redux": "^5.0.5",
+    "redux": "^3.5.2",
+    "redux-thunk": "^2.1.0",
+    "style-to-css": "^1.0.1",
+    "velocity-react": "^1.4.1",
+    "webfontloader": "^1.6.26"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.3.17",
+    "babel-eslint": "^6.0.4",
+    "babel-jest": "^16.0.0",
+    "babel-plugin-external-helpers": "^6.8.0",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.8.0",
+    "babel-polyfill": "^6.16.0",
+    "babel-preset-react-app-rollup": "^0.0.4",
+    "browserify": "^13.0.0",
+    "eslint": "^3.8.1",
+    "eslint-config-react-app": "^0.2.1",
+    "eslint-plugin-flowtype": "^2.20.0",
+    "eslint-plugin-jsx-a11y": "^2.2.3",
+    "eslint-plugin-react": "^6.4.1",
+    "exorcist": "^0.4.0",
+    "jest": "^16.0.1",
+    "loose-envify": "^1.1.0",
+    "redux-logger": "^2.6.1",
+    "rollup-plugin-babel": "^2.4.0",
+    "rollup-plugin-replace": "^1.1.1",
+    "rollupify": "0.3.4",
+    "send": "^0.14.1",
+    "uglify-js": "^2.4.24",
+    "watchify": "^3.4.0"
+  }
 }
