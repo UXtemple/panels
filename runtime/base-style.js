@@ -26,7 +26,6 @@ export default props => (
           flex-shrink: 0;
       margin: 0;
       padding: 0;
-      outline: 0;
     }
     button,a {
       background-color: transparent;
