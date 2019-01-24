@@ -6,7 +6,7 @@
     "bundle": ".bin/bundle `node -e \"console.log(require('./package.json').version)\"`",
     "bundle:dev": ".bin/bundle-dev `node -e \"console.log(require('./package.json').version)\"`",
     "start": ".bin/start",
-    "postpublish": "rm -rf bundle && git checkout package.json && git push && git push --tags",
+    "postpublish": "rm -rf bundle",
     "prepublish": "npm run bundle",
     "push": "git tag $(npm version $VERSION) && npm publish",
     "test": "jest"
@@ -68,5 +68,5 @@
     "uglify-js": "^2.4.24",
     "watchify": "^3.4.0"
   },
-  "version": "10.0.5"
+  "version": "10.1.0"
 }
