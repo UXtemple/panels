@@ -68,5 +68,5 @@
     "uglify-js": "^2.4.24",
     "watchify": "^3.4.0"
   },
-  "version": "10.1.1"
+  "version": "10.1.2"
 }
