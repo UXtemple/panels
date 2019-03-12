@@ -38,10 +38,5 @@ export default props => (
       font-family: inherit;
       font-size: inherit;
     }
-    button::-moz-focus-inner {
-      border: 0;
-      margin: 0;
-      padding: 0;
-    }
   `}</style>
 )
