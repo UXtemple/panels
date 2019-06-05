@@ -1,7 +1,7 @@
 import React from 'react'
 
 const Svg = ({ children, ...props }) => (
-  <svg {...props}>
+  <svg focusable={props.focusable || false} {...props}>
     {children}
   </svg>
 )
