@@ -28,7 +28,8 @@ export default class Teleport extends React.Component {
       ...rest
     } = this.props
     const { isActive, navigate, route } = this.context
-    const active = isActive(to, loose)
+    const isExplicitlyActive = this.props.isActive;
+    const active = typeof isExplicitlyActive === 'boolean' && isExplicitlyActive || isActive(to, loose)
     const href = normaliseUri(`${route.context}${to}`)
 
     let inlineStyle = ''
