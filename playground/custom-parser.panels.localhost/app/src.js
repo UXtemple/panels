@@ -1,5 +1,6 @@
 import Horizontal from '../../../blocks/horizontal.js'
-import React, { PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import Vertical from '../../../blocks/vertical.js'
 
 const Content = props => (

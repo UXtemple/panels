@@ -1,6 +1,7 @@
 import ArrowLeft from './arrow-left.js';
 import ArrowRight from './arrow-right.js';
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 const DIAMETER = 40;
 
