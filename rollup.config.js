@@ -1,32 +1,21 @@
-const replace = require('rollup-plugin-replace')
+import { nodeResolve } from '@rollup/plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs';
+import babel from '@rollup/plugin-babel';
+import replace from '@rollup/plugin-replace';
 
-const pkg = require('./package.json')
-
-module.exports = {
-  onwarn: function(str) {
-    if (!/^Treating/.test(str)) {
-      console.error(str)
-    }
+export default [
+  {
+    plugins: [
+      nodeResolve(),
+      commonjs({ include: /node_modules/ }),
+      replace({
+        preventAssignment: true,
+        'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+      }),
+      babel({
+        babelHelpers: 'runtime',
+        exclude: '**/node_modules/**',
+      }),
+    ],
   },
-  external: Object.keys(pkg.dependencies)
-    .concat(Object.keys(pkg.devDependencies))
-    .concat('regenerator-runtime'),
-  plugins: [
-    {
-      resolveId(importee) {
-        if (/regenerator$/.test(importee)) {
-          return 'regenerator-runtime' // ${importee}/index.js`
-        }
-      },
-    },
-
-    replace({
-      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
-    }),
-
-    require('rollup-plugin-babel')({
-      exclude: 'node_modules/**',
-      presets: [require.resolve('babel-preset-react-app-rollup')],
-    }),
-  ],
-}
+];

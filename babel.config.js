@@ -1,11 +1,8 @@
 module.exports = {
-  presets: ['@babel/preset-env', '@babel/preset-react'],
+  presets: [['@babel/preset-env', { modules: false }], '@babel/preset-react'],
   plugins: [
-    '@babel/plugin-transform-modules-commonjs',
-    '@babel/plugin-proposal-class-properties',
-    '@babel/plugin-syntax-dynamic-import',
-    '@babel/plugin-transform-classes',
-    ['@babel/plugin-transform-runtime', { regenerator: true }],
+    '@babel/plugin-transform-runtime',
+    '@babel/plugin-proposal-export-default-from',
   ],
-  ignore: [/node_modules/],
+  compact: false,
 };
