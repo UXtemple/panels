@@ -3,7 +3,9 @@
 BIN=node_modules/.bin
 
 function run {
+  NODE_ENV=development rollup -i ./playground/$1/src.js -o ./rollup-bundle/$1-app.js -c rollup.config.js
   NODE_ENV=development $BIN/watchify --debug --verbose \
+    --plugin esmify \
     --external panels \
     --external panels/blocks \
     --external panels/normalise-uri \
@@ -11,18 +13,18 @@ function run {
     --external react \
     --external react-dom \
     --external velocity-react \
-    --transform [rollupify --config rollup.config.js] \
-    --transform loose-envify \
-    --require ./playground/$1/src.js:$1 \
-    --outfile playground/$1/app.js
+    --require ./rollup-bundle/$1-app.js:$1 \
+    --outfile ./playground/$1/app.js
 }
 
-run trails.panels.localhost & \
-run launchpad.panels.localhost & \
-run launchpad-floating.panels.localhost & \
-run toc.localhost & \
-run notes.localhost & \
+run trails.panels.localhost &
+run launchpad.panels.localhost &
+run launchpad-floating.panels.localhost &
+run toc.localhost &
+run notes.localhost &
+NODE_ENV=development rollup -i ./playground/custom-parser.panels.localhost/app/src.js -o ./rollup-bundle/custom-parser.panels.localhost-app.js -c rollup.config.js
 NODE_ENV=development $BIN/watchify --debug --verbose \
+  --plugin esmify \
   --external panels \
   --external panels/blocks \
   --external panels/normalise-uri \
@@ -30,19 +32,17 @@ NODE_ENV=development $BIN/watchify --debug --verbose \
   --external react \
   --external react-dom \
   --external velocity-react \
-  --transform [rollupify --config rollup.config.js] \
-  --transform loose-envify \
-  --require ./playground/custom-parser.panels.localhost/app/src.js:custom-parser.panels.localhost \
-  --outfile playground/custom-parser.panels.localhost/app/app.js & \
+  --require ./rollup-bundle/custom-parser.panels.localhost-app.js:custom-parser.panels.localhost \
+  --outfile ./playground/custom-parser.panels.localhost/app/app.js &
+NODE_ENV=development rollup -i index.dev.js -o ./rollup-bundle/rollup-index.dev.js -c rollup.config.js
 NODE_ENV=development $BIN/watchify --debug --verbose \
+  --plugin esmify \
   --require react \
   --require react-dom \
   --require velocity-react \
   --require ./blocks/index.js:panels/blocks \
   --require ./utils/normalise-uri/index.js:panels/normalise-uri \
   --require ./utils/snap.js:panels/snap \
-  --transform [rollupify --config rollup.config.js] \
-  --transform loose-envify \
-  --outfile playground/panels.js index.dev.js & \
-  sudo $BIN/babel-node --plugins transform-es2015-modules-commonjs .bin/server.js & \
+  --outfile ./playground/panels.js ./rollup-bundle/rollup-index.dev.js &
+$BIN/babel-node --plugins @babel/plugin-transform-modules-commonjs .bin/server.js &
   wait
