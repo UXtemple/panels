@@ -21,7 +21,6 @@ NODE_ENV=production $BIN/browserify --verbose --debug \
   --require ./blocks/index.js:panels/blocks \
   --require ./utils/normalise-uri/index.js:panels/normalise-uri \
   --require ./utils/snap.js:panels/snap \
-  --transform loose-envify \
   --entry ./rollup-bundle/rollup-index.js | \
   $BIN/exorcist $PANELS-prod.js.map > $PANELS-prod.js &&
   $BIN/uglifyjs --verbose \

@@ -9,7 +9,7 @@ PANELS=$BUNDLE/panels-$VERSION
 echo "[bundle-dev] watching panels..."
 
 mkdir -p $BUNDLE
-NODE_ENV=development rollup -i index.dev.js -o ./rollup-bundle/rollup-$PANELS.js -c rollup.config.js
+NODE_ENV=development rollup -i index.dev.js -o ./rollup-bundle/rollup-panels-$VERSION.js -c rollup.config.js
 NODE_ENV=development $BIN/watchify --verbose --debug \
   --plugin esmify \
   --require react \
@@ -20,6 +20,5 @@ NODE_ENV=development $BIN/watchify --verbose --debug \
   --require ./blocks/index.js:panels/blocks \
   --require ./utils/normalise-uri/index.js:panels/normalise-uri \
   --require ./utils/snap.js:panels/snap \
-  --transform loose-envify \
-  --entry ./rollup-bundle/rollup-$PANELS.js \
+  --entry ./rollup-bundle/rollup-panels-$VERSION.js \
   --outfile $PANELS.js
