@@ -7,4 +7,3 @@ playground/panels.js
 playground/*/app.js
 playground/*/*/app.js
 *.tmp
-rollup-bundle

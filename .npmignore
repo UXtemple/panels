@@ -1,3 +1,2 @@
-.babelrc
-examples/
+babel.config.js
 playground/
