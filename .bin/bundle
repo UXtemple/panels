@@ -10,25 +10,34 @@ echo "[bundle] bundling panels..."
 mkdir -p $BUNDLE
 
 echo "[bundle] v${VERSION}..."
-NODE_ENV=production rollup -i index.js -o ./rollup-bundle/rollup-index.js -c rollup.config.js
-NODE_ENV=production $BIN/browserify --verbose --debug \
-  --plugin esmify \
+NODE_ENV=development $BIN/browserify --verbose --debug \
   --require react \
   --require react-dom \
+  --require prop-types \
+  --require ./index.dev.js:panels \
+  --require ./panels-ui-compat.js:panels-ui \
+  --require ./blocks/index.js:panels/blocks \
+  --require ./utils/normalise-uri/index.js:panels/normalise-uri \
+  --require ./utils/snap.js:panels/snap \
+  --transform [ babelify ] \
+  --entry index.dev.js | \
+  $BIN/exorcist $PANELS.js.map > $PANELS.js
+
+NODE_ENV=production $BIN/browserify --verbose --debug \
+  --exclude react \
+  --require ./node_modules/react/cjs/react.production.min.js:react \
+  --exclude react-dom \
+  --require ./node_modules/react-dom/cjs/react-dom.production.min.js:react-dom \
   --require prop-types \
   --require ./index.js:panels \
   --require ./panels-ui-compat.js:panels-ui \
   --require ./blocks/index.js:panels/blocks \
   --require ./utils/normalise-uri/index.js:panels/normalise-uri \
   --require ./utils/snap.js:panels/snap \
-  --entry ./rollup-bundle/rollup-index.js | \
+  --transform [ babelify ] \
+  --entry index.js | \
   $BIN/exorcist $PANELS-prod.js.map > $PANELS-prod.js &&
-  $BIN/uglifyjs --verbose \
-    --compress \
-    --mangle \
-    --screw-ie8 \
-    --in-source-map $PANELS-prod.js.map \
-    --source-map $PANELS.min.js.map $PANELS-prod.js > $PANELS.min.js
+  $BIN/uglifyjs $PANELS-prod.js -o $PANELS.min.js -c -m
 
 ls -lha $PANELS.*
 echo "[bundle] done"
