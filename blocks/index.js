@@ -1,4 +1,4 @@
-export Horizontal from './horizontal.js'
-export Knocking from './knocking.js'
-export Text from './text.js'
-export Vertical from './vertical.js'
+export { default as Horizontal } from './horizontal.js'
+export { default as Knocking } from './knocking.js'
+export { default as Text } from './text.js'
+export { default as Vertical } from './vertical.js'
