@@ -24,10 +24,8 @@ NODE_ENV=development $BIN/browserify --verbose --debug \
   $BIN/exorcist $PANELS.js.map > $PANELS.js
 
 NODE_ENV=production $BIN/browserify --verbose --debug \
-  --exclude react \
-  --require ./node_modules/react/cjs/react.production.min.js:react \
-  --exclude react-dom \
-  --require ./node_modules/react-dom/cjs/react-dom.production.min.js:react-dom \
+  --require react \
+  --require react-dom \
   --require prop-types \
   --require ./index.js:panels \
   --require ./panels-ui-compat.js:panels-ui \
