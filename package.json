@@ -72,5 +72,5 @@
     "uglify-js": "^3.17.0",
     "watchify": "^4.0.0"
   },
-  "version": "10.1.6"
+  "version": "11.0.0"
 }
