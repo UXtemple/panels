@@ -1,7 +1,8 @@
 import Horizontal from '../../blocks/horizontal.js'
 import Vertical from '../../blocks/vertical.js'
 import normaliseUri from '../../utils/normalise-uri/index.js'
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 
 const styleAction = {
   backgroundColor: '#f0f0f0',

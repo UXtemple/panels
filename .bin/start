@@ -11,17 +11,16 @@ function run {
     --external react \
     --external react-dom \
     --external velocity-react \
-    --transform [rollupify --config rollup.config.js] \
-    --transform loose-envify \
+    --transform [ babelify ] \
     --require ./playground/$1/src.js:$1 \
     --outfile playground/$1/app.js
 }
 
-run trails.panels.localhost & \
-run launchpad.panels.localhost & \
-run launchpad-floating.panels.localhost & \
-run toc.localhost & \
-run notes.localhost & \
+run trails.panels.localhost &
+run launchpad.panels.localhost &
+run launchpad-floating.panels.localhost &
+run toc.localhost &
+run notes.localhost &
 NODE_ENV=development $BIN/watchify --debug --verbose \
   --external panels \
   --external panels/blocks \
@@ -30,8 +29,7 @@ NODE_ENV=development $BIN/watchify --debug --verbose \
   --external react \
   --external react-dom \
   --external velocity-react \
-  --transform [rollupify --config rollup.config.js] \
-  --transform loose-envify \
+  --transform [ babelify ] \
   --require ./playground/custom-parser.panels.localhost/app/src.js:custom-parser.panels.localhost \
   --outfile playground/custom-parser.panels.localhost/app/app.js & \
 NODE_ENV=development $BIN/watchify --debug --verbose \
@@ -41,8 +39,7 @@ NODE_ENV=development $BIN/watchify --debug --verbose \
   --require ./blocks/index.js:panels/blocks \
   --require ./utils/normalise-uri/index.js:panels/normalise-uri \
   --require ./utils/snap.js:panels/snap \
-  --transform [rollupify --config rollup.config.js] \
-  --transform loose-envify \
+  --transform [ babelify ] \
   --outfile playground/panels.js index.dev.js & \
-  sudo $BIN/babel-node --plugins transform-es2015-modules-commonjs .bin/server.js & \
+$BIN/babel-node --plugins @babel/plugin-transform-modules-commonjs .bin/server.js &
   wait

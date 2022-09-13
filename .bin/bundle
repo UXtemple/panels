@@ -19,8 +19,7 @@ NODE_ENV=development $BIN/browserify --verbose --debug \
   --require ./blocks/index.js:panels/blocks \
   --require ./utils/normalise-uri/index.js:panels/normalise-uri \
   --require ./utils/snap.js:panels/snap \
-  --transform [rollupify --config rollup.config.js] \
-  --transform loose-envify \
+  --transform [ babelify ] \
   --entry index.dev.js | \
   $BIN/exorcist $PANELS.js.map > $PANELS.js
 
@@ -33,16 +32,10 @@ NODE_ENV=production $BIN/browserify --verbose --debug \
   --require ./blocks/index.js:panels/blocks \
   --require ./utils/normalise-uri/index.js:panels/normalise-uri \
   --require ./utils/snap.js:panels/snap \
-  --transform [rollupify --config rollup.config.js] \
-  --transform loose-envify \
+  --transform [ babelify ] \
   --entry index.js | \
   $BIN/exorcist $PANELS-prod.js.map > $PANELS-prod.js &&
-  $BIN/uglifyjs --verbose \
-    --compress \
-    --mangle \
-    --screw-ie8 \
-    --in-source-map $PANELS-prod.js.map \
-    --source-map $PANELS.min.js.map $PANELS-prod.js > $PANELS.min.js
+  $BIN/uglifyjs $PANELS-prod.js -o $PANELS.min.js -c -m --source-map "content='$PANELS-prod.js.map'"
 
 ls -lha $PANELS.*
 echo "[bundle] done"

@@ -1,6 +1,7 @@
 import normaliseUri from '../../utils/normalise-uri/index.js'
 import Horizontal from '../../blocks/horizontal.js'
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import Text from '../../blocks/text.js'
 import Vertical from '../../blocks/vertical.js'
 

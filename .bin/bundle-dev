@@ -18,7 +18,6 @@ NODE_ENV=development $BIN/watchify --verbose --debug \
   --require ./blocks/index.js:panels/blocks \
   --require ./utils/normalise-uri/index.js:panels/normalise-uri \
   --require ./utils/snap.js:panels/snap \
-  --transform [rollupify --config rollup.config.js] \
-  --transform loose-envify \
+  --transform [ babelify ] \
   --entry index.dev.js \
   --outfile $PANELS.js
